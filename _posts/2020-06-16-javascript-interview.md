@@ -7,6 +7,11 @@ keywords: JavaScript, interview
 topmost: false
 ---
 
+**目录**
+
+* TOC
+{:toc}
+
 ### 打印网页标签个数以及标签最多的一组数据
 
 ```javascript
@@ -21,3 +26,5 @@ console.table(Object.entries([...document.getElementsByTagName("*")].map(v=>v.no
 }, {})).sort((a, b)=>b[1]-a[1]).slice(0, 1))
 
 ```
+
+
