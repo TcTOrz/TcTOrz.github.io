@@ -13,10 +13,11 @@ topmost: false
 - [请简述`Javascript`中的`this`](#请简述javascript中的this)
 - [请解释原型继承(prototypal inheritance) 的工作原理](#请解释原型继承prototypal-inheritance的工作原理)
 - [说说你对`AMD`和`CommonJS`的了解](#说说你对AMD和CommonJS的了解)
-- [`null`、`undefined`和未声明的变量之间有什么区别？如何检查判断这些状态值？](#null、undefined和未声明的变量之间有什么区别？如何检查判断这些状态值？)
-- [什么是闭包（closure），为什么使用闭包？](#什么是闭包（closure），为什么使用闭包？)
-- [请说明`.forEach`循环和`.map()`循环的主要区别，它们分别在什么情况下使用？](#请说明.forEach循环和.map()循环的主要区别，它们分别在什么情况下使用？)
-- [匿名函数的典型应用场景是什么？](#匿名函数的典型应用场景是什么？)
+- [`null`、`undefined`和未声明的变量之间有什么区别？如何检查判断这些状态值？](#nullundefined和未声明的变量之间有什么区别如何检查判断这些状态值)
+- [什么是闭包（closure），为什么使用闭包？](#什么是闭包closure为什么使用闭包)
+- [请说明`.forEach`循环和`.map()`循环的主要区别，它们分别在什么情况下使用？](#请说明forEach循环和map循环的主要区别它们分别在什么情况下使用)
+- [匿名函数的典型应用场景是什么？](#匿名函数的典型应用场景是什么)
+- [宿主对象（host objects）和原生对象（native objects）的区别是什么？](#宿主对象host-objects和原生对象native-objects的区别是什么)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 <!-- * TOC
 {:toc} -->
@@ -228,6 +229,18 @@ console.log(double); // [2, 4, 6]
 参考
 - <https://www.quora.com/What-is-a-typical-usecase-for-anonymous-functions>
 - <https://stackoverflow.com/questions/10273185/what-are-the-benefits-to-using-anonymous-functions-instead-of-named-functions-fo>
+
+[[↑] 回到顶部](#目录)
+
+### 宿主对象（host objects）和原生对象（native objects）的区别是什么？
+
+原生对象是由 ECMAScript 规范定义的 JavaScript 内置对象，比如`String`、`Math`、`RegExp`、`Object`、`Function`等等。
+
+宿主对象是由运行时环境（浏览器或 Node）提供，比如`window`、`XMLHTTPRequest`等等。  
+
+参考
+
+- <https://stackoverflow.com/questions/7614317/what-is-the-difference-between-native-objects-and-host-objects>
 
 [[↑] 回到顶部](#目录)
 
