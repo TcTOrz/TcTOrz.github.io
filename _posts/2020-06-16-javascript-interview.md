@@ -54,12 +54,13 @@ JS中的`this`是一个相对复杂的概念，不是简单几句能解释清楚
 
 [[↑] 回到顶部](#目录)
 
-### 说说你对 AMD 和 CommonJS 的了解<存疑>
-它们都是实现模块体系的方式，直到ES2015出现之前，Javascript一直没有模块体系。 CommonJS 是同步的，而 AMD （Asynchronous Module Definitions）从全称中可以明显看出是异步的。 CommonJS 的设计是为服务器端开发考虑的，而 AMD 支持异步加载模块，更适合浏览器。
+### 说说你对 AMD 和 CommonJS 的了解
+<存疑>
+它们都是实现模块体系的方式，直到ES2015出现之前，Javascript一直没有模块体系。`CommonJS`是同步的，而`AMD`（Asynchronous Module Definitions）从全称中可以明显看出是异步的。`CommonJS`的设计是为服务器端开发考虑的，而`AMD`支持异步加载模块，更适合浏览器。
 
-我发现 AMD 的语法非常冗长， CommonJS 更接近其他语言 import 声明语句用法习惯。大多数情况下，我认为 AMD 没有使用的必要，因为如果把所有 Javascript 都捆绑进一个文件中，将无法得到异步加载的好处。此外， CommonJS 语法上更接近 Node 编写模块的风格，在前后端都使用 Jaascript 开发之间进行切换时，语境的切换开销较小。
+我发现`AMD`的语法非常冗长，`CommonJS`更接近其他语言`import`声明语句用法习惯。大多数情况下，我认为`AMD`没有使用的必要，因为如果把所有`Javascript`都捆绑进一个文件中，将无法得到异步加载的好处。此外，`CommonJS`语法上更接近`Node`编写模块的风格，在前后端都使用`Jaascript`开发之间进行切换时，语境的切换开销较小。
 
-我很高兴看到 ES2015 的模块加载方案同时支持同步和异步，我们终于可以只使用一种方案了。虽然它尚未在浏览器和 Node 中完全推出，但是我们可以使用代码转换工具进行转换。  
+我很高兴看到`ES2015`的模块加载方案同时支持同步和异步，我们终于可以只使用一种方案了。虽然它尚未在浏览器和`Node`中完全推出，但是我们可以使用代码转换工具进行转换。  
 
 参考
 - <https://exploringjs.com/es6/ch_modules.html>
@@ -70,7 +71,28 @@ JS中的`this`是一个相对复杂的概念，不是简单几句能解释清楚
 
 [[↑] 回到顶部](#目录)
 
-<!-- ### 请解释下面代码为什么不能用作 -->
+### 请解释下面代码为什么不能用作`IIFE`：`function foo(){ }();`，需要作出哪些修改才能使其成为`IIFE`？
+`IIFE`（Immediately Involved Function Expressions）代表立即执行函数。`Javascript`解析器将`function foo(){ }();`解析成`function foo(){ }`和`();`。其中前者是函数声明；后者是一对括号试图调用一个函数，却没有指定名称，因此它会抛出`Uncaught SyntaxError： Unexpected token`的错误。
+
+修改方法是：再添加一对括号，形式上有两种：`(function foo(){ })()`和`(function foo(){ }())`。以上函数不会暴露到全局作用域，如果不需要在函数内部引用自身，可以省略函数的名称。
+
+你可能会用到`void`操作符：`void function foo(){ }();`。但是，这种做法是有问题的。表达式的值是`undefined`,所以如果你的`IIFE`有返回值，不要用这种做法。例如：
+```js
+const foo = void(function bar(){
+    return 'foo';
+})();
+console.log(foo); // undefined
+```
+> 注：`function`之前的左圆括号是必需的，因为如果不写这个左圆括号，`Javascript`解释器会试图将关键字`function`解析为函数声明语句。使用圆括号`Javascript`解释器才会正确地将其解析为函数定义表达式。使用圆括号是习惯用法，尽管有时候没有必要也不应当省略。`《Javascript权威指南 第六版》 8-5节 181 页`  
+
+参考
+- <http://lucybain.com/blog/2014/immediately-invoked-function-expression/>
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/void> 
+
+
+[[↑] 回到顶部](#目录)
+
+<!-- ### `null` -->
 
 ### 打印网页标签个数以及标签最多的一组数据
 
