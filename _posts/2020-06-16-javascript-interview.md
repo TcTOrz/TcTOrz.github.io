@@ -12,6 +12,7 @@ topmost: false
 - [请解释事件委托（event delegation）](#请解释事件委托event-delegation)
 - [请简述`Javascript`中的`this`](#请简述javascript中的this)
 - [请解释原型继承(prototypal inheritance) 的工作原理](#请解释原型继承prototypal-inheritance的工作原理)
+- [说说你对 AMD 和 CommonJS 的了解](#说说你对-AMD-和-CommonJS-的了解)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 <!-- * TOC
 {:toc} -->
@@ -52,6 +53,24 @@ JS中的`this`是一个相对复杂的概念，不是简单几句能解释清楚
 - <https://davidwalsh.name/javascript-objects>  
 
 [[↑] 回到顶部](#目录)
+
+### 说说你对 AMD 和 CommonJS 的了解<存疑>
+它们都是实现模块体系的方式，直到ES2015出现之前，Javascript一直没有模块体系。 CommonJS 是同步的，而 AMD （Asynchronous Module Definitions）从全称中可以明显看出是异步的。 CommonJS 的设计是为服务器端开发考虑的，而 AMD 支持异步加载模块，更适合浏览器。
+
+我发现 AMD 的语法非常冗长， CommonJS 更接近其他语言 import 声明语句用法习惯。大多数情况下，我认为 AMD 没有使用的必要，因为如果把所有 Javascript 都捆绑进一个文件中，将无法得到异步加载的好处。此外， CommonJS 语法上更接近 Node 编写模块的风格，在前后端都使用 Jaascript 开发之间进行切换时，语境的切换开销较小。
+
+我很高兴看到 ES2015 的模块加载方案同时支持同步和异步，我们终于可以只使用一种方案了。虽然它尚未在浏览器和 Node 中完全推出，但是我们可以使用代码转换工具进行转换。  
+
+参考
+- <https://exploringjs.com/es6/ch_modules.html>
+- <https://segmentfault.com/q/1010000005680390>
+- <https://auth0.com/blog/javascript-module-systems-showdown/>
+- <https://stackoverflow.com/questions/16521471/relation-between-commonjs-amd-and-requirejs>
+
+
+[[↑] 回到顶部](#目录)
+
+<!-- ### 请解释下面代码为什么不能用作 -->
 
 ### 打印网页标签个数以及标签最多的一组数据
 
