@@ -7,12 +7,16 @@ keywords: JavaScript, interview
 topmost: false
 ---
 
-# 目录
+## 目录
 
-* TOC
-{:toc}
+- [请解释事件委托（event delegation）](#请解释事件委托event-delegation)
+- [请简述`Javascript`中的`this`](#请简述Javascript中的this)
+- [请解释原型继承(prototypal inheritance) 的工作原理](#请解释原型继承prototypal-inheritance的工作原理)
+- [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
+<!-- * TOC
+{:toc} -->
 
-### 请解释事件委托
+### 请解释事件委托（event delegation）
 事件委托是将事件监听器添加到父元素，而不是每个子元素单独设置监听。当触发子元素时，事件会冒泡到父元素，监听器就会触发。
 这种技术的好处是：
 - 减少内存的占用，只需要一个父元素的事件处理程序，而不必为每个后代添加事件处理程序
@@ -40,7 +44,7 @@ JS中的`this`是一个相对复杂的概念，不是简单几句能解释清楚
 
 [[↑] 回到顶部](#目录)
 
-### 请解释原型继承(prototypal inheritance) 的工作原理
+### 请解释原型继承(prototypal inheritance)的工作原理
 这是一个非常常见的Javascript问题。所有JS对象都有一个__proto__属性，指向它的原型对象。当试图访问一个对象的属性时，如果没有在该对象上找到，它会搜寻该对象的原型，以及该对象的原型的原型，依次层层向上搜索，直到找到一个名字匹配的属性或达到原型的末尾(Object.prototype)。这种行为是在模拟经典的继承，[但是与其说是继承，不如说是委托(delegation)](https://davidwalsh.name/javascript-objects)  
 
 参考
