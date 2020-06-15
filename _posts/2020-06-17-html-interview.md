@@ -72,7 +72,9 @@ topmost: false
 ```html
 <div id="myDiv" data-appId="12345" data-myName="Nicholas"></div>
 ```
+
 > 添加了自定义属性后，可以通过元素的`dataset`属性来访问自定义属性的值。`dataset`属性的值是`DOMStringMap`的一个实例，也就是一个名值对的映射。例如：
+
 ```js
 var div = document.getElementById("myDiv")
 var appId = div.dataset.appId
@@ -85,6 +87,7 @@ if( div.dadtaset.myName ){ //如果有myName值
     console.log(`Hello, ${div.dataset.myName}`)
 } 
 ```
+
 > 注： 此代码在《Javascript高级程序设计》第三版 11-3-5节 293页  
 
 参考
