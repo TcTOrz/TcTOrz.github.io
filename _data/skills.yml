@@ -1,19 +1,19 @@
-- name: Software Engineer Keywords
+- name: Language
   keywords:
-      - Java
-      - C++
-      - Python
-      - Design Patterns
+      - Javascript
+      - Html
+      - Css
+      - Php
 
-- name: Mobile Developer Keywords
+- name: Frame
   keywords:
-      - Android
-      - Reverse Engineering
+      - node
+      - Vue
+      - React
+      - Jquery
+      - Webpack
 
-- name: Windows Developer Keywords
+- name: Tools
   keywords:
-      - Win32 SDK
-      - DuiLib
-      - WTL
-      - COM
-      - WinDbg
+      - Vagrant
+      - Vscode
