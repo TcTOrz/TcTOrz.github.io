@@ -21,6 +21,19 @@ topmost: false
 - <https://davidwalsh.name/event-delegate>
 - <https://stackoverflow.com/questions/1687296/what-is-dom-event-delegation>
 
+### 请简述`Javascript`中的`this`
+JS中的`this`是一个相对复杂的概念，不是简单几句能解释清楚的。粗略的讲，函数的调用方式决定了this的值。我阅读了网上很多关于`this`的文章(Arnav Aggrawal)[https://medium.com/@arnav_aggarwal]写的比较清楚。`this`取值符合以下规则：
+1. 在调用函数时使用`new`关键字，函数内的this是一个全新的对象。
+2. 如果`apply`、`call`或`bind`方法调用、创建一个函数，函数内的this就是作为参数传入这些方法的对象。
+3. 当函数作为对象里的方法被调用时，函数内的`this`是调用该函数的对象。比如：当obj.method()被调用时，函数内的this将绑定到obj对象
+4. 如果调用函数不符合上述规则，那么`this`的值指向全局对象(global object)。浏览器环境下指向`window`对象，但在严格模式下(`use strict`)，`this`的值为`undefined`。
+5. 如果符合上述多个规则，则较高的规则(1最高，4最低)将决定`this`值。
+6. 如果该函数是ES2015中的箭头函数，将忽略上面所有规则，`this`将被设置为它被创建时的上下文。
+想获得更深入的解释，请查看(他在 Medium 上的文章)[https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3]。
+参考：
+- https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3
+- https://stackoverflow.com/a/3127440/1751946
+
 ### 打印网页标签个数以及标签最多的一组数据
 
 ```javascript
