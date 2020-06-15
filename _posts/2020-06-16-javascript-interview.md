@@ -15,7 +15,7 @@ topmost: false
 - [说说你对`AMD`和`CommonJS`的了解](#说说你对AMD和CommonJS的了解)
 - [`null`、`undefined`和未声明的变量之间有什么区别？如何检查判断这些状态值？](#null、undefined和未声明的变量之间有什么区别？如何检查判断这些状态值？)
 - [什么是闭包（closure），为什么使用闭包？](#什么是闭包（closure），为什么使用闭包？)
-
+- [请说明`.forEach`循环和`.map()`循环的主要区别，它们分别在什么情况下使用？](#请说明.forEach循环和.map()循环的主要区别，它们分别在什么情况下使用？)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 <!-- * TOC
 {:toc} -->
@@ -163,13 +163,42 @@ var object = {
 console.log(object.getNameFunc()()) // "My Object"
 ```
 
-**为什么使用闭包？**
+*为什么使用闭包？*
 - 利用闭包实现数据私有化或模拟私有方法。这个方式也称为[模块模式（module pattern）](https://addyosmani.com/resources/essentialjsdesignpatterns/book/#modulepatternjavascript)。
 - [部分参数函数（partial applications）柯里化（currying）](https://medium.com/javascript-scene/curry-or-partial-application-8150044c78b8#.l4b6l1i3x).  
 
 参考
 - <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures>
 - <https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-closure-b2f0d2152b36>
+
+[[↑] 回到顶部](#目录)
+
+### 请说明`.forEach`循环和`.map()`循环的主要区别，它们分别在什么情况下使用？
+*`forEach`*
+- 遍历数组中的元素。
+- 为每个元素执行回调。
+- 无返回值。
+```js
+const a = [1, 2, 3];
+const doubled = a.forEach((num, index) => {
+  // 执行与 num、index 相关的代码
+});
+// doubled = undefined
+```
+*`map`*
+- 遍历数组中的元素
+- 通过对每个元素调用函数，将每个元素“映射（map）”到一个新元素，从而创建一个新数组。
+```js
+const a = [1, 2, 3];
+const doubled = a.map((num) => {
+  return num * 2;
+});
+// doubled = [2, 4, 6]
+```
+`.forEach`和`.map()`的主要区别在于`.map()`返回一个新的数组。如果你想得到一个结果，但不想改变原始数组，用`.map()`。如果你只需要在数组上做迭代修改，用`forEach`。  
+
+参考
+- <https://codeburst.io/javascript-map-vs-foreach-f38111822c0f>
 
 [[↑] 回到顶部](#目录)
 
