@@ -16,10 +16,12 @@ topmost: false
 事件委托是将事件监听器添加到父元素，而不是每个子元素单独设置监听。当触发子元素时，事件会冒泡到父元素，监听器就会触发。
 这种技术的好处是：
 - 减少内存的占用，只需要一个父元素的事件处理程序，而不必为每个后代添加事件处理程序
-- 无需从已删除的元素中解绑处理程序，也无需将处理程序绑定到新元素上
-###### 参考
+- 无需从已删除的元素中解绑处理程序，也无需将处理程序绑定到新元素上  
+
+参考
 - <https://davidwalsh.name/event-delegate>
-- <https://stackoverflow.com/questions/1687296/what-is-dom-event-delegation>
+- <https://stackoverflow.com/questions/1687296/what-is-dom-event-delegation>  
+
 [[↑] 回到顶部](#目录)
 
 ### 请简述`Javascript`中的`this`
@@ -30,18 +32,22 @@ JS中的`this`是一个相对复杂的概念，不是简单几句能解释清楚
 4. 如果调用函数不符合上述规则，那么`this`的值指向全局对象(global object)。浏览器环境下指向`window`对象，但在严格模式下(`use strict`)，`this`的值为`undefined`。
 5. 如果符合上述多个规则，则较高的规则(1最高，4最低)将决定`this`值。
 6. 如果该函数是ES2015中的箭头函数，将忽略上面所有规则，`this`将被设置为它被创建时的上下文。
-想获得更深入的解释，请查看[他在 Medium 上的文章](https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3)。
-###### 参考
+想获得更深入的解释，请查看[他在 Medium 上的文章](https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3)。  
+
+参考
 - <https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3>
-- <https://stackoverflow.com/a/3127440/1751946>
+- <https://stackoverflow.com/a/3127440/1751946>  
+
 [[↑] 回到顶部](#目录)
 
 ### 请解释原型继承(prototypal inheritance) 的工作原理
-这是一个非常常见的Javascript问题。所有JS对象都有一个__proto__属性，指向它的原型对象。当试图访问一个对象的属性时，如果没有在该对象上找到，它会搜寻该对象的原型，以及该对象的原型的原型，依次层层向上搜索，直到找到一个名字匹配的属性或达到原型的末尾(Object.prototype)。这种行为是在模拟经典的继承，[但是与其说是继承，不如说是委托(delegation)](https://davidwalsh.name/javascript-objects)
-###### 参考
+这是一个非常常见的Javascript问题。所有JS对象都有一个__proto__属性，指向它的原型对象。当试图访问一个对象的属性时，如果没有在该对象上找到，它会搜寻该对象的原型，以及该对象的原型的原型，依次层层向上搜索，直到找到一个名字匹配的属性或达到原型的末尾(Object.prototype)。这种行为是在模拟经典的继承，[但是与其说是继承，不如说是委托(delegation)](https://davidwalsh.name/javascript-objects)  
+
+参考
 - <https://www.quora.com/What-is-prototypal-inheritance/answer/Kyle-Simpson>
-- <https://davidwalsh.name/javascript-objects>
-[[↑] 回到顶部](#目录)
+- <https://davidwalsh.name/javascript-objects>  
+
+[[↑] 回到顶部](*目录)
 
 ### 打印网页标签个数以及标签最多的一组数据
 
@@ -56,7 +62,8 @@ console.table(Object.entries([...document.getElementsByTagName("*")].map(v=>v.no
     return obj
 }, {})).sort((a, b)=>b[1]-a[1]).slice(0, 1))
 
-```
-[[↑] 回到顶部](#目录)
+```  
+
+[[↑] 回到顶部](目录)
 
 
