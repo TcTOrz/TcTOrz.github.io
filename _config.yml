@@ -117,16 +117,16 @@ comments_provider: gitalk
 disqus:
     username: 
 # https://imsun.net/posts/gitment-introduction/
-gitment:
-    owner: TcTOrz
-    repo: TcTOrz.github.io
-    oauth:
-        client_id: b5e12eb2c1d3152c681d
-        client_secret: c3de57a05164ab3526f28d499ffc39c90450fffc
+# gitment:
+#     owner: TcTOrz
+#     repo: blog-comments
+#     oauth:
+#         client_id: b5e12eb2c1d3152c681d
+#         client_secret: c3de57a05164ab3526f28d499ffc39c90450fffc
 # https://github.com/gitalk/gitalk#install
 gitalk:
     owner: TcTOrz
-    repo: TcTOrz.github.io
+    repo: blog-comments
     clientID: b5e12eb2c1d3152c681d
     clientSecret: c3de57a05164ab3526f28d499ffc39c90450fffc
 # 在使用其它评论组件时可点击显示 Disqus
