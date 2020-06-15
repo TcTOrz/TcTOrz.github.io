@@ -1204,4 +1204,10 @@ console.table(Object.entries([...document.getElementsByTagName("*")].map(v=>v.no
 
 [[↑] 回到顶部](#目录)
 
-写在最后：感谢原作者[yangshun](https://github.com/yangshun)
+写在最后：
+- 原作者[yangshun](https://github.com/yangshun)
+- 部分摘录自《JavaScript高级程序设计》(第3版)
+- 部分摘录自《JavaScript权威指南》(第6版)
+- 部分摘录自《深入理解ES6》
+- 部分摘录自《Learning TypeScript中文版》
+- 感谢他们的付出!

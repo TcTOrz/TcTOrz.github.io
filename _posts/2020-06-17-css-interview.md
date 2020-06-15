@@ -10,6 +10,8 @@ topmost: false
 ## 目录
 
 - [CSS 选择器的优先级是如何计算的？](#css-选择器的优先级是如何计算的)
+- [重置（resetting）CSS 和 标准化（normalizing）CSS 的区别是什么？你会选择哪种方式，为什么？](#重置resettingCSS-和-标准化normalizingCSS-的区别是什么你会选择哪种方式为什么)
+- [请阐述`Float`定位的工作原理。](#请阐述float定位的工作原理)
 
 ### CSS 选择器的优先级是如何计算的？
 浏览器通过优先级规则，判断元素展示哪些样式。优先级通过 4 个维度指标确定，我们假定以`a、b、c、d`命名，分别代表以下含义：
@@ -81,7 +83,49 @@ body * strong { color: red; } /* 0,0,0,2 */
 <h1 style="color: green;">test</h1> <!-- 1,0,0,0 -->
 ```
 
-另外重要声明`!important`对特指度没有影响，但是会与不重要声明分开处理。重要声明和非重要声明冲突时，重要声明始终胜出。
+另外重要声明`!important`对特指度没有影响，但是会与不重要声明分开处理。重要声明和非重要声明冲突时，重要声明始终胜出。  
+
+参考
+- <https://www.smashingmagazine.com/2007/07/css-specificity-things-you-should-know/>
+- <https://www.sitepoint.com/web-foundations/specificity/>
 
 [[↑] 回到顶部](#目录)
 
+### 重置（resetting）CSS 和 标准化（normalizing）CSS 的区别是什么？你会选择哪种方式，为什么？
+- *重置（Resetting）*： 重置意味着除去所有的浏览器默认样式。对于页面所有的元素，像`margin`、`padding`、`font-size`这些样式全部置成一样。你将必须重新定义各种元素的样式。
+- *标准化（Normalizing）*： 标准化没有去掉所有的默认样式，而是保留了有用的一部分，同时还纠正了一些常见错误。
+当需要实现非常个性化的网页设计时，我会选择重置的方式，因为我要写很多自定义的样式以满足设计需求，这时候就不再需要标准化的默认样式了。  
+
+参考
+- <https://stackoverflow.com/questions/6887336/what-is-the-difference-between-normalize-css-and-reset-css>
+
+[[↑] 回到顶部](#目录)
+
+### 请阐述`Float`定位的工作原理。
+浮动（float）是 CSS 定位属性。浮动元素从网页的正常流动中移出，但是保持了部分的流动性，会影响其他元素的定位（比如文字会围绕着浮动元素）。这一点与绝对定位不同，绝对定位的元素完全从文档流中脱离。
+
+CSS 的`clear`属性通过使用`left`、`right`、`both`，让该元素向下移动（清除浮动）到浮动元素下面。
+
+如果父元素只包含浮动元素，那么该父元素的高度将塌缩为 0。我们可以通过清除（clear）从浮动元素后到父元素关闭前之间的浮动来修复这个问题。
+
+有一种 hack 的方法，是自定义一个`.clearfix`类，利用伪元素选择器`::after`清除浮动。[另外还有一些方法](https://css-tricks.com/all-about-floats/#article-header-id-4)，比如添加空的`<div></div>`和设置浮动元素父元素的`overflow`属性。与这些方法不同的是，`clearfix`方法，只需要给父元素添加一个类，定义如下：
+
+```css
+.clearfix::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+```
+
+值得一提的是，把父元素属性设置为`overflow: auto`或`overflow: hidden`，会使其内部的子元素形成块格式化上下文（Block Formatting Context），并且父元素会扩张自己，使其能够包围它的子元素。
+
+参考
+- <https://css-tricks.com/all-about-floats/>
+
+[[↑] 回到顶部](#目录)
+
+写在最后：
+- 原作者[yangshun](https://github.com/yangshun)
+- 部分摘录自《CSS权威指南》(第四版)
+- 感谢他们的付出!
