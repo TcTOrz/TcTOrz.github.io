@@ -4,8 +4,8 @@
 baseurl:
 url: https://tctorz.github.io/
 date_format: "ordinal"
-title: 日志
-subtitle: "公众号：闷骚的程序员"
+title: 李健的博客
+subtitle: "一个简单的博客"
 description: "李健的个人博客"
 keywords: 日志, Jian Li, ifwechat, ifwechat.com, Web前端程序员, PHP程序员
 timezone: Asia/Shanghai
@@ -119,14 +119,14 @@ disqus:
 # https://imsun.net/posts/gitment-introduction/
 gitment:
     owner: TcTOrz
-    repo: blog-comments
+    repo: TcTOrz.github.io
     oauth:
         client_id: b5e12eb2c1d3152c681d
         client_secret: c3de57a05164ab3526f28d499ffc39c90450fffc
 # https://github.com/gitalk/gitalk#install
 gitalk:
     owner: TcTOrz
-    repo: blog-comments
+    repo: TcTOrz.github.io
     clientID: b5e12eb2c1d3152c681d
     clientSecret: c3de57a05164ab3526f28d499ffc39c90450fffc
 # 在使用其它评论组件时可点击显示 Disqus
