@@ -28,9 +28,33 @@ topmost: false
 - [请解释变量提升（hoisting）。](#请解释变量提升hoisting)
 - [请描述事件冒泡。](#请描述事件冒泡)
 - [`attribute`和`property`之间有什么区别？](#attribute和property之间有什么区别)
-- [为什么扩展`JavaScript`内置对象是不好的做法？](#为什么扩展javaScript内置对象是不好的做法)
+- [为什么扩展`JavaScript`内置对象是不好的做法？](#为什么扩展javascript内置对象是不好的做法)
 - [`==`和`===`的区别是什么？](#和的区别是什么？)
+- [请解释关于`JavaScript`的同源策略。](#请解释关于javascript的同源策略)
+- [请使下面的语句生效：](#请使下面的语句生效)
+- [什么是`"use strict";`？使用它有什么优缺点？](#什么是use-strict使用它有什么优缺点)
+- [创建一个循环，从 1 迭代到 100，`3`的倍数时输出 "fizz"，`5`的倍数时输出 "buzz"，同时为`3`和`5`的倍数时输出 "fizzbuzz"。](#创建一个循环从1迭代到1003的倍数时输出-fizz5的倍数时输出-buzz同时为3和5的倍数时输出-fizzbuzz)
+- [为什么不要使用全局作用域？](#为什么不要使用全局作用域)
+- [为什么要使用`load`事件？这个事件有什么缺点吗？你知道一些代替方案吗，为什么使用它们？](#为什么要使用load事件这个事件有什么缺点吗你知道一些代替方案吗为什么使用它们)
+- [请解释单页应用是什么，如何使其对`SEO`友好。](#请解释单页应用是什么如何使其对seo友好)
+- [`Promise`代替回调函数有什么优缺点？](#promise代替回调函数有什么优缺点)
+- [你使用什么语句遍历对象的属性和数组的元素？](#你使用什么语句遍历对象的属性和数组的元素)
+- [请解释可变对象和不可变对象之间的区别。](#请解释可变对象和不可变对象之间的区别)
+- [请解释同步和异步函数之间的区别。](#请解释同步和异步函数之间的区别)
+- [什么是事件循环？调用堆栈和任务队列之间有什么区别？](#什么是事件循环调用堆栈和任务队列之间有什么区别)
+- [请解释`function foo() {}`和`var foo = function() {}`之间`foo`的用法上的区别。](#请解释function-foo-和var-foo--function-之间foo的用法上的区别)
+- [使用`let`、`var`和`const`创建变量有什么区别？](#使用letvar和const创建变量有什么区别)
+- [ES6 的类和 ES5 的构造函数有什么区别？](#es6-的类和-es5-的构造函数有什么区别)
+- [你能给出一个使用箭头函数的例子吗，箭头函数与其他函数有什么不同？](#你能给出一个使用箭头函数的例子吗箭头函数与其他函数有什么不同)
+- [高阶函数（higher-order）的定义是什么？](#高阶函数higher-order的定义是什么)
+- [请给出一个解构（destructuring）对象或数组的例子。](#请给出一个解构destructuring对象或数组的例子)
+- [ES6的模板字符串为生成字符串提供了很大的灵活性，你可以举个例子吗？](#es6的模板字符串为生成字符串提供了很大的灵活性你可以举个例子吗)
+- [你能举出一个柯里化函数（curry function）的例子吗？它有哪些好处？](#你能举出一个柯里化函数curry-function的例子吗它有哪些好处)
+- [使用扩展运算符（spread）的好处是什么，它与使用剩余参数语句（rest）有什么区别？](#使用扩展运算符spread的好处是什么它与使用剩余参数语句rest有什么区别)
+- [如何在文件之间共用代码？](#如何在文件之间共用代码)
+- [什么情况下会用到静态类成员？](#什么情况下会用到静态类成员)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
+- [其他](#其他)
 <!-- * TOC
 {:toc} -->
 
@@ -504,15 +528,664 @@ console.log(a == undefined); // true
 
 [[↑] 回到顶部](#目录)
 
-### 请解释关于 JavaScript 的同源策略。
+### 请解释关于`JavaScript`的同源策略。
+同源策略可防止`JavaScript`发起跨域请求。源被定义为 URI、主机名和端口号的组合。此策略可防止页面上的恶意脚本通过该页面的文档对象模型，访问另一个网页上的敏感数据。  
 
+参考
+- <https://en.wikipedia.org/wiki/Same-origin_policy>
+
+[[↑] 回到顶部](#目录)
+
+### 请使下面的语句生效：
+```js
+duplicate([1, 2, 3, 4, 5]); // [1,2,3,4,5,1,2,3,4,5]
+```
+```js
+function duplicate(arr) {
+  return arr.concat(arr);
+}
+// or
+function duplicate(arr) {
+    return [...arr, ...arr];
+}
+duplicate([1, 2, 3, 4, 5]); // [1,2,3,4,5,1,2,3,4,5]
+```
+
+[[↑] 回到顶部](#目录)
+
+### 什么是`"use strict";`？使用它有什么优缺点？
+'use strict' 是用于对整个脚本或单个函数启用严格模式的语句。严格模式是可选择的一个限制`JavaScript`的变体一种方式 。
+*优点：*
+- 无法再意外创建全局变量。
+- 会使引起静默失败（silently fail，即：不报错也没有任何效果）的赋值操抛出异常。
+- 试图删除不可删除的属性时会抛出异常（之前这种操作不会产生任何效果）。
+- 要求函数的参数名唯一。
+- 全局作用域下，`this`的值为`undefined`。
+- 捕获了一些常见的编码错误，并抛出异常。
+- 禁用令人困惑或欠佳的功能。
+
+*缺点：*
+- 缺失许多开发人员已经习惯的功能。
+- 无法访问`function.caller`和`function.arguments`。
+- 以不同严格模式编写的脚本合并后可能导致问题。  
+
+参考
+- <http://2ality.com/2011/10/strict-mode-hatred.html>
+- <http://lucybain.com/blog/2014/js-use-strict/>
+
+[[↑] 回到顶部](#目录)
+
+### 创建一个循环，从 1 迭代到 100，`3`的倍数时输出 "fizz"，`5`的倍数时输出 "buzz"，同时为`3`和`5`的倍数时输出 "fizzbuzz"。
+来自 [Paul Irish](https://gist.github.com/jaysonrowe/1592432#gistcomment-790724)的 FizzBuzz。
+```js
+for (let i = 1; i <= 100; i++) {
+  let f = i % 3 == 0,
+    b = i % 5 == 0;
+  console.log(f ? (b ? 'FizzBuzz' : 'Fizz') : b ? 'Buzz' : i);
+}
+```
+关于更多千奇百怪的 FizzBuzz 实现，请查看下面的参考链接。  
+
+参考
+- <https://gist.github.com/jaysonrowe/1592432>
+
+[[↑] 回到顶部](#目录)
+
+### 为什么不要使用全局作用域？
+每个脚本都可以访问全局作用域，如果人人都使用全局命名空间来定义自己的变量，肯定会发生冲突。使用模块模式（IIFE）将变量封装在本地命名空间中。
+
+[[↑] 回到顶部](#目录)
+
+### 为什么要使用`load`事件？这个事件有什么缺点吗？你知道一些代替方案吗，为什么使用它们？
+在文档装载完成后会触发`load`事件。此时，在文档中的所有对象都在 DOM 中，所有图像、脚本、链接和子框架都完成了加载。
+DOM 事件`DOMContentLoaded`将在页面的 DOM 构建完成后触发，但不要等待其他资源完成加载。如果在初始化之前不需要装入整个页面，这个事件是使用首选。  
+
+参考
+- <https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onload>
+
+[[↑] 回到顶部](#目录)
+
+### 请解释单页应用是什么，如何使其对`SEO`友好。
+以下摘自 [Grab Front End Guide](https://github.com/grab/front-end-guide)。
+现如今，`Web`开发人员将他们构建的产品称为`Web`应用，而不是网站。虽然这两个术语之间没有严格的区别，但网络应用往往具有高度的交互性和动态性，允许用户执行操作并接收他们的操作响应。在过去，浏览器从服务器接收`HTML`并渲染。当用户导航到其它`URL`时，需要整页刷新，服务器会为新页面发送新的`HTML`。这被称为服务器端渲染。
+
+然而，在现代的`SPA`中，客户端渲染取而代之。浏览器从服务器加载初始页面、整个应用程序所需的脚本（框架、库、应用代码）和样式表。当用户导航到其他页面时，不会触发页面刷新。该页面的`URL`通过 [HTML5 History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API) 进行更新。浏览器通过 [AJAX](https://developer.mozilla.org/en-US/docs/AJAX/Getting_Started) 请求向服务器检索新页面所需的数据（通常采用`JSON`格式）。然后，`SPA`通过`JavaScript`来动态更新页面，这些`JavaScript`在初始页面加载时已经下载。这种模式类似于原生移动应用的工作方式。
+
+*好处：*
+- 用户感知响应更快，用户切换页面时，不再看到因页面刷新而导致的白屏。
+- 对服务器进行的`HTTP`请求减少，因为对于每个页面加载，不必再次下载相同的资源。
+- 客户端和服务器之间的关注点分离。可以为不同平台（例如手机、聊天机器人、智能手表）建立新的客户端，而无需修改服务器代码。只要`API`没有修改，可以单独修改客户端和服务器上的代码。
+
+*坏处：*
+- 由于加载了多个页面所需的框架、应用代码和资源，导致初始页面加载时间较长。
+- 服务器还需要进行额外的工作，需要将所有请求路由配置到单个入口点，然后由客户端接管路由。
+- `SPA`依赖于`JavaScript`来呈现内容，但并非所有搜索引擎都在抓取过程中执行`JavaScript`，他们可能会在你的页面上看到空的内容。这无意中损害了应用的搜索引擎优化（SEO）。然而，当你构建应用时，大多数情况下，搜索引擎优化并不是最重要的因素，因为并非所有内容都需要通过搜索引擎进行索引。为了解决这个问题，可以在服务器端渲染你的应用，或者使用诸如 [Prerender](https://prerender.io/) 的服务来“在浏览器中呈现你的`javascript`，保存静态 HTML，并将其返回给爬虫”。  
+
+参考
+- <https://github.com/grab/front-end-guide#single-page-apps-spas>
+- <http://stackoverflow.com/questions/21862054/single-page-app-advantages-and-disadvantages>
+- <http://blog.isquaredsoftware.com/presentations/2016-10-revolution-of-web-dev/>
+- <https://medium.freecodecamp.com/heres-why-client-side-rendering-won-46a349fadb52>
+
+[[↑] 回到顶部](#目录)
+
+### `Promise`代替回调函数有什么优缺点？
+*优点：*
+- 避免可读性极差的回调地狱。
+- 使用`.then()`编写的顺序异步代码，既简单又易读。
+- 使用`Promise.all()`编写并行异步代码变得很容易。
+
+*缺点：*
+- 轻微地增加了代码的复杂度（这点存在争议）。
+- 在不支持 ES2015 的旧版浏览器中，需要引入 polyfill 才能使用。
+
+[[↑] 回到顶部](#目录)
+
+### 你使用什么语句遍历对象的属性和数组的元素？
+*对象：*
+- `for`循环：`for (var property in obj) { console.log(property); }`。但是，这还会遍历到它的继承属性，在使用之前，你需要加入`obj.hasOwnProperty(property)`检查。
+- `Object.keys()`：`Object.keys(obj).forEach(function (property) { ... })`。`Object.keys()`方法会返回一个由一个给定对象的自身可枚举属性组成的数组。
+- `Object.getOwnPropertyNames()`：`Object.getOwnPropertyNames(obj).forEach(function (property) { ... })`。`Object.getOwnPropertyNames()`方法返回一个由指定对象的所有自身属性的属性名（包括不可枚举属性但不包括 Symbol 值作为名称的属性）组成的数组。
+
+*数组：*
+- `for` loops：`for (var i = 0; i < arr.length; i++)`。这里的常见错误是`var`是函数作用域而不是块级作用域，大多数时候你想要迭代变量在块级作用域中。ES2015 引入了具有块级作用域的`let`，建议使用它。所以就变成了：`for (let i = 0; i < arr.length; i++)`。
+- `forEach`：`arr.forEach(function (el, index) { ... })`。这个语句结构有时会更精简，因为如果你所需要的只是数组元素，你不必使用`index`。还有`every`和`some`方法可以让你提前终止遍历。
+
+> 注：还有ES6中的Set集合与Map集合未考虑`《深入理解ES6》 美 NICHOLAS C.ZAKAS 著 7章 128页`
+
+[[↑] 回到顶部](#目录)
+
+### 请解释可变对象和不可变对象之间的区别。
+1. 在 `JavaScript` 中，`string` 和 `number` 从设计之初就是不可变(Immutable)。
+2. *_不可变_* 其实是保持一个对象状态不变，这样做的好处是使得开发更加简单，可回溯，测试友好，减少了任何可能的副作用。但是，每当你想添加点东西到一个不可变(Immutable)对象里时，它一定是先拷贝已存在的值到新实例里，然后再给新实例添加内容，最后返回新实例。相比可变对象，这势必会有更多内存、计算量消耗。
+```js
+const student1 = {
+  school: 'Baidu',
+  name: 'HOU Ce',
+  birthdate: '1995-12-15',
+};
+
+const changeStudent = (student, newName, newBday) => {
+  return {
+    ...student, // 使用解构
+    name: newName, // 覆盖name属性
+    birthdate: newBday, // 覆盖birthdate属性
+  };
+};
+
+const student2 = changeStudent(student1, 'YAN Haijing', '1990-11-10');
+
+// both students will have the name properties
+console.log(student1, student2);
+// Object {school: "Baidu", name: "HOU Ce", birthdate: "1995-12-15"}
+// Object {school: "Baidu", name: "YAN Haijing", birthdate: "1990-11-10"}
+```  
+
+参考
+- <https://juejin.im/post/58d0ff6f1b69e6006b8fd4e9>
+- <https://www.interviewcake.com/concept/java/mutable>
+- <https://www.sitepoint.com/immutability-javascript/>
+
+[[↑] 回到顶部](#目录)
+
+### 请解释同步和异步函数之间的区别。
+同步函数阻塞，而异步函数不阻塞。在同步函数中，语句完成后，下一句才执行。在这种情况下，程序可以按照语句的顺序进行精确评估，如果其中一个语句需要很长时间，程序的执行会停滞很长时间。
+
+异步函数通常接受回调作为参数，在调用异步函数后立即继续执行下一行。回调函数仅在异步操作完成且调用堆栈为空时调用。诸如从 Web 服务器加载数据或查询数据库等重负载操作应该异步完成，以便主线程可以继续执行其他操作，而不会出现一直阻塞，直到费时操作完成的情况（在浏览器中，界面会卡住）。
+
+[[↑] 回到顶部](#目录)
+
+### 什么是事件循环？调用堆栈和任务队列之间有什么区别？
+事件循环是一个单线程循环，用于监视调用堆栈并检查是否有工作即将在任务队列中完成。如果调用堆栈为空并且任务队列中有回调函数，则将回调函数出队并推送到调用堆栈中执行。
+> 注：图形化应该会更好理解。正好`《Learning TypeScript中文版》 5节 136页`有更详细的说明。
+
+如果你没有看过 Philip Robert [关于事件循环的演讲](https://2014.jsconf.eu/speakers/philip-roberts-what-the-heck-is-the-event-loop-anyway.html)，你应该看一下。这是观看次数最多的 JavaScript 相关视频之一。  
+
+参考
+- <https://2014.jsconf.eu/speakers/philip-roberts-what-the-heck-is-the-event-loop-anyway.html>
+- <http://theproactiveprogrammer.com/javascript/the-javascript-event-loop-a-stack-and-a-queue/>
+
+[[↑] 回到顶部](#目录)
+
+### 请解释`function foo() {}`和`var foo = function() {}`之间`foo`的用法上的区别。
+前者是函数声明，后者是函数表达式。关键的区别在于函数声明会使函数体提升（具有与变量相同的提升行为），但函数表达式的函数体不能。有关变量提升的更多解释，请参阅上面关于变量提升的问题。如果你试图在定义函数表达式之前调用它，你会得到一个`Uncaught TypeError: XXX is not a function`的错误。
+
+*函数声明*
+```js
+foo(); // 'FOOOOO'
+function foo() {
+  console.log('FOOOOO');
+}
+```
+*函数表达式*
+```js
+foo(); // Uncaught TypeError: foo is not a function
+var foo = function () {
+  console.log('FOOOOO');
+};
+```  
+
+参考
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function>
+
+[[↑] 回到顶部](#目录)
+
+### 使用`let`、`var`和`const`创建变量有什么区别？
+用`var`声明的变量的作用域是它当前的执行上下文，它可以是嵌套的函数，也可以是声明在任何函数外的变量。`let`和`const`是块级作用域，意味着它们只能在最近的一组花括号（function、if-else 代码块或 for 循环中）中访问。
+```js
+function foo() {
+  // 所有变量在函数中都可访问
+  var bar = 'bar';
+  let baz = 'baz';
+  const qux = 'qux';
+
+  console.log(bar); // bar
+  console.log(baz); // baz
+  console.log(qux); // qux
+}
+
+console.log(bar); // ReferenceError: bar is not defined
+console.log(baz); // ReferenceError: baz is not defined
+console.log(qux); // ReferenceError: qux is not defined
+```
+```js
+if (true) {
+  var bar = 'bar';
+  let baz = 'baz';
+  const qux = 'qux';
+}
+
+// 用 var 声明的变量在函数作用域上都可访问
+console.log(bar); // bar
+// let 和 const 定义的变量在它们被定义的语句块之外不可访问
+console.log(baz); // ReferenceError: baz is not defined
+console.log(qux); // ReferenceError: qux is not defined
+```
+`var`会使变量提升，这意味着变量可以在声明之前使用。`let`和`const`不会使变量提升，提前使用会报错。
+```js
+console.log(foo); // undefined
+
+var foo = 'foo';
+
+console.log(baz); // ReferenceError: can't access lexical declaration 'baz' before initialization
+
+let baz = 'baz';
+
+console.log(bar); // ReferenceError: can't access lexical declaration 'bar' before initialization
+
+const bar = 'bar';
+```
+用`var`重复声明不会报错，但`let`和`const`会。
+```js
+var foo = 'foo';
+var foo = 'bar';
+console.log(foo); // "bar"
+
+let baz = 'baz';
+let baz = 'qux'; // Uncaught SyntaxError: Identifier 'baz' has already been declared
+```
+`let`和`const`的区别在于：`let`允许多次赋值，而`const`只允许一次。
+```js
+// 这样不会报错。
+let foo = 'foo';
+foo = 'bar';
+
+// 这样会报错。
+const baz = 'baz';
+baz = 'qux';
+```  
+
+参考
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let>
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/var>
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const>
+
+[[↑] 回到顶部](#目录)
+
+### ES6 的类和 ES5 的构造函数有什么区别？
+看一个例子：
+```js
+// ES5 构造函数
+function Person(name) {
+  this.name = name;
+}
+
+// ES6 类
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+}
+```
+对于简单的构造函数而言，他们看起来很相似。
+他们的主要区别体现在类继承上。如果我们想要创建一个继承于 `Person` 父类的 `Student` 子类，并且添加一个 `studentId` 字段，我们需要做的修改如下：
+```js
+// ES5 构造函数
+function Student(name, studentId) {
+  // 调用父类的构造函数来初始化父类的成员变量
+  Person.call(this, name);
+
+  // 初始化子类自己的成员变量
+  this.studentId = studentId;
+}
+
+Student.prototype = Object.create(Person.prototype);
+Student.prototype.constructor = Student;
+
+// ES6 类
+class Student extends Person {
+  constructor(name, studentId) {
+    super(name);
+    this.studentId = studentId;
+  }
+}
+```
+从上面的例子我们可以看出来，使用 ES5 构造函数来实现继承特别麻烦，而使用 ES6 类的方式来实现就特别容易理解和记忆。  
+
+参考
+- <https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Inheritance>
+- <https://eli.thegreenplace.net/2013/10/22/classical-inheritance-in-javascript-es5>
+
+[[↑] 回到顶部](#目录)
+
+### 你能给出一个使用箭头函数的例子吗，箭头函数与其他函数有什么不同？
+在构造函数里使用箭头函数的主要优点是它的 `this` 只与箭头函数创建时的 `this` 保持一致，并且不会修改。所以，当用构造函数去创建一个新的对象的时候，箭头函数的 `this` 总是指向新创建的对象。比如，假设我们有一个 `Person` 构造函数，它接受一个 `firstName` 参数，并且它有两个方法去调用 `console.log` 这个 `firstName`，一个是正常的函数，而另一个则是箭头函数:
+```js
+const Person = function (firstName) {
+  this.firstName = firstName;
+  this.sayName1 = function () {
+    console.log(this.firstName);
+  };
+  this.sayName2 = () => {
+    console.log(this.firstName);
+  };
+};
+
+const john = new Person('John');
+const dave = new Person('Dave');
+
+john.sayName1(); // John
+john.sayName2(); // John
+
+// 普通函数的 this 可以被修改，而箭头函数则不会
+john.sayName1.call(dave); // Dave (因为 "this" 现在指向了 dave 对象)
+john.sayName2.call(dave); // John
+
+john.sayName1.apply(dave); // Dave (因为 "this" 现在指向了 dave 对象)
+john.sayName2.apply(dave); // John
+
+john.sayName1.bind(dave)(); // Dave (因为 "this" 现在指向了 dave 对象)
+john.sayName2.bind(dave)(); // John
+
+var sayNameFromWindow1 = john.sayName1;
+sayNameFromWindow1(); // undefined (因为 "this" 现在指向了 Window 对象)
+
+var sayNameFromWindow2 = john.sayName2;
+sayNameFromWindow2(); // John
+```
+这里主要的区别是，正常函数的 `this` 是可以在执行过程中被改变的，而箭头函数的 `this` 则会一直保持一致。所以在使用箭头函数的时候，你就不需要担心它的上下文被改变了。
+
+(想看更好的演示以及示例代码，可以打开这篇文章: https://medium.com/@machnicki/handle-events-in-react-with-arrow-functions-ede88184bbb)
+
+[[↑] 回到顶部](#目录)
+
+### 高阶函数（higher-order）的定义是什么？
+高阶函数是将一个或多个函数作为参数的函数，它用于数据处理，也可能将函数作为返回结果。高阶函数是为了抽象一些重复执行的操作。一个典型的例子是`map`，它将一个数组和一个函数作为参数。`map`使用这个函数来转换数组中的每个元素，并返回一个包含转换后元素的新数组。JavaScript 中的其他常见示例是`forEach`、`filter`和`reduce`。高阶函数不仅需要操作数组的时候会用到，还有许多函数返回新函数的用例。`Function.prototype.bind`就是一个例子。
+
+*Map 示例：*
+假设我们有一个由名字组成的数组，我们需要将每个字符转换为大写字母。
+```js
+const names = ['irish', 'daisy', 'anna'];
+```
+不使用高阶函数的方法是这样：
+```js
+const transformNamesToUppercase = function (names) {
+  const results = [];
+  for (let i = 0; i < names.length; i++) {
+    results.push(names[i].toUpperCase());
+  }
+  return results;
+};
+transformNamesToUppercase(names); // ['IRISH', 'DAISY', 'ANNA']
+```
+使用`.map(transformerFn)`使代码更简明
+```js
+const transformNamesToUppercase = function (names) {
+  return names.map((name) => name.toUpperCase());
+};
+transformNamesToUppercase(names); // ['IRISH', 'DAISY', 'ANNA']
+```  
+
+参考
+- <https://medium.com/javascript-scene/higher-order-functions-composing-software-5365cf2cbe99>
+- <https://hackernoon.com/effective-functional-javascript-first-class-and-higher-order-functions-713fde8df50a>
+- <https://eloquentjavascript.net/05_higher_order.html>
+
+[[↑] 回到顶部](#目录)
+
+### 请给出一个解构（destructuring）对象或数组的例子。
+解构是 ES6 中新功能，它提供了一种简洁方便的方法来提取对象或数组的值，并将它们放入不同的变量中。
+*数组解构*
+```js
+// 变量赋值
+const foo = ['one', 'two', 'three'];
+
+const [one, two, three] = foo;
+console.log(one); // "one"
+console.log(two); // "two"
+console.log(three); // "three"
+```
+```js
+// 变量交换
+let a = 1;
+let b = 3;
+
+[a, b] = [b, a];
+console.log(a); // 3
+console.log(b); // 1
+```
+*对象解构*
+```js
+// 变量赋值
+const o = {p: 42, q: true};
+const {p, q} = o;
+
+console.log(p); // 42
+console.log(q); // true
+```
+*混合解构*
+```js
+let node = {
+    type: "Identifier",
+    name: "foo",
+    loc: {
+        start: {
+            line: 1,
+            column: 1
+        },
+        end: {
+            line: 1,
+            column: 4
+        }
+    },
+    range: [0, 3]
+}
+let {
+    loc: { start },
+    range: [ startIndex ]
+} = node
+console.log(start.line) // 1
+console.log(start.column) // 1
+console.log(startIndex) // 0
+```
+*解构参数*
+```js
+function setCookie(name, value, options) {
+    options = options || {}
+    let secure = options.secure,
+        path = options.path,
+        domain = options.domain,
+        expiress = options.expiress;
+    // 设置cookie
+}
+// 解构参数变得更清晰
+function setCookie(name, value, { secure, path, domain, expiress }) {
+    // 设置cookie
+}
+setCookie("type", "js", {
+    secure: true,
+    expiress: 60000
+})
+```  
+
+参考
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment>
+- <https://ponyfoo.com/articles/es6-destructuring-in-depth>
+
+[[↑] 回到顶部](#目录)
+
+### ES6的模板字符串为生成字符串提供了很大的灵活性，你可以举个例子吗？
+*_模板字面量_*（Template literals） 是允许嵌入表达式的字符串字面量。你可以使用多行字符串和字符串插值功能。
+*语法*
+```js
+`string text``string text line 1
+ string text line 2``string text ${expression} string text`;
+
+tag`string text ${expression} string text`;
+```
+*示例*
+```js
+console.log(`string text line 1
+string text line 2`);
+// "string text line 1
+// string text line 2"
+
+var a = 5;
+var b = 10;
+console.log(`Fifteen is ${a + b} and\nnot ${2 * a + b}.`);
+// "Fifteen is 15 and
+// not 20."
+```
+```js
+//show函数采用rest参数的写法如下：
+let name = '张三',
+  age = 20,
+  message = show`我来给大家介绍:${name}的年龄是${age}.`;
+
+function show(stringArr, ...values) {
+  let output = '';
+
+  let index = 0;
+
+  for (; index < values.length; index++) {
+    output += stringArr[index] + values[index];
+  }
+
+  output += stringArr[index];
+
+  return output;
+}
+
+message; //"我来给大家介绍:张三的年龄是20."
+```  
+
+参考
+- <https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/template_strings>
+
+[[↑] 回到顶部](#目录)
+
+### 你能举出一个柯里化函数（curry function）的例子吗？它有哪些好处？
+柯里化（currying）是一种模式，其中具有多个参数的函数被分解为多个函数，当被串联调用时，将一次一个地累积所有需要的参数。这种技术帮助编写函数式风格的代码，使代码更易读、紧凑。值得注意的是，对于需要被 curry 的函数，它需要从一个函数开始，然后分解成一系列函数，每个函数都需要一个参数。
+> 注：函数柯里化用于创建已经设置好了一个或多个参数的函数。函数柯里化的基本方法和函数绑定是一样的：使用一个闭包返回一个函数。两者的区别在于，当函数被调用时，返回的函数还需要设置一些传入参数。
+```js
+// 技术上说curriedAdd并非是柯里化函数，但是很好的展示了其概念
+function add(num1, num2) {
+    return num1 + num2
+}
+function curriedAdd(num2) {
+    return add(5, num2)
+}
+console.log(add(2, 3))  // 5
+console.log(curriedAdd(3)) // 8
+```
+```js
+function curry(fn) {
+  if (fn.length === 0) {
+    return fn;
+  }
+
+  function _curried(depth, args) {
+    return function (newArgument) {
+      if (depth - 1 === 0) {
+        return fn(...args, newArgument);
+      }
+      return _curried(depth - 1, [...args, newArgument]);
+    };
+  }
+
+  return _curried(fn.length, []);
+}
+
+function add(a, b) {
+  return a + b;
+}
+
+var curriedAdd = curry(add);
+var addFive = curriedAdd(5);
+
+var result = [0, 1, 2, 3, 4, 5].map(addFive); // [5, 6, 7, 8, 9, 10]
+```
+```js
+function curry(fn) {
+    var args = Array.prototype.slice.call(arguments, 1)
+    return function() {
+        var innerArgs = Array.prototype.slice.call(arguments)
+        var finalArgs = args.concat(innerArgs)
+        return fn.apply(null, finalArgs)
+    }
+}
+function add(num1, num2) {
+    return num1 + num2
+}
+var curriedAdd = curry(add, 5)
+console.log(curriedAdd(3)) // 8
+
+var curriedAdd = curry(add, 5, 12)
+console.log(curriedAdd()) // 17
+```  
+
+参考
+- <https://hackernoon.com/currying-in-js-d9ddc64f162e>
+
+[[↑] 回到顶部](#目录)
+
+### 使用扩展运算符（spread）的好处是什么，它与使用剩余参数语句（rest）有什么区别？
+在函数泛型编码时，ES6 的扩展运算符非常有用，因为我们可以轻松创建数组和对象的拷贝，而无需使用`Object.create`、`slice`或其他函数库。
+```js
+function putDookieInAnyArray(arr) {
+  return [...arr, 'dookie'];
+}
+
+const result = putDookieInAnyArray(['I', 'really', "don't", 'like']); // ["I", "really", "don't", "like", "dookie"]
+
+const person = {
+  name: 'Todd',
+  age: 29,
+};
+
+const copyOfTodd = {...person}
+```
+ES6 的剩余参数语句提供了一个简写，允许我们将不定数量的参数表示为一个数组。它就像是扩展运算符语法的反面，将数据收集到数组中，而不是解构数组。剩余参数语句在函数参数、数组和对象的解构赋值中有很大作用。
+```js
+function addFiveToABunchOfNumbers(...numbers) {
+  return numbers.map((x) => x + 5);
+}
+
+const result = addFiveToABunchOfNumbers(4, 5, 6, 7, 8, 9, 10); // [9, 10, 11, 12, 13, 14, 15]
+
+const [a, b, ...rest] = [1, 2, 3, 4]; // a: 1, b: 2, rest: [3, 4]
+
+const {e, f, ...others} = {
+  e: 1,
+  f: 2,
+  g: 3,
+  h: 4,
+}; // e: 1, f: 2, others: { g: 3, h: 4 }
+```  
+
+参考
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax>
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters>
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment>
+
+[[↑] 回到顶部](#目录)
+
+### 如何在文件之间共用代码？
+这取决于执行 JavaScript 的环境。
+
+在客户端（浏览器环境）上，只要变量或函数在全局作用域（`window`）中声明，所有脚本都可以引用它们。或者，通过 RequireJS 采用异步模块定义（AMD）以获得更多模块化方法。
+
+在服务器（Node.js）上，常用的方法是使用 CommonJS。每个文件都被视为一个模块，可以通过将它们附加到`module.exports`对象来导出变量和函数。
+
+ES2015 定义了一个模块语法，旨在替换 AMD 和 CommonJS。 这最终将在浏览器和 Node 环境中得到支持。  
+
+参考
+- <http://requirejs.org/docs/whyamd.html>
+- <https://nodejs.org/docs/latest/api/modules.html>
+- <http://2ality.com/2014/09/es6-modules-final.html>
+
+[[↑] 回到顶部](#目录)
+
+### 什么情况下会用到静态类成员？
+静态类成员（属性或方法）不绑定到某个类的特定实例，不管哪个实例引用它，都具有相同的值。静态属性通常是配置变量，而静态方法通常是纯粹的实用函数，不依赖于实例的状态。  
+
+参考
+- <https://stackoverflow.com/questions/21155438/when-to-use-static-variables-methods-and-when-to-use-instance-variables-methods>
 
 [[↑] 回到顶部](#目录)
 
 ### 打印网页标签个数以及标签最多的一组数据
-
-```javascript
-
+```js
 // tag数
 new Set(document.getElementsByTagName("*")).size
 
@@ -526,4 +1199,9 @@ console.table(Object.entries([...document.getElementsByTagName("*")].map(v=>v.no
 
 [[↑] 回到顶部](#目录)
 
+
+### 其他
+- <http://flowerszhong.github.io/2013/11/20/javascript-questions.html>
+
+[[↑] 回到顶部](#目录)
 
