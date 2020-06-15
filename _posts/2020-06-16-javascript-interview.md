@@ -658,6 +658,7 @@ DOM 事件`DOMContentLoaded`将在页面的 DOM 构建完成后触发，但不�
 ### 请解释可变对象和不可变对象之间的区别。
 1. 在 `JavaScript` 中，`string` 和 `number` 从设计之初就是不可变(Immutable)。
 2. *_不可变_* 其实是保持一个对象状态不变，这样做的好处是使得开发更加简单，可回溯，测试友好，减少了任何可能的副作用。但是，每当你想添加点东西到一个不可变(Immutable)对象里时，它一定是先拷贝已存在的值到新实例里，然后再给新实例添加内容，最后返回新实例。相比可变对象，这势必会有更多内存、计算量消耗。
+
 ```js
 const student1 = {
   school: 'Baidu',
@@ -673,12 +674,8 @@ const changeStudent = (student, newName, newBday) => {
   };
 };
 
-const student2 = changeStudent(student1, 'YAN Haijing', '1990-11-10');
-
-// both students will have the name properties
-console.log(student1, student2);
-// Object {school: "Baidu", name: "HOU Ce", birthdate: "1995-12-15"}
-// Object {school: "Baidu", name: "YAN Haijing", birthdate: "1990-11-10"}
+const student2 = changeStudent(student1, 'YAN Haijing', '1990-11-10'); // both students will have the name properties
+console.log(student1, student2); //Object {school: "Baidu", name: "HOU Ce", birthdate: "1995-12-15"} Object {school: "Baidu", name: "YAN Haijing", birthdate: "1990-11-10"}
 ```  
 
 参考
