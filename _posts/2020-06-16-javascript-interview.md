@@ -12,13 +12,14 @@ topmost: false
 - [请解释事件委托（event delegation）](#请解释事件委托event-delegation)
 - [请简述`Javascript`中的`this`](#请简述javascript中的this)
 - [请解释原型继承(prototypal inheritance) 的工作原理](#请解释原型继承prototypal-inheritance的工作原理)
-- [说说你对`AMD`和`CommonJS`的了解](#说说你对AMD和CommonJS的了解)
+- [说说你对`AMD`和`CommonJS`的了解](#说说你对amd和commonjs的了解)
 - [`null`、`undefined`和未声明的变量之间有什么区别？如何检查判断这些状态值？](#nullundefined和未声明的变量之间有什么区别如何检查判断这些状态值)
 - [什么是闭包（closure），为什么使用闭包？](#什么是闭包closure为什么使用闭包)
-- [请说明`.forEach`循环和`.map()`循环的主要区别，它们分别在什么情况下使用？](#请说明forEach循环和map循环的主要区别它们分别在什么情况下使用)
+- [请说明`.forEach`循环和`.map()`循环的主要区别，它们分别在什么情况下使用？](#请说明foreach循环和map循环的主要区别它们分别在什么情况下使用)
 - [匿名函数的典型应用场景是什么？](#匿名函数的典型应用场景是什么)
 - [宿主对象（host objects）和原生对象（native objects）的区别是什么？](#宿主对象host-objects和原生对象native-objects的区别是什么)
 - [下列语句有什么区别：`function Person(){}`、`var person = Person()`和`var person = new Person()`？](#下列语句有什么区别function-personvar-person--person和var-person--new-person)
+- [`.call`和`.apply`有什么区别？](#call和apply有什么区别？)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 <!-- * TOC
 {:toc} -->
@@ -257,6 +258,19 @@ console.log(double); // [2, 4, 6]
 
 参考
 - <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new>
+
+[[↑] 回到顶部](#目录)
+
+### `.call`和`.apply`有什么区别？
+`.call`和`.apply`都用于调用函数，第一个参数将用作函数内 this 的值。然而，`.call`接受逗号分隔的参数作为后面的参数，而`.apply`接受一个参数数组作为后面的参数。一个简单的记忆方法是，从`call`中的 C 联想到逗号分隔（comma-separated），从`apply`中的 A 联想到数组（array）。
+```js
+function add(a, b) {
+  return a + b;
+}
+
+console.log(add.call(null, 1, 2)); // 3
+console.log(add.apply(null, [1, 2])); // 3
+```
 
 [[↑] 回到顶部](#目录)
 
