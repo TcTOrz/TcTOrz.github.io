@@ -20,6 +20,7 @@ topmost: false
 - [宿主对象（host objects）和原生对象（native objects）的区别是什么？](#宿主对象host-objects和原生对象native-objects的区别是什么)
 - [下列语句有什么区别：`function Person(){}`、`var person = Person()`和`var person = new Person()`？](#下列语句有什么区别function-personvar-person--person和var-person--new-person)
 - [`.call`和`.apply`有什么区别？](#call和apply有什么区别？)
+- [请说明`Function.prototype.bind`的用法。](#请说明functionprototypebind的用法)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 <!-- * TOC
 {:toc} -->
@@ -273,6 +274,30 @@ console.log(add.apply(null, [1, 2])); // 3
 ```
 
 [[↑] 回到顶部](#目录)
+
+### 请说明`Function.prototype.bind`的用法。
+摘自[MDN](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind)：
+> `bind()`方法创建一个新的函数, 当被调用时，将其 this 关键字设置为提供的值，在调用新函数时，在任何提供之前提供一个给定的参数序列。
+> 注：`《Javascript权威指南 第六版》 8-7-4节 190页` `《Javascript高级程序设计 第三版》 22-1-4节 602页`
+```js
+function f(y) {return this.x + y;}
+var o = {x: 1}
+var g = f.bind(o)
+g(2) // => 3
+```
+```js
+var sum = function(x, y) {return x + y;}
+var succ = sum.bind(null, 1);
+succ(2) // => 3
+```
+```js
+function f(y,z){return this.x + y + z;}
+var g = f.bind({x:1}, 2)
+g(3) // => 6
+```
+
+参考
+- <https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind>
 
 ### 打印网页标签个数以及标签最多的一组数据
 
