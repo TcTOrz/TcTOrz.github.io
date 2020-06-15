@@ -2,7 +2,7 @@
 #   Main Configs   #
 # ---------------- #
 baseurl:
-# url: https://mazhuang.org
+url: https://tctorz.github.io/
 date_format: "ordinal"
 title: 日志
 #subtitle: "公众号：闷骚的程序员"
