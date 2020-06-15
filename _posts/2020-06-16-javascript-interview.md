@@ -19,7 +19,7 @@ topmost: false
 - [匿名函数的典型应用场景是什么？](#匿名函数的典型应用场景是什么)
 - [宿主对象（host objects）和原生对象（native objects）的区别是什么？](#宿主对象host-objects和原生对象native-objects的区别是什么)
 - [下列语句有什么区别：`function Person(){}`、`var person = Person()`和`var person = new Person()`？](#下列语句有什么区别function-personvar-person--person和var-person--new-person)
-- [`.call`和`.apply`有什么区别？](#call和apply有什么区别？)
+- [`.call`和`.apply`有什么区别？](#call和apply有什么区别)
 - [请说明`Function.prototype.bind`的用法。](#请说明functionprototypebind的用法)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 <!-- * TOC
@@ -294,10 +294,20 @@ succ(2) // => 3
 function f(y,z){return this.x + y + z;}
 var g = f.bind({x:1}, 2)
 g(3) // => 6
-```
+```  
 
 参考
 - <https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind>
+
+[[↑] 回到顶部](#目录)
+
+### 什么时候会用到`document.write()`？
+`document.write()`用来将一串文本写入由`document.open()`打开的文档流中。当页面加载后执行`document.write()`时，它将调用`document.open`，会清除整个文档（`<head>`和`<body>`会被移除！），并将文档内容替换成给定的字符串参数。因此它通常被认为是危险的并且容易被误用。
+> 注：当页面加载完成后，执行document.write()会重写整个页面内容，其它还有writeIn()、open()、close()方法，具体参见 `《Javascript高级程序设计 第三版》10-1-2-6节 259页`
+
+网上有一些答案，解释了`document.write()`被用于分析代码中，或者[当你想包含只有在启用了 JavaScript 的情况下才能工作的样式](https://www.quirksmode.org/blog/archives/2005/06/three_javascrip_1.html)。它甚至在 HTML5 样板代码中用于[并行加载脚本并保持执行顺序](https://github.com/paulirish/html5-boilerplate/wiki/Script-Loading-Techniques#documentwrite-script-tag)！但是，我怀疑这些使用原因是过时的，现在可以在不使用`document.write()`的情况下实现。如果我的观点有错，请纠正我。
+
+[[↑] 回到顶部](#目录)
 
 ### 打印网页标签个数以及标签最多的一组数据
 
