@@ -5,13 +5,13 @@ baseurl:
 url: https://tctorz.github.io/
 date_format: "ordinal"
 title: 日志
-#subtitle: "公众号：闷骚的程序员"
+subtitle: "公众号：闷骚的程序员"
 description: "李健的个人博客"
 keywords: 日志, Jian Li, ifwechat, ifwechat.com, Web前端程序员, PHP程序员
 timezone: Asia/Shanghai
 encoding: "utf-8"
 side_bar_repo_limit: 5
-repository: TcTOrz.github.io
+repository: TctOrz/tctorz.github.io
 # 对 css 和 js 资源的 cdn 加速配置
 cdn:
     jsdelivr:
