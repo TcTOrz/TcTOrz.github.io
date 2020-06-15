@@ -24,6 +24,12 @@ topmost: false
 - [功能检测（feature detection）、功能推断（feature inference）和使用 UA 字符串之间有什么区别？](#功能检测feature-detection功能推断feature-inference和使用-UA-字符串之间有什么区别)
 - [请尽可能详细地解释`Ajax`。](#请尽可能详细地解释ajax)
 - [使用`Ajax`的优缺点分别是什么？](#使用ajax的优缺点分别是什么)
+- [请说明`JSONP`的工作原理，它为什么不是真正的`Ajax`？](#请说明jsonp的工作原理它为什么不是真正的ajax)
+- [请解释变量提升（hoisting）。](#请解释变量提升hoisting)
+- [请描述事件冒泡。](#请描述事件冒泡)
+- [`attribute`和`property`之间有什么区别？](#attribute和property之间有什么区别)
+- [为什么扩展`JavaScript`内置对象是不好的做法？](#为什么扩展javaScript内置对象是不好的做法)
+- [`==`和`===`的区别是什么？](#和的区别是什么？)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 <!-- * TOC
 {:toc} -->
@@ -367,6 +373,139 @@ if (document.getElementsByTagName) {
 - 如果`JavaScript`已在浏览器中被禁用，则不起作用。
 - 有些网络爬虫不执行`JavaScript`，也不会看到`JavaScript`加载的内容。
 - 基本上包括大部分`SPA`的缺点。
+
+[[↑] 回到顶部](#目录)
+
+### 请说明`JSONP`的工作原理，它为什么不是真正的`Ajax`？
+`JSONP`（带填充的 JSON）是一种通常用于绕过`Web`浏览器中的跨域限制的方法，因为`Ajax`不允许跨域请求。
+
+`JSONP` 通过`<script>`标签发送跨域请求，通常使用`callback`查询参数，例如：`https://example.com?callback=printData`。 然后服务器将数据包装在一个名为`printData`的函数中并将其返回给客户端。
+```html
+<!-- https://mydomain.com -->
+<script>
+  function printData(data) {
+    console.log(`My name is ${data.name}!`);
+  }
+</script>
+
+<script src="https://example.com?callback=printData"></script>
+```
+```js
+// 文件加载自 https://example.com?callback=printData
+printData({name: 'Yang Shun'});
+```
+客户端必须在其全局范围内具有`printData`函数，并且在收到来自跨域的响应时，该函数将由客户端执行。
+
+JSONP 可能具有一些安全隐患。由于`JSONP`是纯`JavaScript`实现，它可以完成`JavaScript`所能做的一切，因此需要信任`JSONP`数据的提供者。
+
+现如今，[跨来源资源共享（CORS）](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing) 是推荐的主流方式，JSONP 已被视为一种比较 hack 的方式。  
+
+参考
+- <https://stackoverflow.com/a/2067584/1751946>
+
+[[↑] 回到顶部](#目录)
+
+### 请解释变量提升（hoisting）。
+变量提升（hoisting）是用于解释代码中变量声明行为的术语。使用`var`关键字声明或初始化的变量，会将声明语句“提升”到当前作用域的顶部。 但是，只有声明才会触发提升，赋值语句（如果有的话）将保持原样。我们用几个例子来解释一下。
+```js
+// 用 var 声明得到提升
+console.log(foo); // undefined
+var foo = 1;
+console.log(foo); // 1
+
+// 用 let/const 声明不会提升
+console.log(bar); // ReferenceError: bar is not defined
+let bar = 2;
+console.log(bar); // 2
+```
+函数声明会使函数体提升，但函数表达式（以声明变量的形式书写）只有变量声明会被提升。
+```js
+// 函数声明
+console.log(foo); // [Function: foo]
+foo(); // 'FOOOOO'
+function foo() {
+  console.log('FOOOOO');
+}
+console.log(foo); // [Function: foo]
+
+// 函数表达式
+console.log(bar); // undefined
+bar(); // Uncaught TypeError: bar is not a function
+var bar = function () {
+  console.log('BARRRR');
+};
+console.log(bar); // [Function: bar]
+```
+
+[[↑] 回到顶部](#目录)
+
+### 请描述事件冒泡。
+当一个事件在 DOM 元素上触发时，如果有事件监听器，它将尝试处理该事件，然后事件冒泡到其父级元素，并发生同样的事情。最后直到事件到达祖先元素。事件冒泡是实现事件委托的原理（event delegation）。  
+
+[[↑] 回到顶部](#目录)
+
+### `attribute`和`property`之间有什么区别？
+`Attribute`是在`HTML`中定义的，而`property`是在`DOM`上定义的。为了说明区别，假设我们在 HTML 中有一个文本框：`<input type="text" value="Hello">`。
+```js
+const input = document.querySelector('input');
+console.log(input.getAttribute('value')); // Hello
+console.log(input.value); // Hello
+```
+但是在文本框中键入` World!`后:
+```js
+console.log(input.getAttribute('value')); // Hello
+console.log(input.value); // Hello World!
+```  
+
+参考
+- <https://stackoverflow.com/questions/6003819/properties-and-attributes-in-html>
+
+[[↑] 回到顶部](#目录)
+
+### 为什么扩展`JavaScript`内置对象是不好的做法？
+扩展`JavaScript`内置（原生）对象意味着将属性或方法添加到其`prototype`中。虽然听起来很不错，但事实上这样做很危险。想象一下，你的代码使用了一些库，它们通过添加相同的 contains 方法来扩展`Array.prototype`，如果这两个方法的行为不相同，那么这些实现将会相互覆盖，你的代码将不能正常运行。
+
+扩展内置对象的唯一使用场景是创建`polyfill`，本质上为老版本浏览器缺失的方法提供自己的实现，该方法是由 JavaScript 规范定义的。  
+
+参考
+- <http://lucybain.com/blog/2014/js-extending-built-in-objects/>
+
+[[↑] 回到顶部](#目录)
+
+### `document中的`load`事件和`DOMContentLoaded`事件之间的区别是什么？
+当初始的`HTML`文档被完全加载和解析完成之后，`DOMContentLoaded`事件被触发，而无需等待样式表、图像和子框架的完成加载。
+`window`的`load`事件仅在`DOM`和所有相关资源全部完成加载后才会触发。  
+
+参考
+- <https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded>
+- <https://developer.mozilla.org/en-US/docs/Web/Events/load>
+
+[[↑] 回到顶部](#目录)
+
+### `==`和`===`的区别是什么？
+`==`是抽象相等运算符，而`===`是严格相等运算符。`==`运算符是在进行必要的类型转换后，再比较。`===`运算符不会进行类型转换，所以如果两个值不是相同的类型，会直接返回`false`。使用`==`时，可能发生一些特别的事情，例如：
+```js
+1 == '1'; // true
+1 == [1]; // true
+1 == true; // true
+0 == ''; // true
+0 == '0'; // true
+0 == false; // true
+```
+我的建议是从不使用`==`运算符，除了方便与`null`或`undefined`比较时，`a == null`如果`a`为`null`或`undefined`将返回`true`。
+```js
+var a = null;
+console.log(a == null); // true
+console.log(a == undefined); // true
+```  
+
+参考
+- <https://stackoverflow.com/questions/359494/which-equals-operator-vs-should-be-used-in-javascript-comparisons>
+
+[[↑] 回到顶部](#目录)
+
+### 请解释关于 JavaScript 的同源策略。
+
 
 [[↑] 回到顶部](#目录)
 
