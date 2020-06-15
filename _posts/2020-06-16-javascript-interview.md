@@ -16,6 +16,7 @@ topmost: false
 - [`null`、`undefined`和未声明的变量之间有什么区别？如何检查判断这些状态值？](#null、undefined和未声明的变量之间有什么区别？如何检查判断这些状态值？)
 - [什么是闭包（closure），为什么使用闭包？](#什么是闭包（closure），为什么使用闭包？)
 - [请说明`.forEach`循环和`.map()`循环的主要区别，它们分别在什么情况下使用？](#请说明.forEach循环和.map()循环的主要区别，它们分别在什么情况下使用？)
+- [匿名函数的典型应用场景是什么？](#匿名函数的典型应用场景是什么？)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 <!-- * TOC
 {:toc} -->
@@ -199,6 +200,34 @@ const doubled = a.map((num) => {
 
 参考
 - <https://codeburst.io/javascript-map-vs-foreach-f38111822c0f>
+
+[[↑] 回到顶部](#目录)
+
+### 匿名函数的典型应用场景是什么？
+匿名函数可以在 IIFE 中使用，来封装局部作用域内的代码，以便其声明的变量不会暴露到全局作用域。
+```js
+(function () {
+  // 一些代码。
+})();
+```
+匿名函数可以作为只用一次，不需要在其他地方使用的回调函数。当处理函数在调用它们的程序内部被定义时，代码具有更好地自闭性和可读性，可以省去寻找该处理函数的函数体位置的麻烦。
+```js
+setTimeout(function () {
+  console.log('Hello world!');
+}, 1000);
+```
+匿名函数可以用于函数式编程或 Lodash（类似于回调函数）。
+```js
+const arr = [1, 2, 3];
+const double = arr.map(function (el) {
+  return el * 2;
+});
+console.log(double); // [2, 4, 6]
+```  
+
+参考
+- <https://www.quora.com/What-is-a-typical-usecase-for-anonymous-functions>
+- <https://stackoverflow.com/questions/10273185/what-are-the-benefits-to-using-anonymous-functions-instead-of-named-functions-fo>
 
 [[↑] 回到顶部](#目录)
 
