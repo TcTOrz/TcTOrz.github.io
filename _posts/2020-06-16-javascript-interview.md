@@ -14,6 +14,7 @@ topmost: false
 - [请解释原型继承(prototypal inheritance) 的工作原理](#请解释原型继承prototypal-inheritance的工作原理)
 - [说说你对`AMD`和`CommonJS`的了解](#说说你对AMD和CommonJS的了解)
 - [`null`、`undefined`和未声明的变量之间有什么区别？如何检查判断这些状态值？](#null、undefined和未声明的变量之间有什么区别？如何检查判断这些状态值？)
+- [什么是闭包（closure），为什么使用闭包？](#什么是闭包（closure），为什么使用闭包？)
 
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 <!-- * TOC
@@ -129,6 +130,46 @@ console.log(foo == undefined); // true. 错误，不要使用非严格相等！
 参考
 - <https://stackoverflow.com/questions/15985875/effect-of-declared-and-undeclared-variables>
 - <https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/undefined>
+
+[[↑] 回到顶部](#目录)
+
+### 什么是闭包（closure），为什么使用闭包？
+闭包是函数和声明该函数的词法环境的组合。词法作用域中使用的域，是变量在代码中声明的位置所决定的。闭包是即使被外部函数返回，依然可以访问到外部（封闭）函数作用域的函数。
+> 注：闭包是指有权访问另一个函数作用域中的变量的函数。`《Javascript高级程序设计（第三版）》7-2节 178页`
+> 注：有关闭包中的`this`。`《Javascript高级程序设计（第三版）》7-2-2节 182页`
+```js
+var name = "The Window"
+var object = {
+    name: "My Object",
+    getNameFunc: function() {
+        return function() {
+            return this.name
+        }
+    }
+}
+console.log(object.getNameFunc()()) // "The Window" (在非严格模式下)
+```
+```js
+var name = "The Window"
+var object = {
+    name: "My Object",
+    getNameFunc: function() {
+        var that = this
+        return function() {
+            return that.name
+        }
+    }
+}
+console.log(object.getNameFunc()()) // "My Object"
+```
+
+**为什么使用闭包？**
+- 利用闭包实现数据私有化或模拟私有方法。这个方式也称为[模块模式（module pattern）](https://addyosmani.com/resources/essentialjsdesignpatterns/book/#modulepatternjavascript)。
+- [部分参数函数（partial applications）柯里化（currying）](https://medium.com/javascript-scene/curry-or-partial-application-8150044c78b8#.l4b6l1i3x).  
+
+参考
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures>
+- <https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-closure-b2f0d2152b36>
 
 [[↑] 回到顶部](#目录)
 
