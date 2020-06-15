@@ -12,7 +12,7 @@ topmost: false
 - [请解释事件委托（event delegation）](#请解释事件委托event-delegation)
 - [请简述`Javascript`中的`this`](#请简述javascript中的this)
 - [请解释原型继承(prototypal inheritance) 的工作原理](#请解释原型继承prototypal-inheritance的工作原理)
-- [说说你对 AMD 和 CommonJS 的了解](#说说你对-AMD-和-CommonJS-的了解)
+- [说说你对`AMD`和`CommonJS`的了解](#说说你对AMD和CommonJS的了解)
 - [`null`、`undefined`和未声明的变量之间有什么区别？如何检查判断这些状态值？](#null、undefined和未声明的变量之间有什么区别？如何检查判断这些状态值？)
 
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
@@ -56,7 +56,7 @@ JS中的`this`是一个相对复杂的概念，不是简单几句能解释清楚
 
 [[↑] 回到顶部](#目录)
 
-### 说说你对 AMD 和 CommonJS 的了解
+### 说说你对`AMD`和`CommonJS`的了解
 存疑  
 它们都是实现模块体系的方式，直到ES2015出现之前，Javascript一直没有模块体系。`CommonJS`是同步的，而`AMD`（Asynchronous Module Definitions）从全称中可以明显看出是异步的。`CommonJS`的设计是为服务器端开发考虑的，而`AMD`支持异步加载模块，更适合浏览器。
 
@@ -95,6 +95,7 @@ console.log(foo); // undefined
 [[↑] 回到顶部](#目录)
 
 ### `null`、`undefined`和未声明的变量之间有什么区别？如何检查判断这些状态值？
+
 
 [[↑] 回到顶部](#目录)
 
