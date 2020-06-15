@@ -10,7 +10,7 @@ topmost: false
 ## 目录
 
 - [请解释事件委托（event delegation）](#请解释事件委托event-delegation)
-- [请简述`Javascript`中的`this`](#请简述Javascript中的this)
+- [请简述`Javascript`中的`this`](#请简述`Javascript`中的`this`)
 - [请解释原型继承(prototypal inheritance) 的工作原理](#请解释原型继承prototypal-inheritance的工作原理)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 <!-- * TOC
