@@ -18,6 +18,7 @@ topmost: false
 - [请说明`.forEach`循环和`.map()`循环的主要区别，它们分别在什么情况下使用？](#请说明forEach循环和map循环的主要区别它们分别在什么情况下使用)
 - [匿名函数的典型应用场景是什么？](#匿名函数的典型应用场景是什么)
 - [宿主对象（host objects）和原生对象（native objects）的区别是什么？](#宿主对象host-objects和原生对象native-objects的区别是什么)
+- [下列语句有什么区别：`function Person(){}`、`var person = Person()`和`var person = new Person()`？](#下列语句有什么区别function-personvar-person--person和var-person--new-person)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 <!-- * TOC
 {:toc} -->
@@ -241,6 +242,21 @@ console.log(double); // [2, 4, 6]
 参考
 
 - <https://stackoverflow.com/questions/7614317/what-is-the-difference-between-native-objects-and-host-objects>
+
+[[↑] 回到顶部](#目录)
+
+### 下列语句有什么区别：`function Person(){}`、`var person = Person()`和`var person = new Person()`？
+这个问题问得很含糊。我猜这是在考察 JavaScript 中的构造函数（constructor）。从技术上讲，`function Person(){}`只是一个普通的函数声明。使用 PascalCase 方式命名函数作为构造函数，是一个惯例。
+> 注：函数声明，首字母大写按惯例当作构造函数使用，会变量提升。
+
+`var person = Person()`将`Person`以普通函数调用，而不是构造函数。如果该函数是用作构造函数的，那么这种调用方式是一种常见错误。通常情况下，构造函数不会返回任何东西，因此，像普通函数一样调用构造函数，只会返回`undefined`赋给用作实例的变量。
+> 注：函数定义表达式，首字母大写按惯例当作构造函数使用，不会变量提升。
+
+`var person = new Person()`使用`new`操作符，创建`Person`对象的实例，该实例继承自`Person.prototype`。另外一种方式是使用`Object.create`，例如：Object.create(Person.prototype)`。
+> 注：构造函数的使用  
+
+参考
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new>
 
 [[↑] 回到顶部](#目录)
 
