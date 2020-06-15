@@ -1207,3 +1207,4 @@ console.table(Object.entries([...document.getElementsByTagName("*")].map(v=>v.no
 
 [[↑] 回到顶部](#目录)
 
+写在最后：感谢原作者[yangshun](https://github.com/yangshun)
