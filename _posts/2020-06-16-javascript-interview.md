@@ -47,7 +47,7 @@ JS中的`this`是一个相对复杂的概念，不是简单几句能解释清楚
 - <https://www.quora.com/What-is-prototypal-inheritance/answer/Kyle-Simpson>
 - <https://davidwalsh.name/javascript-objects>  
 
-[[↑] 回到顶部](*目录)
+[[↑] 回到顶部](#目录)
 
 ### 打印网页标签个数以及标签最多的一组数据
 
@@ -64,6 +64,6 @@ console.table(Object.entries([...document.getElementsByTagName("*")].map(v=>v.no
 
 ```  
 
-[[↑] 回到顶部](目录)
+[[↑] 回到顶部](#目录)
 
 
