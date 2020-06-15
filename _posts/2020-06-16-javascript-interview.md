@@ -21,6 +21,7 @@ topmost: false
 - [下列语句有什么区别：`function Person(){}`、`var person = Person()`和`var person = new Person()`？](#下列语句有什么区别function-personvar-person--person和var-person--new-person)
 - [`.call`和`.apply`有什么区别？](#call和apply有什么区别)
 - [请说明`Function.prototype.bind`的用法。](#请说明functionprototypebind的用法)
+- [功能检测（feature detection）、功能推断（feature inference）和使用 UA 字符串之间有什么区别？](#功能检测feature-detection功能推断feature-inference和使用-UA-字符串之间有什么区别)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 <!-- * TOC
 {:toc} -->
@@ -305,9 +306,40 @@ g(3) // => 6
 `document.write()`用来将一串文本写入由`document.open()`打开的文档流中。当页面加载后执行`document.write()`时，它将调用`document.open`，会清除整个文档（`<head>`和`<body>`会被移除！），并将文档内容替换成给定的字符串参数。因此它通常被认为是危险的并且容易被误用。
 > 注：当页面加载完成后，执行document.write()会重写整个页面内容，其它还有writeIn()、open()、close()方法，具体参见 `《Javascript高级程序设计 第三版》10-1-2-6节 259页`
 
-网上有一些答案，解释了`document.write()`被用于分析代码中，或者[当你想包含只有在启用了 JavaScript 的情况下才能工作的样式](https://www.quirksmode.org/blog/archives/2005/06/three_javascrip_1.html)。它甚至在 HTML5 样板代码中用于[并行加载脚本并保持执行顺序](https://github.com/paulirish/html5-boilerplate/wiki/Script-Loading-Techniques#documentwrite-script-tag)！但是，我怀疑这些使用原因是过时的，现在可以在不使用`document.write()`的情况下实现。如果我的观点有错，请纠正我。
+网上有一些答案，解释了`document.write()`被用于分析代码中，或者[当你想包含只有在启用了 JavaScript 的情况下才能工作的样式](https://www.quirksmode.org/blog/archives/2005/06/three_javascrip_1.html)。它甚至在 HTML5 样板代码中用于[并行加载脚本并保持执行顺序](https://github.com/paulirish/html5-boilerplate/wiki/Script-Loading-Techniques#documentwrite-script-tag)！但是，我怀疑这些使用原因是过时的，现在可以在不使用`document.write()`的情况下实现。如果我的观点有错，请纠正我。  
+
+参考
+- <https://www.quirksmode.org/blog/archives/2005/06/three_javascrip_1.html>
+- <https://github.com/h5bp/html5-boilerplate/wiki/Script-Loading-Techniques#documentwrite-script-tag>
 
 [[↑] 回到顶部](#目录)
+
+### 功能检测（feature detection）、功能推断（feature inference）和使用 UA 字符串之间有什么区别？
+*功能检测（feature detection）*
+功能检测包括确定浏览器是否支持某段代码，以及是否运行不同的代码（取决于它是否执行），以便浏览器始终能够正常运行代码功能，而不会在某些浏览器中出现崩溃和错误。例如：
+```js
+if ('geolocation' in navigator) {
+  // 可以使用 navigator.geolocation
+} else {
+  // 处理 navigator.geolocation 功能缺失
+}
+```
+[Modernizr](https://modernizr.com/)是处理功能检测的优秀工具。
+*功能推断（feature inference）*
+功能推断与功能检测一样，会对功能可用性进行检查，但是在判断通过后，还会使用其他功能，因为它假设其他功能也可用，例如：
+```js
+if (document.getElementsByTagName) {
+  element = document.getElementById(id);
+}
+```
+非常不推荐这种方式。功能检测更能保证万无一失。
+*UA 字符串*
+这是一个浏览器报告的字符串，它允许网络协议对等方（network protocol peers）识别请求用户代理的应用类型、操作系统、应用供应商和应用版本。它可以通过`navigator.userAgent`访问。 然而，这个字符串很难解析并且很可能存在欺骗性。例如，Chrome 会同时作为 Chrome 和 Safari 进行报告。因此，要检测 Safari，除了检查 Safari 字符串，还要检查是否存在 Chrome 字符串。不要使用这种方式。  
+
+参考
+- <https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Cross_browser_testing/Feature_detection>
+- <https://stackoverflow.com/questions/20104930/whats-the-difference-between-feature-detection-feature-inference-and-using-th>
+- <https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent>
 
 ### 打印网页标签个数以及标签最多的一组数据
 
