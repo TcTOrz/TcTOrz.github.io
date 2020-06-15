@@ -1067,7 +1067,8 @@ function curriedAdd(num2) {
 }
 console.log(add(2, 3))  // 5
 console.log(curriedAdd(3)) // 8
-```
+```  
+
 ```js
 function curry(fn) {
   if (fn.length === 0) {
@@ -1094,7 +1095,8 @@ var curriedAdd = curry(add);
 var addFive = curriedAdd(5);
 
 var result = [0, 1, 2, 3, 4, 5].map(addFive); // [5, 6, 7, 8, 9, 10]
-```
+```  
+
 ```js
 function curry(fn) {
     var args = Array.prototype.slice.call(arguments, 1)
