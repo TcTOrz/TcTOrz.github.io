@@ -7,6 +7,8 @@ keywords: markdown
 topmost: true
 ---
 
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
 # Markdown语法
 
 ```markdown
@@ -402,8 +404,6 @@ X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
 ----
 
 ### 科学公式 TeX(KaTeX)
-
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 :star: github正确显示需要安装mathjax-plugin-for-github插件[立即下载](https://ifwechat.com/assets/crx/mathjax-plugin-for-github.zip)
 
