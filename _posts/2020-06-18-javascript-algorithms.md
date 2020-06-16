@@ -7,11 +7,10 @@ keywords: JavaScript, Algorithms
 topmost: false
 ---
 
-## 目录
+* TOC
+{:toc} 
 
-- [十进制转二进制。](#十进制转二进制)
-- [十进制转十六进制。](#十进制转十六进制)
-- [十进制转八进制。](#十进制转八进制)
+## Conversions
 
 ### 十进制转二进制。
 - 如果 10
