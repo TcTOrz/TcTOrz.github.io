@@ -167,6 +167,7 @@ GFM a-tail link @pandao
     <?php
         echo "Hello world!";
     ?>
+
 预格式化文本：
 
     | First Header  | Second Header |
@@ -175,13 +176,15 @@ GFM a-tail link @pandao
     | Content Cell  | Content Cell  |
 
 #### JS代码
+
 ```javascript
 function test() {
-	console.log("Hello world!");
+    console.log("Hello world!");
 }
 ```
 
 #### HTML 代码 HTML codes
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -200,17 +203,19 @@ function test() {
         <p class="text-green">Plain text</p>
     </body>
 </html>
+
 ```
+
 ### 图片 Images
 
 图片加链接 (Image + Link)：
-
 
 [![](https://www.mdeditor.com/images/logos/markdown.png)](https://www.mdeditor.com/images/logos/markdown.png "markdown")
 
 > Follow your heart.
 
 ----
+
 ### 列表 Lists
 
 #### 无序列表（减号）Unordered Lists (-)
@@ -226,6 +231,7 @@ function test() {
 * 列表三
 
 #### 无序列表（加号和嵌套）Unordered Lists (+)
+
 + 列表一
 + 列表二
     + 列表二-1
@@ -253,6 +259,18 @@ function test() {
 - [ ] GFM task list 4
     - [ ] GFM task list 4-1
     - [ ] GFM task list 4-2
+
+```markdown
+- [x] GFM task list 1
+- [x] GFM task list 2
+- [ ] GFM task list 3
+    - [ ] GFM task list 3-1
+    - [ ] GFM task list 3-2
+    - [ ] GFM task list 3-3
+- [ ] GFM task list 4
+    - [ ] GFM task list 4-1
+    - [ ] GFM task list 4-2
+```
 
 ----
 
@@ -291,6 +309,41 @@ Content Cell  | Content Cell
 | Phone     |   $12 |
 | Pipe      |    $1 |
 
+```markdown
+| 项目        | 价格   |  数量  |
+| --------   | -----:  | :----:  |
+| 计算机      | $1600   |   5     |
+| 手机        |   $12   |   12   |
+| 管线        |    $1    |  234  |
+
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+
+| Function name | Description                    |
+| ------------- | ------------------------------ |
+| `help()`      | Display the help window.       |
+| `destroy()`   | **Destroy your computer!**     |
+
+| Left-Aligned  | Center Aligned  | Right Aligned |
+| :------------ |:---------------:| -----:|
+| col 3 is      | some wordy text | $1600 |
+| col 2 is      | centered        |   $12 |
+| zebra stripes | are neat        |    $1 |
+
+| Item      | Value |
+| --------- | -----:|
+| Computer  | $1600 |
+| Phone     |   $12 |
+| Pipe      |    $1 |
+```
+
 ----
 
 #### 特殊符号 HTML Entities Codes
@@ -302,11 +355,26 @@ X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
 
 18&ordm;C  &quot;  &apos;
 
+```markdown
+&copy; &  &uml; &trade; &iexcl; &pound;
+&amp; &lt; &gt; &yen; &euro; &reg; &plusmn; &para; &sect; &brvbar; &macr; &laquo; &middot;
+
+X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
+
+18&ordm;C  &quot;  &apos;
+```
+
 [========]
 
 ### Emoji表情 :smiley:
 
 > Blockquotes :star:
+
+```markdown
+### Emoji表情 :smiley:
+
+> Blockquotes :star:
+```
 
 #### GFM task lists & Emoji & fontAwesome icon emoji & editormd logo emoji :editormd-logo-5x:
 
@@ -318,6 +386,16 @@ X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
     - [ ] :smiley: this is an incomplete item [test link](#) :fa-star: :fa-gear:;
     - [ ] :smiley: this is  :fa-star: :fa-gear: an incomplete item [test link](#);
 
+```markdown
+- [x] :smiley: @mentions, :smiley: #refs, [links](), **formatting**, and <del>tags</del> supported :editormd-logo:;
+- [x] list syntax required (any unordered or ordered list supported) :editormd-logo-3x:;
+- [x] [ ] :smiley: this is a complete item :smiley:;
+- [ ] []this is an incomplete item [test link](#) :fa-star: @pandao;
+- [ ] [ ]this is an incomplete item :fa-star: :fa-gear:;
+    - [ ] :smiley: this is an incomplete item [test link](#) :fa-star: :fa-gear:;
+    - [ ] :smiley: this is  :fa-star: :fa-gear: an incomplete item [test link](#);
+```
+
 #### 反斜杠 Escape
 
 \*literal asterisks\*
@@ -325,15 +403,15 @@ X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
 [========]
 ### 科学公式 TeX(KaTeX)
 
-$$E=mc^2$$
+$$ E=mc^2 $$
 
 行内的公式$$E=mc^2$$行内的公式，行内的$$E=mc^2$$公式。
 
-$$x > y$$
+$$ x > y $$
 
-$$\(\sqrt{3x-1}+(1+x)^2\)$$
+$$ \(\sqrt{3x-1}+(1+x)^2\) $$
 
-$$\sin(\alpha)^{\theta}=\sum_{i=0}^{n}(x^i + \cos(f))$$
+$$ \sin(\alpha)^{\theta}=\sum_{i=0}^{n}(x^i + \cos(f)) $$
 
 多行公式：
 
@@ -344,6 +422,7 @@ $$\sin(\alpha)^{\theta}=\sum_{i=0}^{n}(x^i + \cos(f))$$
 \left( \sum\_{k=1}^n a\_k^2 \right)
 \left( \sum\_{k=1}^n b\_k^2 \right)
 ```
+
 ```katex
 \displaystyle
     \frac{1}{
@@ -355,11 +434,13 @@ $$\sin(\alpha)^{\theta}=\sum_{i=0}^{n}(x^i + \cos(f))$$
         }
     }
 ```
+
 ```latex
 f(x) = \int_{-\infty}^\infty
     \hat f(\xi)\,e^{2 \pi i \xi x}
     \,d\xi
 ```
+
 ### 分页符 Page break
 
 > Print Test: Ctrl + P
@@ -378,6 +459,7 @@ st->op->cond
 cond(yes)->e
 cond(no)->op
 ```
+
 [========]
 
 ### 绘制序列图 Sequence Diagram
@@ -388,4 +470,5 @@ Note right of China: China thinks\nabout it
 China-->Andrew: How are you?
 Andrew->>China: I am good thanks!
 ```
+
 ### End
