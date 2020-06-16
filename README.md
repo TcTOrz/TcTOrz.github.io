@@ -19,9 +19,9 @@
 
 **[在线预览 &rarr;](https://tctorz.github.io//)**
 
-<!-- ![screenshot home](https://mazhuang.org/assets/images/screenshots/home.png) -->
+![screenshot home](https://ifwechat.com/assets/images/screenshots/home1.png)
 
-<!-- ## Fork 指南
+## Fork 指南
 
 Fork 本项目之后，还需要做一些事情才能让你的页面「正确」跑起来。
 
@@ -52,7 +52,7 @@ Fork 本项目之后，还需要做一些事情才能让你的页面「正确」
 
 5. 修改「关于」页面。
 
-   pages/about.md 文件内容对应网站的「关于」页面，里面的内容多为个人相关，将它们替换成你自己的信息，包括 \_data 目录下的 skills.yml 和 social.yml 文件里的数据。 -->
+   pages/about.md 文件内容对应网站的「关于」页面，里面的内容多为个人相关，将它们替换成你自己的信息，包括 \_data 目录下的 skills.yml 和 social.yml 文件里的数据。
 
 <!-- ## 使用文档
 
@@ -85,7 +85,7 @@ Fork 本项目之后，还需要做一些事情才能让你的页面「正确」
 
 ## 致谢
 
-本博客外观基于 [DONGChuan](https://dongchuan.github.io) 修改，感谢！
+本博客外观基于 [码志](https://github.com/mzlogin) 修改，感谢！
 
 Thanks for JetBrains' support.
 
