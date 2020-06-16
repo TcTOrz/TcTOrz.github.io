@@ -18,14 +18,14 @@ mathjax: true
 ### 超链接
 
 ```
-[靠谱-ing](https://mazhuang.org)
+[靠谱-ing](https://ifwechat.com)
 
-<https://mazhuang.org>
+<https://ifwechat.com>
 ```
 
-[靠谱-ing](https://mazhuang.org)  
+[靠谱-ing](https://ifwechat.com)  
 
-<https://mazhuang.org>
+<https://ifwechat.com>
 
 ### 列表
 
