@@ -403,7 +403,7 @@ X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
 
 ### 科学公式 TeX(KaTeX)
 
-:star: github正确显示需要安装mathjax-plugin-for-github插件[立即下载](https://ifwechat.com/assets/crx/mathjax-plugin-for-github.zip)
+:star: github正确显示需要安装mathjax-plugin-for-github插件[立即下载](https://ifwechat.com/assets/crx/mathjax-plugin-for-github.zip)  
 :star: [查看地址](https://github.com/TcTOrz/TcTOrz.github.io/blob/master/_posts/2020-06-16-markdown--base-use.md#%E7%A7%91%E5%AD%A6%E5%85%AC%E5%BC%8F-texkatex)
 
 $a_{1}$ \qquad $x^{2}$ \qquad
@@ -437,7 +437,24 @@ y &= (a + b)^2 \\
 \end {split}
 $$
 
-```math
+```markdown
+$$
+y = (a + b)^2 \\
+  = a^2 + b^2 + 2ab\\
+  = 0
+$$
+
+$$
+\begin {split}
+y &= (a + b)^2 \\
+  &= a^2 + b^2 + 2ab\\
+  &= 0
+\end {split}
+$$
+
+```
+
+<!-- ```math
 
 \displaystyle
 \left( \sum\_{k=1}^n a\_k b\_k \right)^2
@@ -467,7 +484,7 @@ f(x) = \int_{-\infty}^\infty
     \hat f(\xi)\,e^{2 \pi i \xi x}
     \,d\xi
 
-```
+``` -->
 
 ### 分页符 Page break
 
