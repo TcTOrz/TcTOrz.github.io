@@ -363,7 +363,7 @@ X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
 18&ordm;C  &quot;  &apos;
 ```
 
-========
+----
 
 ### Emoji表情 :smiley:
 
@@ -399,9 +399,14 @@ X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
 
 \*literal asterisks\*
 
-========
+----
 
 ### 科学公式 TeX(KaTeX)
+
+$a_{1}$ \qquad $x^{2}$ \qquad
+$e^{-\alpha t}$ \qquad
+$a^{3}_{ij}$\\
+$e^{x^2} \neq {e^x}^2$
 
 $$ E=mc^2 $$
 
@@ -445,7 +450,7 @@ f(x) = \int_{-\infty}^\infty
 
 > Print Test: Ctrl + P
 
-========
+----
 
 ### 绘制流程图 Flowchart
 
@@ -460,7 +465,7 @@ cond(yes)->e
 cond(no)->op
 ```
 
-========
+----
 
 ### 绘制序列图 Sequence Diagram
 
