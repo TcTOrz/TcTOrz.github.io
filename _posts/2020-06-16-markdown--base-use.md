@@ -403,6 +403,8 @@ X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
 
 ### 科学公式 TeX(KaTeX)
 
+:star: github正确显示需要安装[mathjax-plugin-for-github插件](ifwechat.com/assets/crx)
+
 $a_{1}$ \qquad $x^{2}$ \qquad
 $e^{-\alpha t}$ \qquad
 $a^{3}_{ij}$\\
