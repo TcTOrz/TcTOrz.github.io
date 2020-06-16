@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Webpack的基本使用
-categories: WEBPACK
+categories: Webpack
 description: 记一次使用webpack的基础使用过程, 包括四个核心： 入口、输出、loader、插件
 keywords: webpack, Webpack, loader, plugin
 topmost: false
