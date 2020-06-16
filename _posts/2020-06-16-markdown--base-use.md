@@ -157,7 +157,6 @@ GFM a-tail link @pandao
 
 #### 行内代码 Inline code
 
-
 执行命令：`npm install marked`
 
 #### 缩进风格
@@ -189,7 +188,7 @@ function test() {
 <!DOCTYPE html>
 <html>
     <head>
-        <mate charest="utf-8" />
+        <meta charest="utf-8" />
         <meta name="keywords" content="Editor.md, Markdown, Editor" />
         <title>Hello world!</title>
         <style type="text/css">
@@ -364,7 +363,7 @@ X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
 18&ordm;C  &quot;  &apos;
 ```
 
-[========]
+========
 
 ### Emoji表情 :smiley:
 
@@ -383,8 +382,8 @@ X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
 - [x] [ ] :smiley: this is a complete item :smiley:;
 - [ ] []this is an incomplete item [test link](#) :fa-star: @pandao;
 - [ ] [ ]this is an incomplete item :fa-star: :fa-gear:;
-    - [ ] :smiley: this is an incomplete item [test link](#) :fa-star: :fa-gear:;
-    - [ ] :smiley: this is  :fa-star: :fa-gear: an incomplete item [test link](#);
+- [ ] :smiley: this is an incomplete item [test link](#) :fa-star: :fa-gear:;
+- [ ] :smiley: this is  :fa-star: :fa-gear: an incomplete item [test link](#);
 
 ```markdown
 - [x] :smiley: @mentions, :smiley: #refs, [links](), **formatting**, and <del>tags</del> supported :editormd-logo:;
@@ -400,7 +399,8 @@ X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
 
 \*literal asterisks\*
 
-[========]
+========
+
 ### 科学公式 TeX(KaTeX)
 
 $$ E=mc^2 $$
@@ -445,7 +445,7 @@ f(x) = \int_{-\infty}^\infty
 
 > Print Test: Ctrl + P
 
-[========]
+========
 
 ### 绘制流程图 Flowchart
 
@@ -460,7 +460,7 @@ cond(yes)->e
 cond(no)->op
 ```
 
-[========]
+========
 
 ### 绘制序列图 Sequence Diagram
 
