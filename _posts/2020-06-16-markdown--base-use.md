@@ -458,7 +458,7 @@ $$
 
 ```
 
-<!-- ```math
+```mathjax
 
 \displaystyle
 \left( \sum\_{k=1}^n a\_k b\_k \right)^2
@@ -468,7 +468,7 @@ $$
 
 ```
 
-```katex
+<!-- ```katex
 
 \displaystyle
     \frac{1}{
@@ -513,7 +513,7 @@ cond(no)->op
 
 ### 绘制序列图 Sequence Diagram
 
-```seq
+```sequence
 Andrew->China: Says Hello
 Note right of China: China thinks\nabout it
 China-->Andrew: How are you?
