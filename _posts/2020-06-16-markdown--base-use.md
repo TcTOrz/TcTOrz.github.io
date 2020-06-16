@@ -404,6 +404,7 @@ X&sup2; Y&sup3; &frac34; &frac14;  &times;  &divide;   &raquo;
 ### 科学公式 TeX(KaTeX)
 
 :star: github正确显示需要安装mathjax-plugin-for-github插件[立即下载](https://ifwechat.com/assets/crx/mathjax-plugin-for-github.zip)
+:star: [查看地址](https://github.com/TcTOrz/TcTOrz.github.io/blob/master/_posts/2020-06-16-markdown--base-use.md#%E7%A7%91%E5%AD%A6%E5%85%AC%E5%BC%8F-texkatex)
 
 $a_{1}$ \qquad $x^{2}$ \qquad
 $e^{-\alpha t}$ \qquad
@@ -412,7 +413,7 @@ $e^{x^2} \neq {e^x}^2$
 
 $$ E=mc^2 $$
 
-行内的公式$$E=mc^2$$行内的公式，行内的$$E=mc^2$$公式。
+行内的公式$E=mc^2$行内的公式，行内的$E=mc^2$公式。
 
 $$ x > y $$
 
@@ -430,6 +431,12 @@ $$ \sin(\alpha)^{\theta}=\sum_{i=0}^{n}(x^i + \cos(f)) $$
 \left( \sum\_{k=1}^n b\_k^2 \right)
 ```
 
+\displaystyle
+\left( \sum\_{k=1}^n a\_k b\_k \right)^2
+\leq
+\left( \sum\_{k=1}^n a\_k^2 \right)
+\left( \sum\_{k=1}^n b\_k^2 \right)
+
 ```katex
 \displaystyle
     \frac{1}{
@@ -441,6 +448,16 @@ $$ \sin(\alpha)^{\theta}=\sum_{i=0}^{n}(x^i + \cos(f)) $$
         }
     }
 ```
+
+\displaystyle
+    \frac{1}{
+        \Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{
+        \frac25 \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {
+        1+\frac{e^{-6\pi}}
+        {1+\frac{e^{-8\pi}}
+         {1+\cdots} }
+        }
+    }
 
 ```latex
 f(x) = \int_{-\infty}^\infty
