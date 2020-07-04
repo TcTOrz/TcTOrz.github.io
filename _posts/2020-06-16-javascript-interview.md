@@ -54,6 +54,7 @@ topmost: false
 - [如何在文件之间共用代码？](#如何在文件之间共用代码)
 - [什么情况下会用到静态类成员？](#什么情况下会用到静态类成员)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
+- [函数的防抖和节流](#函数的防抖和节流)
 - [其他](#其他)
 <!-- * TOC
 {:toc} -->
@@ -1198,7 +1199,159 @@ console.table(Object.entries([...document.getElementsByTagName("*")].map(v=>v.no
 
 [[↑] 回到顶部](#目录)
 
+### 函数的防抖和节流
+在前端开发过程中，经常会遇到需要绑定一些持续触发的事件，如`resize`、`scroll`、`mousemove`等等，但有些时候我们并不希望事件持续触发的过程中频繁的去执行函数。一般来讲，防抖和节流是比较好的解决方案。
 
+```html
+
+<!-- 持续触发的情况 -->
+<html>
+  <body style="margin: 0;">
+    <div id="content" style="height:100%;line-height:500px;text-align:center; color: #fff;background-color:#ccc;font-size:80px;"></div>
+  </body>
+  <script>
+    let num = 1;
+    let content = document.getElementById('content');
+    function count() {
+      content.innerHTML = num++;
+    };
+    content.onmousemove = count;
+    // content.onmousemove = debounce(count, 1000);
+    // content.onmousemove = throttle(count, 1000);
+  </script>
+</html>
+
+```
+
+`防抖(debounce)`
+所谓防抖，就是指触发事件后n秒内只能执行一次，如果在n秒内又触发了事件，则会重新计算函数执行时间。
+
+防抖函数分为非立即执行和立即执行
+
+```js
+
+// 非立即执行
+// 函数触发事件后不会立即执行，而是在n秒后执行，如果n秒内又触发了事件，则会重新计cou'tent
+function debounce(func, wait) {
+  let timeout;
+  return function() {
+    // let context = this;
+    // let args = arguments;
+    if(timeout) clearTimeout(timeout);
+    timeout = setTimeout(()=>{
+      // func.apply(context, args);
+      func.apply(this, arguments);
+    }, wait);
+  };
+}
+
+// 立即执行
+// 触发事件后函数立即执行，然后n秒内不触发事件才能继续执行函数
+function debounce(func, wait) {
+  let timeout;
+  return function() {
+    if(timeout) clearTimeout(timeout);
+    let callNow = !timeout;
+    timeout = setTimeout(()=>{
+      timeout = null;
+    }, wait);
+    if(callNow) func.apply(this, arguments);
+  };
+}
+
+/**
+ * @desc 函数防抖
+ * @param func 函数
+ * @param wait 延迟执行毫秒数
+ * @param immediate true 表示立即执行，false 表示非立即执行
+ */
+function debounce(func, wait, immediate) {
+  let timeout;
+  return function() {
+    if(timeout) clearTimeout(timeout);
+    if(immediate) {
+      let callNow = !timeout;
+      timeout = setTimeout(()=>{
+        timeout = null;
+      }, wait);
+      if(callNow) func.applt(this, arguments);
+    }else {
+      timeout = setTimeout(()=> {
+        func.apply(this, arguments);
+      }, wait);
+    }
+  };
+}
+
+```
+
+`节流(throttle)`
+所谓节流，就是指连续触发事件但是在n秒中只执行一次函数。节流会稀释函数执行频率。
+
+对于节流，一般有两种方式可以实现，分别是时间戳版和定时器版。
+
+```js
+
+// 时间戳版
+function throttle(func, wait) {
+  let previous = 0;
+  return function() {
+    let now = Date.now();
+    if( now - previous > wait ) {
+      func.apply(this, arguments);
+      previous = now;
+    }
+  };
+}
+
+// 定时器版
+function throttle(func, wait) {
+  let timeout;
+  return function() {
+    if(!timeout) {
+      timeout = setTimeout(()=>{
+        timeout = null;
+        func.apply(this, arguments);
+      }, wait);
+    }
+  };
+}
+
+// 时间戳版和定时器版节流函数的区别是，时间戳版的函数触发是在时间段开始的时候，而定时器版函数触发是在时间段内结束的时候。
+
+/**
+ * @desc 函数节流
+ * @param func 函数
+ * @param wait 延迟执行毫秒数
+ * @param type 1 表时间戳版，2 表定时器版
+ */
+ function throttle(func, wait, type) {
+   if(type===1) {
+     let previous = 0;
+   }else if(type===2) {
+     let timeout;
+   }
+   return function() {
+     if(type===1) {
+       let now = Date.now();
+       if(now-previous>wait) {
+         func.applt(this, arguments);
+         previous = now;
+       }
+     }else if(type===2) {
+       if(!timeout) {
+         timeout = setTimeout(()=>{
+            timeout = null;
+            func.apply(this, arguments);
+         }, wait);
+       }
+     }
+   }
+ }
+
+```
+
+[[↑] 回到顶部](#目录)
 
 ### 其他
 - <http://flowerszhong.github.io/2013/11/20/javascript-questions.html>
