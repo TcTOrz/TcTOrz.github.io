@@ -7,10 +7,10 @@ keywords: Laravel核心
 topmost: false
 ---
 
-# 目录
+<!-- # 目录
 
 * TOC
-{:toc} 
+{:toc}  -->
 
 ### 依赖注入，控制反转概念
 

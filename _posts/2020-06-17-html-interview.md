@@ -7,7 +7,7 @@ keywords: Html, interview
 topmost: false
 ---
 
-## 目录
+<!-- ## 目录
 
 - [`DOCTYPE`有什么用？](#doctype有什么用)
 - [如何提供包含多种语言内容的页面？](#如何提供包含多种语言内容的页面)
@@ -20,7 +20,7 @@ topmost: false
 - [什么是渐进式渲染（progressive rendering）？](#什么是渐进式渲染progressive-rendering)
 - [为什么在`<img>`标签中使用`srcset`属性？请描述浏览器遇到该属性后的处理过程。](#为什么在img标签中使用srcset属性请描述浏览器遇到该属性后的处理过程)
 - [你有过使用不同模版语言的经历吗？](#你有过使用不同模版语言的经历吗)
-- [其它](#其它)
+- [其它](#其它) -->
 
 ### `DOCTYPE`有什么用？
 `DOCTYPE`是`document type`的缩写。它是`HTML`中用来区分标准模式和[怪异模式](https://quirks.spec.whatwg.org/#history)的声明，用来告知浏览器使用标准模式渲染页面。

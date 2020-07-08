@@ -6,10 +6,10 @@ description: 学习babel,及时记录下来
 keywords: Javascript, Babel
 ---
 
-**目录**
+<!-- **目录**
 
 * TOC
-{:toc}
+{:toc} -->
 
 ### 安装&配置
 将es6编译成可在浏览器中工作的js代码

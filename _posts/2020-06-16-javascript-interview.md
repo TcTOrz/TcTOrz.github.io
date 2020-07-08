@@ -7,7 +7,7 @@ keywords: JavaScript, interview
 topmost: false
 ---
 
-## 目录
+<!-- ## 目录
 
 - [请解释事件委托（event delegation）](#请解释事件委托event-delegation)
 - [请简述`Javascript`中的`this`](#请简述javascript中的this)
@@ -55,7 +55,7 @@ topmost: false
 - [什么情况下会用到静态类成员？](#什么情况下会用到静态类成员)
 - [打印网页标签个数以及标签最多的一组数据](#打印网页标签个数以及标签最多的一组数据)
 - [函数的防抖和节流](#函数的防抖和节流)
-- [其他](#其他)
+- [其他](#其他) -->
 <!-- * TOC
 {:toc} -->
 

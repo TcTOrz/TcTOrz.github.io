@@ -6,10 +6,10 @@ description: vue项目遇到的一些问题,及时记录下来
 keywords: Vue, Vagrant
 ---
 
-**目录**
+<!-- **目录**
 
 * TOC
-{:toc}
+{:toc} -->
 
 ### 报错[WDS] Disconnected!并且运行`npm run serve`后，Network地址浏览器打开不了
 项目环境: `Vagrant+Centos7+Xampp+Vue-cli`搭建的`Vue`项目

@@ -6,10 +6,10 @@ description: 学习Jest,及时记录下来
 keywords: Javascript, Jest
 ---
 
-**目录**
+<!-- **目录**
 
 * TOC
-{:toc}
+{:toc} -->
 
 ### 安装&配置
 
