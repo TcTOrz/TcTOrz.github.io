@@ -592,7 +592,200 @@ laravel中的middleware也是通过call_user_func和array_reduce来实现的。
 
 ### laravel的生命周期
 
+laravel入口文件public/index.php
 
+```php
+
+/**
+ * Laravel - A PHP Framework For Web Artisans
+ * 定义laravel开始请求时间
+ * @package  Laravel
+ * @author   Taylor Otwell <taylor@laravel.com>
+ */
+
+define('LARAVEL_START', microtime(true));
+
+/*
+|--------------------------------------------------------------------------
+| Register The Auto Loader
+|--------------------------------------------------------------------------
+| Composer提供的自动加载机制
+|
+| Composer provides a convenient, automatically generated class loader for
+| our application. We just need to utilize it! We'll simply require it
+| into the script here so that we don't have to worry about manual
+| loading any of our classes later on. It feels great to relax.
+|
+*/
+
+require __DIR__.'/../vendor/autoload.php';
+
+/*
+|--------------------------------------------------------------------------
+| Turn On The Lights
+|--------------------------------------------------------------------------
+| 
+| 引入一个Ioc容器
+|
+| We need to illuminate PHP development, so let us turn on the lights.
+| This bootstraps the framework and gets it ready for use, then it
+| will load up this application so that we can run it and send
+| the responses back to the browser and delight our users.
+|
+*/
+
+$app = require_once __DIR__.'/../bootstrap/app.php';
+
+/*
+|--------------------------------------------------------------------------
+| Run The Application
+|--------------------------------------------------------------------------
+|
+| Once we have the application, we can handle the incoming request
+| through the kernel, and send the associated response back to
+| the client's browser allowing them to enjoy the creative
+| and wonderful application we have prepared for them.
+|
+*/
+// 创建一个Kernel::class服务提供者
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+
+// 获取一个request请求，返回http响应
+$response = $kernel->handle(
+    $request = Illuminate\Http\Request::capture()
+);
+
+// 返回的响应发送给浏览器
+$response->send();
+
+// 执行耗时请求/后续操作
+$kernel->terminate($request, $response);
+
+
+```
+
+那middleware，服务提供者都是在那些文件里注册运行呢？
+
+在app/Http/Kernel::class这个文件。
+
+### laravel事件之观察者模式
+
+#### 观察者模式
+
+laravel提供了一个简单的观察者实现，能够订阅和监听应用中发生的各种事件。
+
+什么是观察者？
+
+观察者模式（Observer），当一个对象的状态发生改变时，依赖他的对象会全部收到通知，并自动更新。
+
+场景: 一个事件发生后，要执行一连串的更新操作。传统的编程方式，就是在事件的代码之后直接加入逻辑处理，当更新的逻辑增多之后，代码会变得难以维护。这种方式是耦合的、侵入式的，增加新的逻辑需要改变事件主题的代码。
+
+观察者模式实现了低耦合、非侵入式的通知与更新机制。
+
+代码实现
+
+```php
+
+/**
+ * 观察者接口类
+ * Interface Observer
+ */
+interface Observer
+{
+    public function update($event_info = null);
+}
+
+/**
+ * 观察者1
+ */
+class Observer1 implements Observer
+{
+    public function update($event_info = null) {
+        echo "观察者1 收到通知 执行完毕！ \n";
+    }
+}
+
+/**
+ * 观察者2
+ */
+class Observer2 implements Observer
+{
+    public function update($event_info = null) {
+        echo "观察者2 收到通知 执行完毕！ \n";
+    }
+}
+
+/**
+ * 事件
+ */
+class Event
+{
+    // 用于观察者注册的数组
+    protected $observers = [];
+
+    // 增加观察者
+    public function add(Observer $observer) {
+        $this->observers[] = $observer;
+    }
+
+    // 事件通知
+    public function notify() {
+        foreach($this->observers as $observer) {
+            $observer->update();
+        }
+    }
+
+    // 触发事件
+    public function trigger() {
+        // 通知观察者
+        $this->notify();
+    }
+}
+
+// 服务类  实现事件的创建和触发，不需要关心具体多少调用方需要监听
+class DemoService
+{
+    public function demo() {
+        // 创建一个事件
+        $event = new Event();
+
+        // ...
+
+        // 执行事件，通知旁观者
+        $event->trigger();
+    }
+}
+
+// 调用方， 调用方仅仅需要知道服务类创建了哪些事件
+class DoService
+{
+    public function do() {
+        // 为事件增加旁观者
+        $event->add(new Observer1());
+        $event->add(new Observer2());
+    }
+}
+
+```
+
+#### laravel中使用事件
+
+```php
+
+php artisan make:event // 创建事件
+
+php artisan make:listener // 创建事件监听者，可以为多个
+
+```
+
+laravel事件类保存在app/Events中，而这些事件的监听则被保存在app/Listener下
+
+```php
+
+// 在程序需要触发事件的地方通过event()触发事件，例如
+event(new SendMailEvent());
+
+```
 
 ### 致谢
 作者：cxp1539
