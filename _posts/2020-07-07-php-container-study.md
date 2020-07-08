@@ -117,7 +117,7 @@ class MyLoginController extends Controller
 ```php
 
 // 获取User的reflectionClass对象
-$reflector = new reflectionClass(User::class);
+$reflector = new ReflectionClass(User::class);
 
 // 获取User的构造函数
 $constructor = $reflector->getConstructor();
@@ -135,3 +135,465 @@ $user = $reflector->newInstanceArgs($dependencies = []);
 
 这个时候我们可以创建一个make方法，传入User，利用反射机制拿到User的构造函数，进而得到构造函数的参数对象。用递归的方式创建参数依赖。最后调用newInstanceArgs方法生成User实例。
 
+```php
+
+function make($concrete) {
+    $reflector = new ReflectionClass($concrete);
+    $constructor = $reflector->getConstructor();
+    $dependencies = $constructor->getParameters();
+    return $reflector->newInstanceArgs($dependencies);
+}
+$user = make('User');
+$user->login();
+
+```
+
+代码实现
+
+```php
+
+class User
+{
+    protected $log;
+
+    public function __construct(FileLog $log) {
+        $this->log = $log;
+    }
+
+    public function login() {
+        echo 'Login success...' . "\n";
+        $this->log->write();
+    }
+}
+
+function make($concrete) {
+    $reflector = new ReflectionClass($concrete);
+    $constructor = $reflector->getConstructor();
+    if( is_null($constructor) ) {
+        return $reflector->newInstance();
+    }else {
+        $dependencies = $constructor->getParameters();
+        $instances = getDependencies($dependencies);
+        return $reflector->newInstanceArgs($instances);
+    }
+}
+
+function getDependencies($parameters) {
+    $dependencies = [];
+    foreach( $parameters as $parameter ) {
+        $dependencies[] = make($parameter->getClass()->name);
+    }
+    return $dependencies;
+}
+
+$user = make('User');
+$user->login();
+
+```
+
+### 如何实现Ioc容器和服务提供者是什么概念
+
+上面已经实现了依赖注入，控制反转和反射，但是还没有完全达到解耦，如果项目中很多功能用到login，我们则在页面中反复写，突然某天换需求时，则所有login都要去替换。
+我们可以借助容器，提前把log，user都绑定到IOC容器中。User的创建交给这个容器去做，比如：
+
+### 具体代码实现
+
+- IOC容器维护binding数组记录bind方法传入键值对，如：log=>FileLog, user=>User
+- 在ioc->make('user')的时候，通过反射拿到User构造函数，拿到构造函数参数，发现参数是User的构造函数参数是log，然后再根据log得到FileLog
+- 这时候我们只要通过反射机制创建$fileLog = new FileLog()
+- 通过newInstanceArgs去创建new User($fileLog)
+
+```php
+
+// 实例化容器
+$ioc = new Ioc();
+$ioc->bind('log', 'FileLog');
+$ioc->bind('user', 'User');
+$user = $ioc->make('user');
+$user->login();
+
+```
+
+这里的容器指Ioc容器，服务提供者是User。
+
+```php
+
+interface Log
+{
+    public function write();
+}
+
+class FileLog implements Log
+{
+    public function write() {
+        echo 'File log.' . "\n";
+    }
+}
+
+class DatabaseLog implements Log
+{
+    public function write() {
+        echo 'Database log.' . "\n";
+    }
+}
+
+class User
+{
+    protected $log;
+    public function __construct(Log $log) {
+        $this->log = $log;
+    }
+    public function login() {
+        echo 'Login success...' . "\n";
+        $this->log->write();
+    }
+}
+
+class Ioc
+{
+    protected $binding = [];
+
+    public function bind($abstract, $concrete) {
+        // 这里为什么要返回一个closure呢？因为bind的时候还不需要创建User对象，所以采用closure等make的时候再创建FileLog;
+        $this->binding[$abstract]['concrete'] = function($ioc) use ($concrete) {
+            return $ioc->build($concrete);
+        };
+    }
+
+    public function make($abstract) {
+        // 根据key获取binding的值
+        $concrete = $this->binding[$abstract]['concrete'];
+        return $concrete($this);
+    }
+
+    public function build($concrete) {
+        $reflector = new ReflectionClass($concrete);
+        $constructor = $reflector->getConstructor();
+        if(is_null($constructor)) {
+            return $reflector->newInstance();
+        }else {
+            $dependencies = $constructor->getParameters();
+            $instances = $this->getDependencies($dependencies);
+            return $reflector->newInstanceArgs($instances);
+        }
+    }
+
+    // 获取参数的依赖
+    protected function getDependencies($paramters) {
+        $dependencies = [];
+        foreach ($paramters as $paramter) {
+            $dependencies[] = $this->make($paramter->getClass()->name);
+        }
+        return $dependencies;
+    }
+}
+
+$ioc = new Ioc();
+$ioc->bind('Log', 'FileLog');
+$ioc->bind('user', 'User');
+$user = $ioc->make('user');
+$user->login();
+
+```
+
+至此，Ioc已经实现了。
+
+### laravel中的服务容器和服务提供者是什么样子？
+
+在laravel config/app.php文件中providers,这个数组定义的都是已经写好的服务提供者。
+
+```php
+
+'providers' => [
+    Illuminate\Auth\AuthServiceProvider::class,
+    Illuminate\Broadcasting\BroadcastServiceProvider::class,
+    Illuminate\Bus\BusServiceProvider::class,
+    Illuminate\Cache\CacheServiceProvider::class,
+    // ...
+],
+
+// 随便打开一个，这个服务提供者通过调用register方法注册到ioc容器中，其中的app就是ioc容器。singleton可以理解成上面例子中的bind方法。只不过这里的singleton指的是单例模式。
+class AuthServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        $this->registerAuthenticator();
+    }
+    protected function registerAuthenticator()
+    {
+        $this->app->singleton('auth', function ($app) {
+            $app['auth.loaded'] = true;
+
+            return new AuthManager($app);
+        });
+
+        $this->app->singleton('auth.driver', function ($app) {
+            return $app['auth']->guard();
+        });
+    }
+}
+
+
+```
+
+### Contracts契约之面向接口编程
+
+#### 什么是契约
+
+契约就是所谓的面向接口的编程。
+
+不使用接口的例子
+
+```php
+
+class FileLog
+{
+    public function write() {
+        echo 'File log write...' . "\n";
+    }
+}
+
+class DatabaseLog
+{
+    public function write() {
+        echo 'Database log write...' . "\n";
+    }
+}
+
+class User
+{
+    protected $log;
+    public function __construct(FileLog $log) {
+        $this->log = $log;
+    }
+    public function login() {
+        echo "login success...\n";
+        $this->log->write();
+    }
+}
+
+$user = new User(new FileLog());
+$user->login();
+
+```
+
+看上去没有任何问题，但是如果日后需求变更，需要换database记录日志时，就得改User类，没有解耦。所以才有了面向接口的编程，也就是laravel中的契约，代码修改如下
+
+```php
+
+interface Log
+{
+    public function write();
+}
+
+class FileLog implements Log
+{
+    public function write() {
+        echo 'File log write...' . "\n";
+    }
+}
+
+class DatabaseLog implements Log
+{
+    public function write() {
+        echo 'Database log write...' . "\n";
+    }
+}
+
+class User 
+{
+    protected $log;
+    public function __construct(Log $log) {
+        $this->log = $log;
+    }
+    public function login() {
+        echo "login success...\n";
+        $this->log->write();
+    }
+}
+
+$user = new User(new FileLog());
+$user->login();
+
+```
+
+#### laravel中的契约是什么样子的？
+
+例如Cache，定义的契约在 Illuminate\Contracts\Cache\Repository 文件中
+
+### Facade外观模式背后的实现原理
+
+#### 外观模式理解
+
+上面写过需要$ioc->make('user')才能拿到User的实例，再去用$user->login()。可以进一步简化一下，比如:
+
+```php
+
+UserFacade::login();
+
+```
+
+#### Facade工作原理
+
+- Facade 核心原理就是在UserFacade提前注入Ioc容器
+- 定义一个服务器提供者的外观类，在该类定义一个类的变量，和Ioc绑定key一样
+- 通过静态魔术方法__callStatic可以得到当前想要调用的login
+- 使用static::$ioc->make('user')
+
+#### 具体实现
+
+- 我们定义一个User的外观类UserFacade
+
+```php
+
+class UserFacade
+{
+    protected static $ioc;
+    
+    public static function setFacadeIoc($ioc) {
+        static::$ioc = $ioc;
+    } 
+
+    protected static function getFacadeAccessor() {
+        return 'user';
+    }
+
+    // 魔术方法，当静态方法被调用时会被触发
+    public function __callStatic($method, $args) {
+        $instance = static::$ioc->make(static::getFacadeAccessor());
+        return $instance->$method($args);
+    }
+}
+
+$ioc = new Ioc();
+$ioc->bind('log', 'FileLog');
+$ioc->bind('user', 'User');
+UserFacade::setFacadeIoc($ioc);
+UserFacade::login();
+
+```
+
+### laravel中间件
+
+laravel中间件提供了一种方便的机制来过滤进入应用的HTTP请求。例如：laravel内置了一个中间件来验证用户的身份认证，如果没有通过身份认证，中间件会将用户重定向到登陆界面。如果用户被认证，则中间件允许该请求进入该应用。
+
+当然，除了身份认证外，还可以编写另外的中间件来执行各种任务。例如：CORS中间件负责为所有离开应用的响应添加适合的头部信息，日志中间件可以记录所有传入应用的请求。
+
+laravel自带了一些中间件，在app/Http/Middleware目录。
+
+简单来说就是请求在不去修改自身逻辑，通过中间件来扩展处理一些功能。
+
+#### 实现一个中间件
+
+```php
+
+interface Middleware
+{
+    public static function handle(Closure $next);
+}
+
+class VertifyCsrfToken implements Middleware
+{
+    public static function handle(Closure $next) {
+        echo "验证CSRF token...\n";
+        $next();
+    }
+}
+
+class VertifyAuth implements Middleware
+{
+    public static function handle(Closure $next) {
+        echo "验证是否登录...\n";
+        $next();
+    }
+}
+
+class SetCookie implements Middleware
+{
+    public static function handle(Closure $next) {
+        $next();
+        echo "设置Cookie信息...\n";
+    }
+}
+
+function call_middleware() {
+    SetCookie::handle(function(){
+        VertifyAuth::handle(function(){
+            VertifyCsrfToken::handle(function(){
+                echo "执行的程序\n";
+            });
+        });
+    });
+}
+
+call_middleware();
+
+```
+
+原理很简单，暂不赘述了。
+
+仔细看上述代码，发现这样的代码肯定不好维护与扩展的，需要修改于一下。这其中用到了两个函数
+
+- call_user_func()
+- array_reduce()
+
+```php
+
+interface Middleware
+{
+    public static function handle(Closure $next);
+}
+
+class VertifyCsrfToken implements Middleware
+{
+    public static function handle(Closure $next) {
+        echo "验证CSRF token...\n";
+        $next();
+    }
+}
+
+class VertifyAuth implements Middleware
+{
+    public static function handle(Closure $next) {
+        echo "验证是否登录...\n";
+        $next();
+    }
+}
+
+class SetCookie implements Middleware
+{
+    public static function handle(Closure $next) {
+        $next();
+        echo "设置Cookie信息...\n";
+    }
+}
+
+$handle = function() {
+    echo "执行的程序\n";
+};
+
+$pipe_arr = [
+    'VertifyCsrfToken',
+    'VertifyAuth',
+    'SetCookie'
+];
+
+$callback = array_reduce($pipe_arr, function($stack, $pipe) {
+    return function() use($stack, $pipe) {
+        return $pipe::handle($stack);
+    };
+}, $handle);
+
+call_user_func($callback);
+
+```
+
+laravel中的middleware也是通过call_user_func和array_reduce来实现的。
+
+### laravel的生命周期
+
+
+
+### 致谢
+作者：cxp1539
+[链接](https://learnku.com/docs/laravel-core-concept)
