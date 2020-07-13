@@ -83,3 +83,145 @@ add.invoke(list, "ki");
 System.out.println(list);
 
 ```
+
+泛型一般有三种使用方式：泛型类、泛型接口、泛型方法
+
+- 泛型类
+
+```java
+
+// 此处T可以随便标识，常见的如T、E、K、V等形式的参数常用于标识泛型
+// 在实例化泛型类时，必须指定T的具体类型
+public class Generic<T> {
+    private T key;
+    public Generic(T key) {
+        this.key = key;
+    }
+    public T getKey() {
+        return key;
+    }
+}
+
+// 实例化泛型类
+Generic<Integer> genericInteger = new Generic<Integer>(123);
+
+```
+
+- 泛型接口
+
+```java
+
+public interface Generator<T> {
+    public T method();
+}
+
+```
+
+实现泛型接口，不指定类型
+
+```java
+
+class GeneratorImpl<T> implements Generator<T> {
+    @Override
+    public T method() {
+        return null;
+    }
+}
+
+```
+
+实现泛型接口，指定类型
+
+```java
+
+class GeneratorImpl<T> implements Generator<String> {
+    @Override
+    public String method() {
+        return "hello";
+    }
+}
+
+```
+
+- 泛型方法
+
+```java
+
+public static <E> void printArray(E[] inputArray) {
+    for(E element: inputArray) {
+        System.out.println(element);
+    }
+    System.out.println();
+}
+
+// usage
+// 创建不同类型的数组：Integer，Double， Charactor
+Integer[] intArray = {1,2,3};
+String[] stringArray = {"Hello", "World"};
+printArray(intArray);
+printArray(stringArray);
+
+```
+
+`常用的通配符为：T，E，K，V，?`
+
+- ? 代表不确定的java类型
+- T (type)表示具体的一个java类型
+- K V (key value)分别代表java键值中的Key Value
+- E (element)代表Element
+
+[Java泛型文章1](https://juejin.im/post/5d5789d26fb9a06ad0056bd9)
+[Java泛型文章2](https://www.cnblogs.com/wuqinglong/p/9456193.html)
+
+### ==和equals的区别
+`==`：比较两个对象的地址是否相等。即判断两个对象是不是同一个对象。(基本数据类型==比较的是值，引用数据类型==比较的是内存地址)
+
+> 因为 Java 只有值传递，所以，对于 == 来说，不管是比较基本数据类型，还是引用数据类型的变量，其本质比较的都是值，只是引用类型变量存的值是对象的地址。
+
+`equals()`：比较两个对象是否相等，不能用于比较基本类型的变量。equals()方法存在于Object类中，而Object类是所有类的直接或间接父类。
+
+Object类equals方法
+
+```java
+
+public boolean equals(Object obj) {
+    return (this==obj);
+}
+
+```
+
+equals() 方法使用存在两种情况
+
+- 类没有覆盖 equals()方法。则通过 equals()比较该类的两个对象时，等价于通过“==”比较这两个对象。使用的默认是 Object类equals()方法。
+- 类覆盖了 equals()方法。一般，我们都覆盖 equals()方法来两个对象的内容相等；若它们的内容相等，则返回 true(即，认为这两个对象相等)。 
+
+```java
+
+public class test1 {
+    public static void main(String[] args) {
+        String a = new String("ab"); // a 为一个引用
+        String b = new String("ab"); // b为另一个引用,对象的内容一样
+        String aa = "ab"; // 放在常量池中
+        String bb = "ab"; // 从常量池中查找
+        if (aa == bb) // true
+            System.out.println("aa==bb");
+        if (a == b) // false，非同一对象
+            System.out.println("a==b");
+        if (a.equals(b)) // true
+            System.out.println("aEQb");
+        if (42 == 42.0) { // true
+            System.out.println("true");
+        }
+    }
+}
+
+```
+
+说明
+
+- String 中的 equals 方法是被重写过的，因为 Object 的 equals 方法是比较的对象的内存地址，而 String 的 equals 方法比较的是对象的值。
+- 当创建 String 类型的对象时，虚拟机会在常量池中查找有没有已经存在的值和要创建的值相同的对象，如果有就把它赋给当前引用。如果没有就在常量池中重新创建一个 String 对象。
+
+### hashCode()与 equals()
+暂空
+
