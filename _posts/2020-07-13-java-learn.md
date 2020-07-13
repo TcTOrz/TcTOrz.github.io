@@ -7,6 +7,8 @@ keywords: Java
 topmost: false
 ---
 
+Java边学边记。
+
 ### 说明JVM、JRE、JDK
 - JVM --java virtual machine。java虚拟机，主要功能就是将编译好的class文件进行解释执行，因为class文件不能由操作系统直接执行，需要jvm解释
 - JRE --java runtime environment。java运行时环境，class在运行时需要调用各种java类库，即jvm要想运行class，必须依赖jre中的类库，可以认为jvm+lib组成jre
@@ -47,3 +49,37 @@ Java要确定每种基本类型所占存储空间的大小。它的大小并不�
 | float | 32 bits | -2^31 | +2^31-1 | Float |
 | double | 64 bits | -2^63 | +2^63-1 | Double |
 | void | - | - | - | Void | 
+
+### Java常见关键字
+
+| type | 关键字 |
+| :----: | :----: | 
+| 访问控制 | private, protected, public |
+| 类，方法和变量修饰符 | abstract, class, extends, final, implements, interface, native, new, static, strctfp, synchronized, transient, volatile |
+| 程序控制 | break, continue, return, do, while, if, else, for, instanceof, switch, case, default |
+| 错误处理 | try, catch, throw, throws, finally |
+| 包相关 | import, package |
+| 基本类型 | boolean, byte, char, double, float, int, long, short, null, true, false |
+| 变量引用 | super, this, void |
+| 保留字 |  goto, const |
+
+### Java泛型了解么？什么是类型擦除？介绍一下通配符？
+Java泛型(generics)是JDK5中引入的一个新特性，泛型提供了编译时类型安全监测机制，该机制允许程序员在编译时监测到非法的类型。泛型的本质是参数化类型，也就是说所操作的数据类型被指定为一个参数。
+
+`Java的泛型是伪泛型，这是因为Java在编译期间，所有的泛型信息都会被擦掉，这也就是通常所说的类型擦除。`
+
+```java
+
+List<Integer> list = new ArrayList<>();
+list.add(12);
+// 报错
+list.add('a');
+
+Class<? extends List> clazz = list.getClass();
+Method add = clazz.getDeclareMethod("add", Object.class);
+// 通过反射添加，是可以的
+add.invoke(list, "ki");
+
+System.out.println(list);
+
+```
