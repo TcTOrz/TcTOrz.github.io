@@ -16,3 +16,14 @@ JDK包含JRE，JRE包含JVM。
 
 ### 什么是IDE
 集成开发环境（Integrated Development Environment）是一类软件，将程序开发环境和程序调试环境集合在一起，提升开发效率。
+
+### 在java中单双引号的区别
+- 单引号： 代表字符。
+- 双引号： 代表字符串。
+
+```java
+
+char c = 'a';
+String s = "abc";
+
+```
