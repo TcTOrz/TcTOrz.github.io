@@ -225,3 +225,61 @@ public class test1 {
 ### hashCode()与 equals()
 暂空
 
+### Linux/Windows JAVA环境配置/tomcat安装
+
+- Windows
+> [下载](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html)JDK,选择对应下载的版本即可。
+> 安装完成后配置PATH环境变量 我的电脑->属性->高级系统设置->环境变量
+> 添加系统变量 JAVA_HOME => JDK安装目录
+> 添加系统变量 Path => %JAVA_HOME%\bin
+> 安装IDEA是设置正确的JDK目录即可正常使用
+
+- Linux
+> [下载](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html)JDK,选择对应下载的版本即可。
+> 解压后设置环境变量
+
+```bash
+
+# 在/etc/profile中添加
+# Java Environment Settings
+export JAVA_HOME=/opt/java/jdk-14.0.1
+#export CLASSPATH=$JAVA_HOME/lib/tools.jar
+export PATH=$PATH:$JAVA_HOME/bin
+#export JRE_HOME=$JAVA_HOME/jre
+
+```
+
+生效
+
+```bash
+
+source /etc/profile
+
+```
+
+- Linux Tomcat安装
+> [下载](https://tomcat.apache.org/)Tomcat,选择对应版本。
+> 解压
+> conf/server.xml 配置端口信息等
+> conf/tomcat-users.xml添加
+
+```xml
+
+<role rolename="admin-gui"/>
+  <role rolename="admin-script"/>
+  <role rolename="manager-gui"/>
+  <role rolename="manager-script"/>
+  <role rolename="manager-jmx"/>
+  <role rolename="manager-status"/>
+  <user username="tomcat" password="s3cret" roles="manager-gui,manager-script,manager-jmx,manager-status,admin-script,admin-gui"/>
+
+```
+
+> webapps/manager/META-INF/context.xml 注释,作用是可以跨服务器访问Tomcat管理界面
+
+```xml
+
+<!-- <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" /> -->
+
+```
