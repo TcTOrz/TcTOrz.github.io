@@ -299,3 +299,84 @@ Java中有4中访问权限： 公有(public)、私有(private)、保护(protecte
 | 属性 | 只能被当前类访问 | 可以被相同包中的类访问 | 可以被相同包中的类和当前类的子类访问 | 可以被所有类访问 |
 | 方法 | 只能被当前类访问 | 可以被相同包中的类访问 | 可以被相同包中的类和当前类的子类访问 | 可以被所有类访问 |
 
+### 方法重载（Overload）和覆写（Override）的区别
+
+重载是指在相同类内定义名称相同但参数个数或类型或顺序不同的方法。而覆写是在子类当中定义名称、参数个数与类型均与父类相同的方法，用于覆写父类的方法。区别如下：
+
+| 区别 | 重载 | 覆写 |
+| :---: | :---: | :---: |
+| 英文单词 | Overload | Override |
+| 定义 | 方法名称相同、参数的类型及个数和顺序至少1个不同 | 方法名称、参数的类型及个数、返回值类型完全相同 |
+| 范围 | 只发生在一个类中 | 发生在继承关系中 |
+| 权限 | 不受权限控制 | 被覆写的方法不能拥有比父类更严格的访问控制权限 |
+
+### 基本数据类型的包装类
+
+| 基本数据类型 | 基本数据类型包装类 |
+| :---------: | :-----------: |
+| int | Integer |
+| char | Character |
+| float | Float |
+| double | Double |
+| byte | Byte |
+| long | Long |
+| short | Short |
+| boolean | Boolean |
+
+###### Usage
+
+```java
+
+public class IntegerDemo {
+    public static void main(String[] args) {
+        String a = "1234";
+        int i = Integer.parseInt(a);
+        i++;
+        System.out.println(i);  // 1235
+    }
+}
+
+```
+
+### 异常处理的标准格式
+
+```java
+
+public class ThrowDemo {
+    public static void main(String[] args) {
+        int[] arr = new int[5];
+        try {
+//            ThrowDemo t = new ThrowDemo();
+            setZero(arr, 10);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("异常:"+e);
+        }
+        System.out.println("main方法结束");
+    }
+
+    public static void setZero(int[] arr, int index) throws ArrayIndexOutOfBoundsException {
+        System.out.println("-----------setZero开始-----------");
+        try {
+            arr[index] = 0;
+        }catch (ArrayIndexOutOfBoundsException ex) {
+            throw ex;
+        }finally {
+            System.out.println("-----------setZero结束-----------");
+        }
+    }
+}
+
+// -----------setZero开始-----------
+// -----------setZero结束-----------
+// 异常:java.lang.ArrayIndexOutOfBoundsException: 10
+// main方法结束
+
+```
+
+###### 异常处理的继承关系
+
+异常类型的最大父类是Throwable类，其分为两个子类，分别为Exception、Error。Exception表示程序可以处理的异常，而Error表示JVM错误，一般无需开发人员自己处理。
+
+###### RuntimeException和Exception的区别
+
+RuntimeException类是Exception类的子类，Exception定义的异常必须处理，而RuntimeException定义的异常可以选择性的进行处理。
