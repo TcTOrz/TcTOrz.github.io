@@ -59,6 +59,38 @@ topmost: false
 <!-- * TOC
 {:toc} -->
 
+### 下面函数x输出？
+
+```js
+
+function test() {
+  var x = 'var', result = [];
+  result.push(x);
+  try {
+    throw 'exception';
+  }catch (x) {
+    x = 'catch';
+  }
+  result.push(x);
+  return result;
+}
+// Javascript没有块级作用域的一个例外恰好是其异常处理。
+test(); // ['var', 'var']
+
+```
+
+参考
+- Effective Javascript 第12条：理解变量声明提升
+
+### 闭包的三个基本事实
+
+- Javascript允许你引用在当前函数以外定义的变量。
+- 即使外部函数已经返回，当前函数仍然可以引用在外部函数所定义的变量。
+- 闭包可以更新外部变量的值。
+
+参考
+- Effective Javascript 第11条：熟练掌握闭包
+
 ### 请解释事件委托（event delegation）
 事件委托是将事件监听器添加到父元素，而不是每个子元素单独设置监听。当触发子元素时，事件会冒泡到父元素，监听器就会触发。
 这种技术的好处是：
@@ -1364,4 +1396,5 @@ function throttle(func, wait) {
 - 部分摘录自《JavaScript权威指南》(第6版)
 - 部分摘录自《深入理解ES6》
 - 部分摘录自《Learning TypeScript中文版》
+- 部分摘录自《Effective Javascript》
 - 感谢他们的付出!
