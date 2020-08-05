@@ -205,6 +205,46 @@ deepFlatten([1, [2], [[3], 4], 5]); // [1, 2, 3, 4, 5]
 
 ```
 
+### `difference`
+
+`Array.prototype.filter()`
+
+```js
+
+const difference = (a, b) => {
+    const s = new Set(b);
+    return a.filter(x => !s.has(x));
+};
+difference([1, 2, 3], [1, 2, 4]); // [3]
+
+```
+
+### `differenceBy`
+
+`Array.prototype.filter()` `Array.prototype.map()`
+
+```js
+
+const differenceBy = (a, b, fn) => {
+    const s = new Set(b.map(fn));
+    return a.map(fn).filter(x => !s.has(x));
+};
+differenceBy([2.1, 1.2], [2.3, 3.4], Math.floor); // [1]
+differenceBy([{ x: 2 }, { x: 1 }], [{ x: 1 }], v => v.x); // [2]
+
+```
+
+### `differenceWith`
+
+`Array.prototype.filter()` `Array.prototype.findIndex()`
+
+```js
+
+const differenceWith = (arr, val, comp) => arr.filter(a => val.findIndex(b => comp(a, b)) === -1); // 相当于双重循环
+differenceWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0], (a, b) => Math.round(a) === Math.round(b)); // [1, 1.2]
+
+```
+
 ### `groupBy`
 
 根据给定的函数对数组的元素进行分组。
