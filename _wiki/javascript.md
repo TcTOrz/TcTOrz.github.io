@@ -1,6 +1,6 @@
 ---
 layout: wiki
-title: Javascript-未完成
+title: Javascript
 categories: [Javascript, 面试]
 description: 学习JS,及时记录下来
 keywords: Javascript, 面试
@@ -242,6 +242,64 @@ differenceBy([{ x: 2 }, { x: 1 }], [{ x: 1 }], v => v.x); // [2]
 
 const differenceWith = (arr, val, comp) => arr.filter(a => val.findIndex(b => comp(a, b)) === -1); // 相当于双重循环
 differenceWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0], (a, b) => Math.round(a) === Math.round(b)); // [1, 1.2]
+
+```
+
+### `dropRightWhile`
+
+`Array.prototype.slice()`
+
+```js
+
+const dropRightWhile = (arr, func) => {
+    let rightIndex = arr.length;
+    while(rightIndex-- && !func(arr[rightIndex]));
+    return arr.slice(0, rightIndex + 1);
+}
+dropRightWhile([1, 2, 3, 4], n => n < 3); // [1, 2]
+
+```
+
+### `everyNth`
+
+`Array.prototype.filter()`
+
+```js
+
+const everyNth = (arr, nth) => arr.filter((e, i) => i % nth === nth - 1);
+everyNth([1, 2, 3, 4, 5, 6], 2); // [ 2, 4, 6 ]
+
+```
+
+### `filterNonUnique`
+
+`Array.prototype.filter()`
+
+```js
+
+const filterNonUnique = arr => arr.filter( i => arr.indexOf(i) === arr.lastIndexOf(i) );
+filterNonUnique([1, 2, 2, 3, 4, 4, 5]); // [1, 3, 5]
+
+```
+
+### `filterNonUniqueBy`
+
+`Array.prototype.every()` `Array.prototype.filter()`
+
+```js
+
+// 索引不等并且值也不等，说明唯一
+const filterNonUniqueBy = (arr, fn) => arr.filter((v, i) => arr.every((x, j) => (i === j) === fn(v, x)));
+filterNonUniqueBy(
+  [
+    { id: 0, value: 'a' },
+    { id: 1, value: 'b' },
+    { id: 2, value: 'c' },
+    { id: 1, value: 'd' },
+    { id: 0, value: 'e' }
+  ],
+  (a, b) => a.id == b.id
+); // [ { id: 2, value: 'c' } ]
 
 ```
 
