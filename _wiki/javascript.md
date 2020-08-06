@@ -303,6 +303,70 @@ filterNonUniqueBy(
 
 ```
 
+### `findLastIndex`
+
+`Array.prototype.map()` `Array.prototype.filter()` `Array.prototype.pop()`
+
+```js
+
+const findLastIndex = (arr, fn) => 
+    (
+        arr.map((val, i) => [i, val])
+            .filter(([i, val]) => fn(val, i, arr))
+            .pop() || [-1]
+    )[0];
+findLastIndex([1, 2, 3, 4], n => n % 2 === 1); // 2 (index of the value 3)
+findLastIndex([1, 2, 3, 4], n => n === 5); // -1 (default value when not found)
+
+```
+
+### `flatten`
+
+`Array.prototype.reduce()` `Array.prototype.concat()`
+
+```js
+
+// 注意	逻辑与`&&`和条件运算符`… ? … : …`优先级关系
+const flatten = (arr, depth = 1) => 
+    arr.reduce((a, v) => a.concat(depth > 1 && Array.isArray(v) ? flatten(v, depth-1) : v), []);
+flatten([1, [2], 3, 4]); // [1, 2, 3, 4]
+flatten([1, [2, [3, [4, 5], 6], 7], 8], 2); // [1, 2, 3, [4, 5], 6, 7, 8]
+
+```
+
+### `forEachRight`
+
+`Array.prototype.slice()` `Array.prototype.reverse()` `Array.prototype.forEach()`
+
+> slice()和concat()适用于不包含引用对象的**一维数组**的深拷贝,多维数组则浅拷贝。如果数组需要深拷贝，则使用JSON.parse(JSON.stringify(array))
+
+[MDN concat描述](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/concat)
+[MDN slice描述](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/slice)
+
+```js
+
+// arr.slice主要目的是clone原数组
+// 注意 slice()和concat()适用于不包含引用对象的<一维数组>的深拷贝,多维数组则浅拷贝。
+//      如果数组需要深拷贝，则使用JSON.parse(JSON.stringify(array))
+const forEachRight = (arr, fn) => arr.slice().reverse().forEach(fn);
+forEachRight([1, 2, 3, 4], val => console.log(val)); // '4', '3', '2', '1'
+
+```
+
+### `frequencies`
+
+`Array.prototype.reduce()`
+
+```js
+
+const frequencies = arr => arr.reduce((a, v) => {
+    a[v] = a[v] ? a[v] + 1 : 1;
+    return a;
+}, {});
+frequencies(['a', 'b', 'a', 'c', 'a', 'a', 'b']); // { a: 4, b: 2, c: 1 }
+
+```
+
 ### `groupBy`
 
 根据给定的函数对数组的元素进行分组。
@@ -319,6 +383,174 @@ const groupBy = (arr, fn) =>
 
 groupBy([6.1, 4.2, 6.3], Math.floor); // {4: [4.2], 6: [6.1, 6.3]}
 groupBy(['one', 'two', 'three'], 'length'); // {3: ['one', 'two'], 5: ['three']}
+
+```
+
+### `haveSameContents`
+
+`Array.prototype.filter()`
+
+```js
+
+const haveSameContents = (a, b) => {
+    for( const v of new Set([...a, ...b]) ) {
+        if( a.filter(e => e === v).length !== b.filter(e => e === v).length )
+        return false;
+        return true;
+    }
+};
+haveSameContents([1, 2, 4], [2, 4, 1]); // true
+
+```
+
+### `head`
+
+```js
+
+const head = arr => (arr && arr.length ? arr[0] : undefined);
+head([1, 2, 3]); // 1
+head([]); // undefined
+head(null); // undefined
+head(undefined); // undefined
+
+```
+
+### 如何在`JavaScript`中转换并迭代成数组？
+
+`String`
+
+```js
+
+const name = 'name';
+const letters = [...name];  // ["n", "a", "m", "e"]
+
+```
+
+`Set`
+
+```js
+
+const data = [1, 2, 3, 1, 2, 4];
+const values = new Set(data);
+const uniqueValues = [...values];   // [1, 2, 3, 4]
+
+```
+
+`NodeList`
+
+```js
+
+const nodes = document.childNodes;
+const nodeArray = [...nodes];
+
+```
+
+### 如何在`JavaScript`中合并两个数组？
+
+```js
+
+const a = [1, 2, 3];
+const b = [4, 5, 6];
+const merged = [...a, ...b]; // [1, 2, 3, 4, 5, 6]
+
+const a = [1, 2, 3];
+const b = [4, 5, 6];
+const merged = [].concat(a, b); // [1, 2, 3, 4, 5, 6]
+// -- OR --
+const alsoMerged = a.concat(b); // [1, 2, 3, 4, 5, 6]
+
+const a = [1, 2, 3];
+const b = true;
+const c = 'hi';
+const spreadAb = [...a, ...b]; // Error: b is not iterable
+const spreadAc = [...a, ...c]; // [1, 2, 3, 'h', 'i'], wrong result
+// You should use [...a, b] and [...a, c] instead
+const concatAb = [].concat(a, b); // [1, 2, 3, true]
+const concatAb = [].concat(a, c); // [1, 2, 3, 'hi']
+
+```
+
+### `includesAll`
+
+`Array.prototype.every()` `Array.prototype.includes()`
+
+```js
+
+const includesAll = (arr, values) => values.every(v => arr.includes(v));
+includesAll([1, 2, 3, 4], [1, 4]); // true
+includesAll([1, 2, 3, 4], [1, 5]); // false
+
+```
+
+### `includesAny`
+
+`Array.prototype.some()` `Array.prototype.includes()`
+
+```js
+
+const includesAny = (arr, values) => values.some(v => arr.includes(v));
+includesAny([1, 2, 3, 4], [2, 9]); // true
+includesAny([1, 2, 3, 4], [8, 9]); // false
+
+```
+
+### `indexOfAll`
+
+`Array.prototype.reduce()`
+
+```js
+
+const indexOfAll = (arr, val) => arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), []);
+indexOfAll([1, 2, 3, 1, 2, 3], 1); // [0, 3]
+indexOfAll([1, 2, 3], 4); // []
+
+```
+
+### `initialize2DArray`
+
+`Array.prototype.map()`
+
+```js
+
+const initialize2DArray = (w, h, val) => 
+    Array.from({length: w}).map(() => Array.from({length: h}).fill(val));
+initialize2DArray(2, 2, 0); // [[0,0], [0,0]]
+
+```
+
+### `initializeArrayWithRange`
+
+`Array.from()`
+
+```js
+
+const initializeArrayWithRange = (start, stop, step) => Array.from({length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
+initializeArrayWithRange(0, 4, 1);
+// [0, 1, 2, 3, 4] 
+
+```
+
+### `initializeArrayWithValues`
+
+```js
+
+const initializeArrayWithValues = (n, val = 0) => Array(n).fill(val);
+initializeArrayWithValues(5, 2); // [2, 2, 2, 2, 2]
+
+```
+
+### `initializeNDArray`创建n维数组
+
+`Array.prototype.map()`
+
+```js
+
+const initializeNDArray = (val, ...args) =>
+    args.length === 0
+    ? val
+    : Array.from({length: args[0]}).map(() => initializeNDArray(val, ...args.slice(1)));
+initializeNDArray(1, 3); // [1,1,1]
+initializeNDArray(5, 2, 2, 2); // [[[5,5],[5,5]],[[5,5],[5,5]]]
 
 ```
 
@@ -424,36 +656,6 @@ for(let item of myList) {
 for(let item of myList.values()) {
     console.log(item);
 }
-
-```
-
-### 如何在`JavaScript`中转换并迭代成数组？
-
-`String`
-
-```js
-
-const name = 'name';
-const letters = [...name];  // ["n", "a", "m", "e"]
-
-```
-
-`Set`
-
-```js
-
-const data = [1, 2, 3, 1, 2, 4];
-const values = new Set(data);
-const uniqueValues = [...values];   // [1, 2, 3, 4]
-
-```
-
-`NodeList`
-
-```js
-
-const nodes = document.childNodes;
-const nodeArray = [...nodes];
 
 ```
 
