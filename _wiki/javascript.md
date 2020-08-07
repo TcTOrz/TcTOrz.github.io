@@ -554,6 +554,222 @@ initializeNDArray(5, 2, 2, 2); // [[[5,5],[5,5]],[[5,5],[5,5]]]
 
 ```
 
+### `insertAt`
+
+`Array.prototype.splice()`
+
+```js
+
+const insertAt = (arr, i, ...v) => {
+    arr.splice(i, 0, ...v);
+    return arr;
+};
+let myArray = [1, 2, 3, 4];
+insertAt(myArray, 2, 5); // myArray = [1, 2, 3, 5, 4]
+let otherArray = [2, 10];
+insertAt(otherArray, 0, 4, 6, 8); // otherArray = [2, 4, 6, 8, 10]
+
+```
+
+### `intersection`返回两个数组中都存在的数据的数组
+
+`Array.prototype.filter()`
+
+```js
+
+const intersection = (a, b) => {
+    const s = new Set(b);
+    return [...new Set(a)].filter(x => s.has(x));
+};
+intersection([1, 2, 3], [4, 3, 2]); // [2, 3]
+
+```
+
+### `intersectionBy`
+
+`Array.prototype.filter()`
+
+```js
+
+const intersectionBy = (a, b, fn) => {
+    const s = new Set(b.map(fn));
+    return [...new Set(a)].filter(x => s.has(fn(x)));
+};
+intersectionBy([2.1, 1.2], [2.3, 3.4], Math.floor); // [2.1]
+intersectionBy([{ title: 'Apple' }, { title: 'Orange' }], [{ title: 'Orange' }, { title: 'Melon' }], x => x.title) // [{ title: 'Orange' }]
+
+```
+
+### `intersectionWith`
+
+`Array.prototype.filter()` `Array.prototype.findIndex()`
+
+```js
+
+const intersectionWith = (a, b, comp) => a.filter(x => b.findIndex(y=> comp(x, y)) !== -1);
+intersectionWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0, 3.9], (a, b) => Math.round(a) === Math.round(b)); // [1.5, 3, 0]
+
+```
+
+### `isContainedIn`
+
+`Array.prototype.filter()` `Array.prototype.some()`
+
+```js
+
+const isContainedIn = (a, b) => {
+    for( const v of new Set(a) ) {
+        if(!b.some(e => e === v) || a.filter(e => e === v).length > b.filter(e => e === v).length)
+            return false;
+    }
+    return true;
+};
+isContainedIn([1, 4], [2, 4, 1]); // true
+
+```
+
+### `isSorted`返回1，升序。-1降序。0没有排序
+
+```js
+
+const isSorted = arr => {
+    let direction = -(arr[0] - arr[1]);
+    for(let [i, val] of arr.entries()) {
+        direction = !direction ? -(arr[i - 1] - arr[i]) : direction;
+        if (i === arr.length - 1) 
+            return !direction ? 0 : direction / Math.abs(direction);
+        else if ((val - arr[i + 1]) * direction > 0) 
+            return 0;
+    }
+};
+isSorted([0, 1, 2, 2]); // 1
+isSorted([4, 3, 2]); // -1
+isSorted([4, 3, 5]); // 0
+
+```
+
+### `JSONtoCSV`
+
+`Array.prototype.join()` `Array.prototype.reduce()`
+
+```js
+
+const JSONtoCSV = (arr, columns, delimiter = ",") => 
+    [
+        columns.join(delimiter),
+        ...arr.map(obj => 
+            columns.reduce(
+                (acc, key) => `${acc}${!acc.length ? '' : delimiter}"${!obj[key] ? '' : obj[key]}"`,
+                ''
+            )
+        )
+    ].join('\n');
+JSONtoCSV([{ a: 1, b: 2 }, { a: 3, b: 4, c: 5 }, { a: 6 }, { b: 7 }], ['a', 'b']); // 'a,b\n"1","2"\n"3","4"\n"6",""\n"","7"'
+JSONtoCSV([{ a: 1, b: 2 }, { a: 3, b: 4, c: 5 }, { a: 6 }, { b: 7 }], ['a', 'b'], ';'); // 'a;b\n"1";"2"\n"3";"4"\n"6";""\n"";"7"'
+
+```
+
+### `juxt`
+
+`Array.prototype.map()`
+
+```js
+
+const juxt = (...fns) => (...args) => [...fns].map(fn => [...args].map(fn));
+const juxt = (...fns) => (...args) => [...args].map(arg => [...fns].map(fn => fn(arg)));
+juxt(
+  x => x + 1,
+  x => x - 1,
+  x => x * 10
+)(1, 2, 3); // [[2,3,4],[0,1,2],[10,20,30]]
+
+juxt(
+  s => s.length,
+  s => s.split(" ").join("-")
+)("30 seconds of code"); // [[18],['30-seconds-of-code']]
+
+```
+
+### `last`
+
+```js
+
+const last = arr => (arr && arr.length ? arr[arr.length - 1] : undefined);
+last([1, 2, 3]); // 3
+last([]); // undefined
+last(null); // undefined
+last(undefined); // undefined
+
+```
+
+### `longestItem`
+
+`Array.prototype.reduce()`
+
+```js
+
+const longestItem = (...args) => args.reduce((a, x) => (x.length > a.length ? x : a));
+longestItem('this', 'is', 'a', 'testcase'); // 'testcase'
+longestItem(...['a', 'ab', 'abc']); // 'abc'
+longestItem(...['a', 'ab', 'abc'], 'abcd'); // 'abcd'
+longestItem([1, 2, 3], [1, 2], [1, 2, 3, 4, 5]); // [1, 2, 3, 4, 5]
+longestItem([1, 2, 3], 'foobar'); // 'foobar'
+
+```
+
+### `maxN`
+
+`Array.prototype.sort()` `Array.prototype.slice()`
+
+```js
+
+const maxN = (arr, n = 1) => [...arr].sort((a, b) => b - a).slice(0, n);
+maxN([1, 2, 3]); // [3]
+maxN([1, 2, 3], 2); // [3,2]
+
+```
+
+### `mostFrequent`
+
+`Array.prototype.reduce()`
+
+```js
+
+const mostFrequent = arr => 
+    Object.entries(
+        arr.reduce((a, v) => {
+            a[v] = a[v] ? a[v] + 1 : 1;
+            return a;
+        }, {})
+    ).reduce((a, v) => (v[1] >= a[1] ? v : a), [null, 0])[0];
+mostFrequent(['a', 'b', 'a', 'c', 'a', 'a', 'b']); // 'a'
+
+```
+
+### `nthElement`
+
+`Array.prototype.slice()`
+
+```js
+
+const nthElement = (arr, n = 0) => (n === -1 ? arr.slice(n) : arr.slice(n, n + 1))[0];
+nthElement(['a', 'b', 'c'], 1); // 'b'
+nthElement(['a', 'b', 'b'], -3); // 'a'
+
+```
+
+### `offset`
+
+`Array.prototype.slice()`
+
+```js
+
+const offset = (arr, offset) => [...arr.slice(offset), ...arr.slice(0, offset)];
+offset([1, 2, 3, 4, 5], 2); // [3, 4, 5, 1, 2]
+offset([1, 2, 3, 4, 5], -2); // [4, 5, 1, 2, 3]
+
+```
+
 ### `partition`
 
 根据提供的每个元素中的布尔值，将元素分为两个数组
@@ -572,6 +788,30 @@ const partition = (arr, fn) =>
     );
 const users = [{ user: 'barney', age: 36, active: false }, { user: 'lint', age: 16, active: false }, { user: 'fred', age: 40, active: true }];
 partition(users, o => o.active); // [[{ 'user': 'fred',    'age': 40, 'active': true }],[{ 'user': 'barney',  'age': 36, 'active': false }, { user: 'lint', age: 16, active: false }]]
+
+```
+
+### `permutations`
+
+`Array.prototype.map()` `Array.prototype.reduce()`
+
+```js
+
+const permutations = arr => {
+    if (arr.length <= 2) return arr.length === 2 ? [arr, [arr[1], arr[0]]] : arr;
+    return arr.reduce(
+        (acc, item, i) => 
+            acc.concat(
+                permutations([...arr.slice(0, i), ...arr.slice(i + 1)]).map(val => [item, ...val])
+            ),
+            []
+    );
+};
+// 遍历步骤：
+// 1、item： 1. 33/5递归，返回交换后的数值，map合并数值
+// 2、item： 33. 1/5递归，返回交换后的数值，map合并数值
+// 3、item： 5. 1/33递归，返回交换后的数值，map合并数值
+permutations([1, 33, 5]); // [ [ 1, 33, 5 ], [ 1, 5, 33 ], [ 33, 1, 5 ], [ 33, 5, 1 ], [ 5, 1, 33 ], [ 5, 33, 1 ] ]
 
 ```
 
