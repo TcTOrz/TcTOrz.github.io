@@ -815,6 +815,173 @@ permutations([1, 33, 5]); // [ [ 1, 33, 5 ], [ 1, 5, 33 ], [ 33, 1, 5 ], [ 33, 5
 
 ```
 
+### `pull`
+
+`Array.prototype.filter()` `Array.prototype.includes()`
+
+```js
+
+const pull = (arr, ...args) => {
+//   let argState = Array.isArray(args[0]) ? args[0] : args;
+  let pulled = arr.filter(v => !args.includes(v));
+  arr.length = 0;
+  pulled.forEach(v => arr.push(v));
+};
+let myArray = ['a', 'b', 'c', 'a', 'b', 'c'];
+pull(myArray, 'a', 'c'); // myArray = [ 'b', 'b' ]
+
+```
+
+### `pullAtIndex`
+
+`Array.prototype.filter()` `Array.prototype.includes()` `Array.prototype.push()`
+
+```js
+
+const pullAtIndex = (arr, pullArr) => {
+    let removed = [];
+    let pulled = arr.map((v, i) => (pullArr.includes(i) ? removed.push(v) : v))
+                    .filter((v, i) => !pullArr.includes(i));
+    arr.length = 0;
+    pulled.forEach(v => arr.push(v));
+    return removed;
+};
+let myArray = ['a', 'b', 'c', 'd'];
+let pulled = pullAtIndex(myArray, [1, 3]); // myArray = [ 'a', 'c' ] , pulled = [ 'b', 'd' ]
+
+```
+
+### `pullAtValue`
+
+`Array.prototype.filter()` `Array.prototype.includes()` `Array.prototype.push()`
+
+```js
+
+const pullAtValue = (arr, pullArr) => {
+    let removed = [],
+        pushToRemove = arr.forEach((v, i) => (pullArr.includes(v) ? removed.push(v) : v)),
+        mutateTo = arr.filter((v, i) => !pullArr.includes(v));
+    arr.length = 0;
+    mutateTo.forEach(v => arr.push(v));
+    return removed;
+};
+let myArray = ['a', 'b', 'c', 'd'];
+let pulled = pullAtValue(myArray, ['b', 'd']); // myArray = [ 'a', 'c' ] , pulled = [ 'b', 'd' ]
+
+```
+
+### `pullBy`
+
+`Array.prototype.map()` `Array.prototype.filter()` `Array.prototype.includes()` `Array.prototype.push()`
+
+```js
+
+const pullBy = (arr, ...args) => {
+    const length = args.length;
+    let fn = length > 1 ? args[length - 1] : undefined;
+    fn = typeof fn == 'function' ? (args.pop(), fn) : undefined;
+    let argState = (Array.isArray(args[0]) ? args[0] : args).map(val => fn(val));
+    let pulled = arr.filter((v, i) => !argState.includes(fn(v)));
+    arr.length = 0;
+    pulled.forEach(v => arr.push(v));
+    };
+var myArray = [{ x: 1 }, { x: 2 }, { x: 3 }, { x: 1 }];
+pullBy(myArray, [{ x: 1 }, { x: 3 }], o => o.x); // myArray = [{ x: 2 }]
+
+```
+
+### `reducedFilter`
+
+`Array.prototype.filter()` `Array.prototype.map()` `Array.prototype.reduce()`
+
+```js
+
+const reducedFilter = (data, keys, fn) => data.filter(fn)
+    .map(el => keys.reduce((acc, key) => {
+        acc[key] = el[key];
+        return acc;
+    }, {}));
+const data = [
+  {
+    id: 1,
+    name: 'john',
+    age: 24
+  },
+  {
+    id: 2,
+    name: 'mike',
+    age: 50
+  }
+];
+reducedFilter(data, ['id', 'name'], item => item.age > 24); // [{ id: 2, name: 'mike'}]
+
+```
+
+### `reduceSuccessive`
+
+`Array.prototype.reduce()`
+
+```js
+
+const reduceSuccessive = (arr, fn, acc) => 
+    arr.reduce((res, val, i, arr) => (res.push(fn(res.slice(-1)[0], val, i, arr)), res), [acc]);
+reduceSuccessive([1, 2, 3, 4, 5, 6], (acc, val) => acc + val, 0); // [0, 1, 3, 6, 10, 15, 21]
+
+```
+
+### `reduceWhich`
+
+`Array.prototype.reduce()`
+
+```js
+
+const reduceWhich = (arr, comparator = (a, b) => a - b) =>  arr.reduce((a, b) => (comparator(a, b) >= 0 ? b : a));
+reduceWhich([1, 3, 2]); // 1
+reduceWhich([1, 3, 2], (a, b) => b - a); // 3
+reduceWhich(
+  [{ name: 'Tom', age: 12 }, { name: 'Jack', age: 18 }, { name: 'Lucy', age: 9 }],
+  (a, b) => a.age - b.age
+); // {name: "Lucy", age: 9}
+
+```
+
+### 重构`for...in`循环来避免ESlint警告。
+
+> for..in loops iterate over the entire prototype chain, which is virtually never what you want. Use Object.{keys,values,entries}, and iterate over the resulting array.eslint(no-restricted-syntax)
+
+`Object.keys()`
+
+```js
+
+const data = [3, 4];
+// Same as for (let k in data) console.log(k)
+Object.keys(data).forEach(k => console.log(k));
+// 0 1
+
+```
+
+`Object.values()`
+
+```js
+
+const data = [3, 4];
+// Iterate over the values
+Object.keys(data).forEach(v => console.log(v));
+// 3 4
+
+```
+
+`Object.entries()`
+
+```js
+
+const data = [3, 4];
+// Iterate over the data, returning key-value pairs
+Object.entries(data).forEach(e => console.log(e[0], e[1]));
+// [0, 3] [1, 4]
+
+```
+
 ### 什么是`Javascript`迭代器(`Iterators`)，在哪里可以使用它们？
 
 `Javascript`迭代器是在`ES6`引入的，用于迭代一系列值(通常是某种集合)。根据定义，迭代器必须实现`next()`函数，返回`{value, done}`对象，其中`value`是迭代系列的下一个值，`done`表示布尔值，确定是否迭代完毕。
