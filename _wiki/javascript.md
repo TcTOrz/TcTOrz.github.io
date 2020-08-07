@@ -982,6 +982,79 @@ Object.entries(data).forEach(e => console.log(e[0], e[1]));
 
 ```
 
+### `reject`
+
+`Array.prototype.filter()`
+
+```js
+
+// ...args === element
+const reject = (pred, array) => array.filter((...args) => !pred(...args));
+reject(x => x % 2 === 0, [1, 2, 3, 4, 5]); // [1, 3, 5]
+reject(word => word.length > 4, ['Apple', 'Pear', 'Kiwi', 'Banana']); // ['Pear', 'Kiwi']
+
+```
+
+### `remove`
+
+`Array.prototype.filter()` `Array.prototype.reduce()` `Array.prototype.splice()`
+
+```js
+
+const remove = (arr, func) =>
+    Array.isArray(arr)
+    ? arr.filter(func).reduce((acc, val) => {
+        arr.splice(arr.indexOf(val), 1);
+        return acc.concat(val);
+        }, [])
+    : [];
+remove([1, 2, 3, 4], n => n % 2 === 0); // [2, 4]
+
+```
+
+### `sample`
+
+```js
+
+const sample = arr => arr[Math.floor(Math.random() * arr.length)];
+sample([3, 7, 9, 11]); // 9
+
+```
+
+### `sampleSize`
+
+`Array.prototype.slice()`
+
+```js
+
+const sampleSize = ([...arr], n = 1) => {
+    let m = arr.length;
+    while (m) {
+        const i = Math.floor(Math.random() * m--);
+        [arr[m], arr[i]] = [arr[i], arr[m]];
+    }
+    return arr.slice(0, n);
+};
+sampleSize([1, 2, 3], 2); // [3,1]
+sampleSize([1, 2, 3], 4); // [2,3,1]
+
+```
+
+### `shank`
+
+`Array.prototype.slice()` `Array.prototype.concat()`
+
+```js
+
+const shank = (arr, index = 0, delCount = 0, ...elements) =>
+    arr.slice(0, index).concat(elements).concat(arr.slice(index + delCount));
+const names = ['alpha', 'bravo', 'charlie'];
+const namesAndDelta = shank(names, 1, 0, 'delta'); // [ 'alpha', 'delta', 'bravo', 'charlie' ]
+const namesNoBravo = shank(names, 1, 1); // [ 'alpha', 'charlie' ]
+console.log(names); // ['alpha', 'bravo', 'charlie']
+
+```
+
 ### 什么是`Javascript`迭代器(`Iterators`)，在哪里可以使用它们？
 
 `Javascript`迭代器是在`ES6`引入的，用于迭代一系列值(通常是某种集合)。根据定义，迭代器必须实现`next()`函数，返回`{value, done}`对象，其中`value`是迭代系列的下一个值，`done`表示布尔值，确定是否迭代完毕。
