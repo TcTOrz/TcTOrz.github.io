@@ -1055,6 +1055,115 @@ console.log(names); // ['alpha', 'bravo', 'charlie']
 
 ```
 
+### `shuffle`
+
+```js
+
+const shuffle = ([...arr]) => {
+  let m = arr.length;
+  while (m) {
+    const i = Math.floor(Math.random() * m--);
+    [arr[m], arr[i]] = [arr[i], arr[m]];
+  }
+  return arr;
+};
+const foo = [1, 2, 3];
+shuffle(foo); // [2, 3, 1], foo = [1, 2, 3]
+
+```
+
+### `similarity`
+
+`Array.prototype.filter()` `Array.prototype.includes()`
+
+```js
+
+const similarity = (arr, values) => arr.filter(v => values.includes(v));
+similarity([1, 2, 3], [1, 2, 4]); // [1, 2]
+
+```
+
+### `sortedIndex`
+
+`Array.prototype.findIndex()`
+
+```js
+
+const sortedIndex = (arr, n) => {
+    const isDescending = arr[0] > arr[arr.length - 1];
+    const index = arr.findIndex(el => (isDescending ? n >= el : n <= el));
+    return index === -1 ? arr.length : index;
+};
+sortedIndex([5, 3, 2, 1], 4); // 1
+sortedIndex([30, 50], 40); // 1
+
+```
+
+### `sortedIndexBy`
+
+`Array.prototype.findIndex()`
+
+```js
+
+const sortedIndexBy = (arr, n, fn) => {
+    const isDescending = fn(arr[0]) > fn(arr[arr.length - 1]);
+    const val = fn(n);
+    const index = arr.findIndex(el => (isDescending ? val >= fn(el) : val <= fn(el)));
+    return index === -1 ? arr.length : index;
+};
+sortedIndexBy([{ x: 4 }, { x: 5 }], { x: 4 }, o => o.x); // 0
+
+```
+
+### `sortedLastIndex`
+
+`Array.prototype.reverse()` `Array.prototype.findIndex()`
+
+```js
+
+const sortedLastIndex = (arr, n) => {
+    const isDescending = arr[0] > arr[arr.length - 1];
+    const index = arr.reverse().findIndex(el => (isDescending ? n <= el : n >= el));
+    return index === -1 ? 0 : arr.length - index;
+};
+sortedLastIndex([10, 20, 30, 30, 40], 30); // 4
+
+```
+
+### `sortedLastIndexBy`
+
+`Array.prototype.map()` `Array.prototype.reverse()` `Array.prototype.findIndex()`
+
+```js
+
+const sortedLastIndexBy = (arr, n, fn) => {
+    const isDescending = fn(arr[0]) > fn(arr[arr.length - 1]);
+    const val = fn(n);
+    const index = arr.map(fn).reverse().findIndex(el => (isDescending ? val <= el : val >= el));
+    return index == -1 ? 0 : arr.length - index;
+};
+sortedLastIndexBy([{ x: 4 }, { x: 5 }], { x: 4 }, o => o.x); // 1
+
+```
+
+### `stableSort`
+
+`Array.prototype.map()` `Array.prototype.sort()`
+
+```js
+
+// 意义在于：对数组执行稳定的排序，当它们的值相同时，保留它们的初始索引。 不更改原始数组，而是返回一个新数组。
+const stableSort = (arr, compare) => 
+    arr
+        .map((item, index) => ({item, index}))
+        .sort((a, b) => compare(a.item, b.item) || a.index - b.index)
+        .map(({item}) => item);
+const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const stable = stableSort(arr, () => 0); // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+const stable = stableSort(arr, (a, b) => b - a); // [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+
+```
+
 ### 什么是`Javascript`迭代器(`Iterators`)，在哪里可以使用它们？
 
 `Javascript`迭代器是在`ES6`引入的，用于迭代一系列值(通常是某种集合)。根据定义，迭代器必须实现`next()`函数，返回`{value, done}`对象，其中`value`是迭代系列的下一个值，`done`表示布尔值，确定是否迭代完毕。
