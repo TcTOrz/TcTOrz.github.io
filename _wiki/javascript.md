@@ -1279,6 +1279,37 @@ takeWhile([1, 2, 3, 4], n => n >= 3); // [1, 2]
 
 ```
 
+### `toHash`
+
+```js
+
+const toHash = (object, key) =>
+    Array.prototype.reduce.call(
+        object,
+        (acc, data, index) => ((acc[!key ? index : data[key]] = data), acc),
+        {}
+    );
+toHash([4, 3, 2, 1]); // { 0: 4, 1: 3, 2: 2, 3: 1 }
+toHash([{ a: 'label' }], 'a'); // { label: { a: 'label' } }
+
+// A more in depth example:
+let users = [{ id: 1, first: 'Jon' }, { id: 2, first: 'Joe' }, { id: 3, first: 'Moe' }];
+let managers = [{ manager: 1, employees: [2, 3] }];
+
+managers.forEach(
+    manager => 
+        // manager.employees 覆盖原manager.employees数组
+        // toHash(users, 'id')指代this对象
+        // 返回 {1: {id: 1, first: "Jon"}， 2: {id: 2, first: "Joe"}， 3: {id: 3, first: "Moe"}}
+        // map回调函数不能使用箭头函数，会造成this无法绑定的情况。（箭头函数的特性）
+        (manager.employees = manager.employees.map(function(id) {
+            return this[id];
+        }, toHash(users, 'id')))
+);
+managers; // [ { manager:1, employees: [ { id: 2, first: "Joe" }, { id: 3, first: "Moe" } ] } ]
+
+```
+
 ### 什么是`Javascript`迭代器(`Iterators`)，在哪里可以使用它们？
 
 `Javascript`迭代器是在`ES6`引入的，用于迭代一系列值(通常是某种集合)。根据定义，迭代器必须实现`next()`函数，返回`{value, done}`对象，其中`value`是迭代系列的下一个值，`done`表示布尔值，确定是否迭代完毕。
