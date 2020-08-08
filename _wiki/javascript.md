@@ -1164,6 +1164,121 @@ const stable = stableSort(arr, (a, b) => b - a); // [10, 9, 8, 7, 6, 5, 4, 3, 2,
 
 ```
 
+### `symmetricDifference`
+
+`Array.prototype.filter()`
+
+```js
+
+const symmetricDifference = (a, b) => {
+    const sa = new Set(a),
+        sb = new Set(b);
+    return [...a.filter(x => !sb.has(x)), ...b.filter(x => !sa.has(x))];
+};
+symmetricDifference([1, 2, 3], [1, 2, 4]); // [3, 4]
+symmetricDifference([1, 2, 2], [1, 3, 1]); // [2, 2, 3]
+
+```
+
+### `symmetricDifferenceBy`
+
+`Array.prototype.filter()`
+
+```js
+
+const symmetricDifferenceBy = (a, b, fn) => {
+    const sa = new Set(a.map(v => fn(v))),
+        sb = new Set(b.map(v => fn(v)));
+    return [...a.filter(x => !sb.has(fn(x))), ...b.filter(x => !sa.has(fn(x)))];
+}
+symmetricDifferenceBy([2.1, 1.2], [2.3, 3.4], Math.floor); // [ 1.2, 3.4 ]
+symmetricDifferenceBy([{ id: 1 }, { id: 2 }, { id: 3 }], [{ id: 1 }, { id: 2 }, { id: 4 }], i => i.id) // [{ id: 3 }, { id: 4 }]
+
+```
+
+### `symmetricDifferenceWith`
+
+`Array.prototype.filter()` `Array.prototype.findIndex()`
+
+```js
+
+const symmetricDifferenceWith = (a, b, comp) => [
+    ...a.filter(sa => b.findIndex(sb => comp(sa, sb)) === -1),
+    ...b.filter(sb => a.findIndex(sa => comp(sa, sb)) === -1)
+];
+symmetricDifferenceWith(
+  [1, 1.2, 1.5, 3, 0],
+  [1.9, 3, 0, 3.9],
+  (a, b) => Math.round(a) === Math.round(b)
+); // [1, 1.2, 3.9]
+
+```
+
+### `tail`返回数组中除第一个元素外的所有元素
+
+`Array.prototype.slice()`
+
+```js
+
+const tail = arr => (arr.length > 1 ? arr.slice(1) : arr);
+tail([1, 2, 3]); // [2,3]
+tail([1]); // [1]
+
+```
+
+### `take`
+
+`Array.prototype.slice()`
+
+```js
+
+const take = (arr, n = 1) => arr.slice(0, n);
+take([1, 2, 3], 5); // [1, 2, 3]
+take([1, 2, 3], 0); // []
+
+```
+
+### `takeRight`
+
+`Array.prototype.slice()`
+
+```js
+
+const takeRight = (arr, n = 1) => arr.slice(arr.length - n, arr.length);
+takeRight([1, 2, 3], 2); // [ 2, 3 ]
+takeRight([1, 2, 3]); // [3]
+
+```
+
+### `takeRightWhile`从数组末尾删除元素，直到函数返回true，并返回删除的元素
+
+`Array.prototype.reduceRight()`
+
+```js
+
+const takeRightWhile = (arr, fn) => 
+    arr.reduceRight((acc, el) => (fn(el) ? acc : [el, ...acc]), []);
+takeRightWhile([1, 2, 3, 4], n => n < 3); // [3, 4]
+
+```
+
+### `takeWhile`删除数组中的元素，直到函数返回true，返回移除的元素
+
+`Array.prototype.entries()` `Array.prototype.slice()`
+
+```js
+
+const takeWhile = (arr, fn) => 
+    arr.reduce((acc, el) => (!fn(el) ? [...acc, el] : acc), []);
+// 有一些不同
+const takeWhile = (arr, fn) => {
+    for( const [i, val] of arr.entries() ) if(fn(val)) return arr.slice(0, i);
+    return arr;
+};
+takeWhile([1, 2, 3, 4], n => n >= 3); // [1, 2]
+
+```
+
 ### 什么是`Javascript`迭代器(`Iterators`)，在哪里可以使用它们？
 
 `Javascript`迭代器是在`ES6`引入的，用于迭代一系列值(通常是某种集合)。根据定义，迭代器必须实现`next()`函数，返回`{value, done}`对象，其中`value`是迭代系列的下一个值，`done`表示布尔值，确定是否迭代完毕。
