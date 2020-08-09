@@ -1310,6 +1310,38 @@ managers; // [ { manager:1, employees: [ { id: 2, first: "Joe" }, { id: 3, first
 
 ```
 
+### `union`
+
+```js
+
+const union = (a, b) => Array.from(new Set([...a, ...b]));
+union([1, 2, 3], [4, 3, 2]); // [1, 2, 3, 4]
+
+```
+
+### `unionBy`
+
+```js
+
+const unionBy = (a, b, fn) => {
+    const s = new Set(a.map(fn));
+    return Array.from(new Set([...a, ...b.filter(x => !s.has(fn(x)))]));
+};
+unionBy([2.1], [1.2, 2.3], Math.floor); // [2.1, 1.2]
+unionBy([{ id: 1 }, { id: 2 }], [{ id: 2 }, { id: 3 }], x => x.id) // [{ id: 1 }, { id: 2 }, { id: 3 }]
+
+```
+
+### `unionWith`
+
+```js
+
+const unionWith = (a, b, comp) => 
+    Array.from(new Set([...a, ...b.filter(x => a.findIndex(y => comp(x, y)) === -1)]));
+unionWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0, 3.9], (a, b) => Math.round(a) === Math.round(b)); // [1, 1.2, 1.5, 3, 0, 3.9]
+
+```
+
 ### 什么是`Javascript`迭代器(`Iterators`)，在哪里可以使用它们？
 
 `Javascript`迭代器是在`ES6`引入的，用于迭代一系列值(通常是某种集合)。根据定义，迭代器必须实现`next()`函数，返回`{value, done}`对象，其中`value`是迭代系列的下一个值，`done`表示布尔值，确定是否迭代完毕。
