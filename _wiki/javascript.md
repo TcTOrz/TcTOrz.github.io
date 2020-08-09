@@ -1342,6 +1342,79 @@ unionWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0, 3.9], (a, b) => Math.round(a) === Mat
 
 ```
 
+### `uniqueElements`
+
+```js
+
+const uniqueElements = arr => Array.from(new Set(arr));
+// or
+const uniqueElements = arr => [...new Set(arr)];
+uniqueElements([1, 2, 2, 3, 4, 4, 5]); // [1, 2, 3, 4, 5]
+
+```
+
+### `uniqueElementsBy`
+
+`Array.prototype.reduce()` `Array.prototype.some()`
+
+```js
+
+const uniqueElementsBy = (arr, fn) => 
+    arr.reduce((acc, v) => {
+        if( !acc.some(x => fn(v, x)) ) acc.push(v);
+        return acc;
+    }, []);
+uniqueElementsBy(
+  [
+    { id: 0, value: 'a' },
+    { id: 1, value: 'b' },
+    { id: 2, value: 'c' },
+    { id: 1, value: 'd' },
+    { id: 0, value: 'e' }
+  ],
+  (a, b) => a.id == b.id
+); // [ { id: 0, value: 'a' }, { id: 1, value: 'b' }, { id: 2, value: 'c' } ]
+
+```
+
+### `uniqueElementsByRight`
+
+`Array.prototype.reduceRight()` `Array.prototype.some()`
+
+```js
+
+const uniqueElementsByRight = (arr, fn) =>
+    arr.reduceRight((acc, v) => {
+        if (!acc.some(x => fn(v, x))) acc.push(v);
+            return acc;
+    }, []);
+uniqueElementsByRight(
+  [
+    { id: 0, value: 'a' },
+    { id: 1, value: 'b' },
+    { id: 2, value: 'c' },
+    { id: 1, value: 'd' },
+    { id: 0, value: 'e' }
+  ],
+  (a, b) => a.id == b.id
+); // [ { id: 0, value: 'e' }, { id: 1, value: 'd' }, { id: 2, value: 'c' } ]
+
+```
+
+### `uniqueSymmetricDifference`
+
+`Array.prototype.filter()` `Array.prototype.includes()`
+
+```js
+
+const uniqueSymmetricDifference = (a, b) => [
+    ...new Set([...a.filter(v => !b.includes(v)), ...b.filter(v => !a.includes(v))])
+];
+uniqueSymmetricDifference([1, 2, 3], [1, 2, 4]); // [3, 4]
+uniqueSymmetricDifference([1, 2, 2], [1, 3, 1]); // [2, 3]
+
+```
+
 ### 什么是`Javascript`迭代器(`Iterators`)，在哪里可以使用它们？
 
 `Javascript`迭代器是在`ES6`引入的，用于迭代一系列值(通常是某种集合)。根据定义，迭代器必须实现`next()`函数，返回`{value, done}`对象，其中`value`是迭代系列的下一个值，`done`表示布尔值，确定是否迭代完毕。
