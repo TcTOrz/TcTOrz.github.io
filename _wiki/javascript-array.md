@@ -1,6 +1,6 @@
 ---
 layout: wiki
-title: Javascript
+title: Javascript-array
 categories: [Javascript, 面试]
 description: 学习JS,及时记录下来
 keywords: Javascript, 面试
@@ -1415,6 +1415,97 @@ uniqueSymmetricDifference([1, 2, 2], [1, 3, 1]); // [2, 3]
 
 ```
 
+### `unzip`
+
+`Array.prototype.map()` `Array.prototype.reduce()` `Array.prototype.forEach()`
+
+```js
+
+const unzip = arr => 
+    arr.raduce(
+        (acc, val) => (val.forEach((v, i) => acc[i].push(v)), acc),
+        Array.from({
+            length: Math.max(...arr.map(x => x.length))
+        }).map(x => [])
+    );
+unzip([['a', 1, true], ['b', 2, false]]); // [['a', 'b'], [1, 2], [true, false]]
+unzip([['a', 1, true], ['b', 2]]); // [['a', 'b'], [1, 2], [true]]
+
+```
+
+### `unzipWith`
+
+`Array.prototype.map()` `Array.prototype.reduce()` `Array.prototype.forEach()` `Array.prototype.map()`
+
+```js
+
+const unzipWith = (arr, fn) => 
+    arr.reduce(
+        (acc, val) => (val.forEach((v, i) => acc[i].push(v)), acc),
+        Array.from({
+            length: Math.max(...arr.map(x => x.length))
+        }).map(x => [])
+    ).map(val => fn(...val));
+unzipWith([[1, 10, 100], [2, 20, 200]], (...args) => args.reduce((acc, v) => acc + v, 0)); // [3, 30, 300]
+
+```
+
+### `Using JavaScript generator functions for ranges`
+
+```js
+
+function* generateRange(end, start = 0, step = 1) {
+    let x = start - step;
+    while(x < end - step) yield x += step;
+}
+const gen5 = generateRange(5);
+let x = gen5.next();
+while (!x.done) {
+  console.log(x.value);
+  x = gen5.next();
+} // Logs: 0, 1, 2, 3, 4
+
+const iterableX = {
+  [Symbol.iterator]: function* () {
+    yield 1;
+    yield 2;
+  }
+};
+console.log([...iterableX]); // [1, 2]
+
+const range = (end, start = 0, step = 1) => {
+  function* generateRange() {
+    let x = start - step;
+    while(x < end - step) yield x += step;
+  }
+  return {
+    [Symbol.iterator]: generateRange
+  };
+}
+console.log([...range(7)]); // [0, 1, 2, 3, 4, 5, 6]
+for (let i of range(8, 2, 2)) console.log(i); // Logs: 2, 4, 6
+
+```
+
+### `weightedSample`
+
+根据权重随机返回数组中的元素
+
+`Array.prototype.reduce()` `Array.prototype.findIndex()`
+
+```js
+
+const weightedSample = (arr, weights) => {
+    let roll = Math.random();
+    return arr[
+        weights.reduce((acc, w, i) => (i === 0 ? [w] : [...acc, acc[acc.length - 1] + w]), [])
+             .findIndex((v, i, s) => roll >= (i === 0 ? 0 : s[i - 1]) && roll < v)
+    ];
+};
+weightedSample([3, 7, 9, 11], [0.1, 0.2, 0.6, 0.1]); // 9
+
+```
+
 ### 什么是`Javascript`迭代器(`Iterators`)，在哪里可以使用它们？
 
 `Javascript`迭代器是在`ES6`引入的，用于迭代一系列值(通常是某种集合)。根据定义，迭代器必须实现`next()`函数，返回`{value, done}`对象，其中`value`是迭代系列的下一个值，`done`表示布尔值，确定是否迭代完毕。
@@ -1542,6 +1633,78 @@ for (let val of new Set(['a', 'b', 'a', 'd']))
 ['a', 'b', 'c'].forEach(
   (val, i) => console.log(i)  // 0, 1, 2 (array indexes)
 );
+
+```
+
+### `without`
+
+`Array.prototype.filter()` ``Array.prototype.includes()``
+
+```js
+
+const without = (arr, ...args) => arr.filter(v => !args.includes(v));
+without([2, 1, 2, 3], 1, 2); // [3]
+
+```
+
+### `xProd`
+
+`Array.prototype.reduce()` `Array.prototype.map()` `Array.prototype.concat()`
+
+```js
+
+const xProd = (a, b) => a.reduce((acc, x) => acc.concat( b.map(y => [x, y]) ), []);
+xProd([1, 2], ['a', 'b']); // [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b']]
+
+```
+
+### `zip`
+
+`Array.from()`
+
+```js
+
+const zip = (...arrays) => {
+    const maxLength = Math.max(...arrays.map(x => x.length));
+    return Array.from({ length: maxLength }).map((_, i) => {
+        return Array.from({ length: arrays.length }, (_, k) => arrays[k][i]);
+    });
+};
+zip(['a', 'b'], [1, 2], [true, false]); // [['a', 1, true], ['b', 2, false]]
+zip(['a'], [1, 2], [true, false]); // [['a', 1, true], [undefined, 2, false]]
+
+```
+
+### `zipObject`
+
+`Array.prototype.reduce()`
+
+```js
+
+const zipObject = (props, values) =>
+    props.reduce((obj, prop, index) => ((obj[prop] = values[index]), obj), {});
+zipObject(['a', 'b', 'c'], [1, 2]); // {a: 1, b: 2, c: undefined}
+zipObject(['a', 'b'], [1, 2, 3]); // {a: 1, b: 2}
+
+```
+
+### `zipWith`
+
+```js
+
+const zipWith = (...array) => {
+  const fn = typeof array[array.length - 1] === 'function' ? array.pop() : undefined;
+  return Array.from({ length: Math.max(...array.map(a => a.length)) }, (_, i) =>
+    fn ? fn(...array.map(a => a[i])) : array.map(a => a[i])
+  );
+};
+zipWith([1, 2], [10, 20], [100, 200], (a, b, c) => a + b + c); // [111,222]
+zipWith(
+  [1, 2, 3],
+  [10, 20],
+  [100, 200],
+  (a, b, c) => (a != null ? a : 'a') + (b != null ? b : 'b') + (c != null ? c : 'c')
+); // [111, 222, '3bc']
 
 ```
 
