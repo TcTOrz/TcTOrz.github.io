@@ -216,3 +216,140 @@ const elementIsFocused = el => (el === document.activeElement);
 elementIsFocused(el); // true if the element is focused
 
 ```
+
+### `elementIsVisibleInViewport`
+
+如果指定的元素在视口中可见，则返回true，否则返回false。
+
+```js
+
+const elementIsVisibleInViewport = (el, partiallyVisible = false) => {
+    const { top, left, bottom, right } = el.getBoundingClientRect();
+    const { innerHeight, innerWidth } = window;
+    return partiallyVisible
+        ? ((top > 0 && top < innerHeight) || (bottom > 0 && bottom < innerHeight)) &&
+            ((left > 0 && left < innerWidth) || (right > 0 && right < innerWidth))
+        : top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth;
+};
+// e.g. 100x100 viewport and a 10x10px element at position {top: -1, left: 0, bottom: 9, right: 10}
+elementIsVisibleInViewport(el); // false - (not fully visible) 部分可见 false
+elementIsVisibleInViewport(el, true); // true - (partially visible) 部分可见 true
+
+```
+
+### `formToObject`
+
+将表单元素转化为对象
+
+```js
+
+const formToObject = form => 
+    Array.from(new FormData(form)).reduce(
+        (acc, [key, value]) => {
+            acc[key] = value;
+            return acc;
+        },
+        {}
+    );
+// or
+const formToObject = form => 
+    Array.from(new FormData(form)).reduce(
+        (acc, [key, value]) => ({
+            ...acc,
+            [key]: value
+        }),
+        {}
+    );
+formToObject(document.querySelector('#form')); // { email: 'test@email.com', name: 'Test Name' }
+
+```
+
+### `getBaseURL`
+
+返回没有任何参数的url
+
+```js
+
+const getBaseURL = url => url.indexOf('?') > 0 ? url.slice(0, url.indexOf('?')) : url;
+getBaseURL('http://url.com/page?name=Adam&surname=Smith'); // 'http://url.com/page'
+
+```
+
+### `getImages`
+
+从元素中获取所有图像并将它们放入一个数组中
+
+```js
+
+const getImages = (el, includeDuplicates = false) => {
+    const images = [...el.getElementsByTagName('img')].map(img => img.getAttribute('src'));
+    return includeDuplicates ? images : [...new Set(images)];
+};
+getImages(document, true); // ['image1.jpg', 'image2.png', 'image1.png', '...']
+getImages(document, false); // ['image1.jpg', 'image2.png', '...']
+
+```
+
+### `getScrollPosition`
+
+返回当前页面返回的位置
+
+```js
+
+const getScrollPosition = (el = window) => ({
+    x: el.pageXOffset !== undefined ? el.pageXOffset : el.scrollLeft,
+    y: el.pageYOffset !== undefined ? el.pageYOffset : el.scrollTop
+});
+getScrollPosition(); // {x: 0, y: 200}
+
+```
+
+### `getSelectedText`
+
+获取当前选择的文本
+
+```js
+
+const getSelectedText = () => window.getSelection().toString();
+getSelectedText(); // 'Lorem ipsum'
+
+```
+
+### `getSiblings`
+
+返回一个包含给定元素的所有同级元素的数组。
+
+```js
+
+const getSiblings = el => 
+    [...el.parentNode.childNodes].filter(node => node !== el);
+getSiblings(document.querySelector('head')); // ['body']
+
+```
+
+### `getStyle`
+
+返回指定元素的CSS值。
+
+```js
+
+const getStyle = (el, ruleName) => getComputedStyle(el)[ruleName];
+getStyle(document.querySelector('p'), 'font-size'); // '16px'
+
+```
+
+### `getURLParameters`
+
+返回一个包含当前URL参数的对象。
+
+```js
+
+const getURLParameters = url =>
+    (url.match(/([^?=&]+)(=([^&]*))/g) || []).reduce(
+        (a, v) => ((a[v.slice(0, v.indexOf('='))] = v.slice(v.indexOf('=') + 1)), a),
+        {}
+    );
+getURLParameters('http://url.com/page?name=Adam&surname=Smith'); // {name: 'Adam', surname: 'Smith'}
+getURLParameters('google.com'); // {}
+
+```
