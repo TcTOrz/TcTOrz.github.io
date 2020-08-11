@@ -992,3 +992,95 @@ renderElement(
 );
 
 ```
+
+### `runAsync`
+
+[Web Workers API](https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API)
+[Blob](https://developer.mozilla.org/zh-CN/docs/Web/API/Blob)
+
+使用`Web Worker`在单独的线程中运行一个函数，从而允许长时间运行的函数不会阻塞UI。
+
+```js
+
+// test Blob
+var typedArray = GetTheTypedArraySomehow();
+var blob = new Blob([typedArray.buffer], {type: 'application/octet-stream'}); // 传入一个合适的 MIME 类型
+var url = URL.createObjectURL(blob);
+// 会产生一个类似 blob:d3958f5c-0777-0845-9dcf-2cb28783acaf 这样的URL字符串
+// 你可以像使用普通 URL 那样使用它，比如用在 img.src 上。
+
+```
+
+```js
+
+const runAsync = fn => {
+    const worker = new Worker(
+        URL.createObjectURL(new Blob([`postMessage((${fn})());`]), {
+            type: 'application/javascript; charset=utf-8'
+        }) // MIME类型
+    );
+    return new Promise((res, rej) => {
+        worker.onmessage = ({ data }) => {
+            res(data), worker.terminate();
+        };
+        worker.onerror = err => {
+            rej(err), worker.terminate();
+        };
+    });
+};
+
+const longRunningFunction = () => {
+  let result = 0;
+  for (let i = 0; i < 1000; i++)
+    for (let j = 0; j < 700; j++) for (let k = 0; k < 300; k++) result = result + i + j + k;
+
+  return result;
+};
+/*
+  NOTE: Since the function is running in a different context, closures are not supported.
+  The function supplied to `runAsync` gets stringified, so everything becomes literal.
+  All variables and functions must be defined inside.
+*/
+runAsync(longRunningFunction).then(console.log); // 209685000000
+runAsync(() => 10 ** 3).then(console.log); // 1000
+let outsideVariable = 50;
+runAsync(() => typeof outsideVariable).then(console.log); // 'undefined'
+
+```
+
+### `scrollToTop`
+
+平滑滚动到页面顶部。
+
+```js
+
+// test requestAnimationFrame
+var start = null;
+var element = document.getElementById('SomeElementYouWantToAnimate');
+element.style.position = 'absolute';
+
+function step(timestamp) {
+  if (!start) start = timestamp;
+  var progress = timestamp - start;
+  element.style.left = Math.min(progress / 10, 200) + 'px';
+  if (progress < 2000) {
+    window.requestAnimationFrame(step);
+  }
+}
+
+window.requestAnimationFrame(step);
+
+```
+
+```js
+
+const scrollToTop = () => {
+  const c = document.documentElement.scrollTop || document.body.scrollTop;
+  if (c > 0) {
+    window.requestAnimationFrame(scrollToTop);
+    window.scrollTo(0, c - c / 8);
+  }
+};
+scrollToTop();
+
+```
