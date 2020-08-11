@@ -1084,3 +1084,36 @@ const scrollToTop = () => {
 scrollToTop();
 
 ```
+
+### `serializeCookie`
+
+将Cookie名/值对序列化为Set-Cookie标头字符串。
+
+```js
+
+const serializeCookie = (name, val) => `${encodeURIComponent(name)}=${encodeURIComponent(val)}`;
+serializeCookie('foo', 'bar'); // 'foo=bar'
+
+```
+
+### `serializeForm`
+
+将一组表单元素编码为查询字符串。
+
+```js
+
+// test
+Array.from([1, 2, 3], x => x + x);
+// [2, 4, 6]
+Array.from({length: 5}, (v, i) => i);
+// [0, 1, 2, 3, 4]
+
+```
+
+```js
+
+const serializeForm = form =>
+  Array.from(new FormData(form), field => field.map(encodeURIComponent).join('=')).join('&');
+serializeForm(document.querySelector('#form')); // email=test%40email.com&name=Test%20Name
+
+```
