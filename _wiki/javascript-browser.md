@@ -353,3 +353,349 @@ getURLParameters('http://url.com/page?name=Adam&surname=Smith'); // {name: 'Adam
 getURLParameters('google.com'); // {}
 
 ```
+
+### `hasClass`
+
+如果包含指定的类，则返回true,否则false
+
+```js
+
+const hasClass = (el, className) => el.classList.contains(className);
+hasClass(document.querySelector('p.special'), 'special'); // true
+
+```
+
+### `hashBrowser`
+
+使用SHA-256算法为值创建哈希。 返回Promise。
+
+[SubtleCrypto.digest()](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest)
+
+```js
+
+const hashBrowser = val => 
+    crypto.subtle.digest('SHA-256', new TextEncoder('utf-8').encode(val)).then(h => {
+        let hexes = [],
+            view = new DataView(h);
+        for (let i = 0; i < view.byteLength; i += 4)
+            hexes.push(('00000000' + view.getUint32(i).toString(16)).slice(-8));
+        return hexes.join('');
+    });
+hashBrowser(JSON.stringify({ a: 'a', b: [1, 2, 3, 4], foo: { c: 'bar' } })).then(console.log); // '04aa106279f5977f59f9067fa9712afc4aedc6f5862a8defc34552d8c7206393'
+
+// or
+const hashBrowser = val => {
+    const msgUint8 = new TextEncoder().encode(val);                           // encode as (utf-8) Uint8Array
+    return crypto.subtle.digest('SHA-256', msgUint8);           // hash the message 
+};
+hashBrowser(JSON.stringify({ a: 'a', b: [1, 2, 3, 4], foo: { c: 'bar' } })).then(h => {
+    const hashArray = Array.from(new Uint8Array(h));                     // convert buffer to byte array
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+    return hashHex;
+}).then(console.log); 
+
+// or
+async function hashBrowser(message) {
+  const msgUint8 = new TextEncoder().encode(message);                           // encode as (utf-8) Uint8Array
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);           // hash the message
+  const hashArray = Array.from(new Uint8Array(hashBuffer));                     // convert buffer to byte array
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+  return hashHex;
+}
+const digestHex = await hashBrowser(JSON.stringify({ a: 'a', b: [1, 2, 3, 4], foo: { c: 'bar' } }));
+console.log(digestHex); 
+
+```
+
+### `hide`
+
+`NodeList.prototype.forEach()`
+
+隐藏所有指定的元素。
+
+```js
+
+const hide = (...el) => [...el].forEach(e => (e.style.display = 'none'));
+hide(document.querySelectorAll('img')); // Hides all <img> elements on the page
+
+```
+
+### `Javascriot`如何复制文本
+
+一个普遍的需求是单击复制文本，`Javascript`可以通过五个步骤做到这点。
+
+- 创建一个\<textarea\>,设置为要复制到剪切板的字符串
+- 将\<textarea\>添加到`document`中
+- 使用`HTMLInputElement.select()`选择\<textarea\>内容
+- 使用`Document.execCommand('copy')`将\<textarea\>内容复制到剪切板
+- 删除\<textarea\>
+
+```js
+
+const copyToClipboard = str => {
+    const el = document.createElement('textarea');
+    el.value = str;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+};
+
+```
+
+```js
+
+// 前面已经有过的例子
+const copyToClipboard = str => {
+    const el = document.createElement('textarea');
+    el.value = str;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+};
+
+```
+
+### 如何使用`Javascript`修改url时不重新加载页面？
+
+使用`History API`
+
+```js
+
+const nextURL = 'https://my-website.com/page_b';
+const nextTitle = 'My new page title';
+const nextState = { additionalInformation: 'Updated the URL with JS' };
+
+// This will create a new entry in the browser's history, without reloading
+window.history.pushState(nextState, nextTitle, nextURL);
+
+// This will replace the current entry in the browser's history, without reloading
+window.history.replaceState(nextState, nextTitle, nextURL);
+
+```
+
+使用`Location API`
+
+```js
+
+// Current URL: https://my-website.com/page_a
+const nextURL = 'https://my-website.com/page_b';
+
+// This will create a new entry in the browser's history, reloading afterwards
+window.location.href = nextURL;
+
+// This will replace the current entry in the browser's history, reloading afterwards
+window.location.assign(nextURL);
+
+// This will replace the current entry in the browser's history, reloading afterwards
+window.location.replace(nextURL);
+
+```
+
+### `httpDelete`
+
+对传递的URL进行DELETE请求。
+
+```js
+
+const httpDelete = (url, callback, err = console.error) => {
+    const request = new XMLHttpRequest();
+    request.open('DELETE', url, true);
+    request.onload = () => callback(request);
+    request.onerror = () => err(request);
+    request.send();
+};
+httpDelete('https://jsonplaceholder.typicode.com/posts/1', request => {
+  console.log(request.responseText);
+}); /*
+Logs: {}
+*/
+
+```
+
+### `httpGet`
+
+向传递的URL发出GET请求。
+
+```js
+
+const httpGet = (url, callback, err = console.error) => {
+    const request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.onload = () => callback(request.responseText);
+    request.onerror = () => err(request);
+    request.send();
+};
+httpGet(
+    'https://jsonplaceholder.typicode.com/posts/1',
+    console.log
+); /*
+Logs: {
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}
+*/
+
+```
+
+### `httpPost`
+
+向传递的URL发出POST请求。
+
+```js
+
+const httpPost = (url, data, callback, err = console.error) => {
+    const request = new XMLHttpRequest();
+    request.open('POST', url, true);
+    request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+    request.onload = () => callback(request.responseText);
+    request.onerror = () => err(request);
+    request.send(data);
+};
+const newPost = {
+    userId: 1,
+    id: 1337,
+    title: 'Foo',
+    body: 'bar bar bar'
+};
+const data = JSON.stringify(newPost);
+httpPost(
+    'https://jsonplaceholder.typicode.com/posts',
+    data,
+    console.log
+); /*
+Logs: {
+  "userId": 1,
+  "id": 1337,
+  "title": "Foo",
+  "body": "bar bar bar"
+}
+*/
+httpPost(
+    'https://jsonplaceholder.typicode.com/posts',
+    null, // does not send a body
+    console.log
+); /*
+Logs: {
+  "id": 101
+}
+*/
+
+```
+
+### `httpPut`
+
+向传递的URL发出PUT请求。
+
+```js
+
+const httpPut = (url, data, callback, err = console.error) => {
+    const request = new XMLHttpRequest();
+    request.open('PUT', url, true);
+    request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+    request.onload = () => callback(request);
+    request.onerror = () => err(request);
+    request.send(data);
+};
+// const password = 'fooBaz';
+const data = JSON.stringify({
+    id: 1,
+    title: 'foo',
+    body: 'bar',
+    userId: 1
+});
+httpPut('https://jsonplaceholder.typicode.com/posts/1', data, request => {
+    console.log(request.responseText);
+}); /*
+Logs: {
+  id: 1,
+  title: 'foo',
+  body: 'bar',
+  userId: 1
+}
+*/
+
+```
+
+### `httpsRedirect`
+
+如果页面当前位于HTTP中，则将其重定向到HTTPS。同时，按返回按钮不会将其带回到HTTP页面，因为历史记录已被替换。
+
+```js
+
+const httpsRedirect = () => {
+    if (location.protocol !== 'https:') location.replace('https://' + location.href.split('//')[1]);
+};
+httpsRedirect(); // If you are on http://mydomain.com, you are redirected to https://mydomain.com
+
+```
+
+### `insertAfter`
+
+在指定元素后面插入`html`
+
+[insertAdjacentHTML](https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML)
+
+```html
+
+<!-- beforebegin -->
+<p>
+  <!-- afterbegin -->
+  foo
+  <!-- beforeend -->
+</p>
+<!-- afterend -->
+
+```
+
+```js
+
+const insertAfter = (el, htmlString) => el.insertAdjacentHTML('afterend', htmlString);
+insertAfter(document.getElementById('myId'), '<p>after</p>');
+// <div id="myId">...</div> <p>after</p>
+
+```
+
+### `isBrowser`
+
+确定当前运行时环境是否是浏览器，以便前端模块可以在服务器（节点）上运行而不会引发错误。
+
+```js
+
+const isBrowser = () => ![typeof window, typeof document].includes('undefined');
+isBrowser(); // true (browser)
+isBrowser(); // false (Node)
+
+```
+
+### `isBrowserTabFocused`
+
+如果页面的浏览器`tab`具有焦点，则返回true，否则返回false。
+
+```js
+
+const isBrowserTabFocused = () => !document.hidden;
+isBrowserTabFocused(); // true
+
+```
+
+### `listenOnce`
+
+将事件侦听器添加到仅在首次触发事件时才运行回调的元素。
+
+```js
+
+const listenOnce = (el, evt, fn) => el.addEventListener(evt, fn, { once: true });
+listenOnce(
+    document.getElementById('my-id'),
+    'click',
+    () => console.log('Hello world')
+); // 'Hello world' will only be logged on the first click
+
+```
