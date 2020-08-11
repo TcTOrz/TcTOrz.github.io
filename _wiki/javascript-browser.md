@@ -1117,3 +1117,214 @@ const serializeForm = form =>
 serializeForm(document.querySelector('#form')); // email=test%40email.com&name=Test%20Name
 
 ```
+
+### `setStyle`
+
+为指定的HTML元素设置CSS值。
+
+```js
+
+const setStyle = (el, ruleName, val) => (el.style[ruleName] = val);
+setStyle(document.querySelector('p'), 'font-size', '20px');
+// The first <p> element on the page will have a font-size of 20px
+
+```
+
+### `show`
+
+显示所有指定的元素。
+
+```js
+
+const show = (...el) => [...el].forEach(e => (e.style.display = ''));
+show(...document.querySelectorAll('img')); // Shows all <img> elements on the page
+
+```
+
+### `smoothScroll`
+
+将元素平滑滚动到浏览器窗口的可见区域。
+
+```js
+
+const smoothScroll = element =>
+  document.querySelector(element).scrollIntoView({
+    behavior: 'smooth'
+  });
+smoothScroll('#fooBar'); // scrolls smoothly to the element with the id fooBar
+smoothScroll('.fooBar'); // scrolls smoothly to the first element with a class of fooBar
+
+```
+
+### `supportsTouchEvents`
+
+如果支持触摸事件，则返回true，否则返回false。
+
+```js
+
+const supportsTouchEvents = () =>
+  window &&
+  ('ontouchstart' in window || window.DocumentTouch && document instanceof window.DocumentTouch);
+supportsTouchEvents(); // true
+
+```
+
+### `toggleClass`
+
+切换HTML元素的class。
+
+```js
+
+const toggleClass = (el, className) => el.classList.toggle(className);
+toggleClass(document.querySelector('p.special'), 'special');
+// The paragraph will not have the 'special' class anymore
+
+```
+
+### `triggerEvent`
+
+[创建自定义事件](https://developer.mozilla.org/zh-CN/docs/Web/Guide/Events/Creating_and_triggering_events)
+
+在给定元素上触发特定事件，可以选择传递自定义数据。
+
+```js
+
+// test 创建自定义事件
+var event = new Event('build');
+// Listen for the event.
+elem.addEventListener('build', function (e) { ... }, false);
+// Dispatch the event.
+elem.dispatchEvent(event);
+
+// 添加自定义数据 – CustomEvent()
+// 要向事件对象添加更多数据，可以使用 CustomEvent 接口，detail 属性可用于传递自定义数据。
+var event = new CustomEvent('build', { 'detail': elem.dataset.time });
+function eventHandler(e) {
+  log('The time is: ' + e.detail);
+}
+
+```
+
+```js
+
+const triggerEvent = (el, eventType, detail) =>
+    el.dispatchEvent(new CustomEvent(eventType, { detail }));
+triggerEvent(document.getElementById('myId'), 'click');
+triggerEvent(document.getElementById('myId'), 'click', { username: 'bob' });
+
+```
+
+### `了解JavaScript中的事件冒泡，捕获和委派`
+
+##### 事件冒泡
+
+冒泡是指事件从目标元素（即用户单击的按钮）一直传播到其根树，从最近的树开始传播。 默认情况下，所有事件都会冒泡。
+
+```html
+
+<html>
+  <body>
+    <div id="btn-container">
+      <button class="btn">Click me</button>
+    </div>
+  </body>
+</html>
+
+```
+
+```js
+
+const ancestors = [
+    window, document, document.documentElement,
+    document.body, document.getElementById('btn-container')
+];
+
+// Target phase
+document.querySelector('.btn').addEventListener('click', e => {
+    console.log(`Hello from ${e.target}`);
+});
+// Bubble phase
+ancestors.forEach(a => {
+    a.addEventListener('click', e => {
+        console.log(`Hello from ${e.currentTarget}`);
+    });
+});
+
+// Hello from [object HTMLButtonElement]
+// Hello from [object HTMLDivElement]
+// Hello from [object HTMLBodyElement]
+// Hello from [object HTMLHtmlElement]
+// Hello from [object HTMLDocument]
+// Hello from [object Window]
+
+```
+
+如果将事件侦听器添加到树中的每个元素，如上所示，我们将首先看到一个由按钮触发的侦听器，然后其他每个侦听器从最近的祖先一直触发到窗口。
+
+##### 事件捕获
+
+捕获与冒泡完全相反，这意味着外部事件处理程序在最具体的处理程序（即按钮上的那个）之前触发。 请注意，首先运行所有捕获事件处理程序，然后运行所有冒泡事件处理程序。
+
+可以通过将EventTarget.addEventListener的第三个参数设置为true来使用事件捕获。 例如：
+
+```js
+
+ancestors.forEach(a => {
+    a.addEventListener('click', event => {
+        console.log(`Hello from ${e.currentTarget}`);
+    }, true);
+});
+
+// Hello from [object Window]
+// Hello from [object HTMLDocument]
+// Hello from [object HTMLHtmlElement]
+// Hello from [object HTMLBodyElement]
+// Hello from [object HTMLDivElement]
+// Hello from [object HTMLButtonElement]
+
+```
+
+可以看到首先为该按钮的每个祖先触发事件，然后将触发该按钮的事件。
+
+##### 事件传播
+
+在解释了事件冒泡和捕获之后，我们现在可以解释事件传播的三个阶段：
+
+- 在捕获阶段，事件从`window`开始，向下移动到`document`，父元素。
+
+- 在目标阶段，事件会在事件目标上触发（例如，用户单击的按钮）。
+
+- 在冒泡阶段，事件冒泡通过目标元素的父元素，`document`和`window`。
+
+##### 事件委托
+
+事件委托是指将事件侦听委托给父元素的想法，而不是将事件侦听器直接添加到事件目标。 使用此技术，父级可以根据需要捕获并处理冒泡事件。
+
+```js
+
+window.addEventListener('click', e => {
+    if (e.target.className === 'btn') console.log('Hello there!');
+});
+
+```
+
+在上面的示例中，我们将事件处理从按钮委托到窗口，并使用event.target获取原始事件的目标。
+
+- 通过使用事件委托，我们可以侦听大量元素上的事件，而不必分别附加事件侦听器，这可以提供性能上的好处。
+
+- 通过使用事件委托，动态元素（即随着时间的推移从DOM中添加或删除）可以捕获和处理其事件，而无需注册或删除侦听器。
+
+### `UUIDGeneratorBrowser`
+
+在浏览器中生成UUID。
+
+```js
+
+// [1e7] 转化为字符串
+const UUIDGeneratorBrowser = () =>
+    ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+    );
+UUIDGeneratorBrowser(); // '7982fcfe-5721-4632-bede-6000885be57d'
+
+```
