@@ -699,3 +699,296 @@ listenOnce(
 ); // 'Hello world' will only be logged on the first click
 
 ```
+
+### `nodeListToArray`
+
+将NodeList转换为数组。
+
+```js
+
+const nodeListToArray = nodeList => [...nodeList];
+nodeListToArray(document.childNodes); // [ <!DOCTYPE html>, html ]
+
+```
+
+### `observeMutations`
+
+创建并返回一个新的`MutationObserver`它会在指定的DOM发生变化时被调用。
+
+[MutationObserver](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver)
+
+```js
+
+const observeMutations = (element, callback, options) => {
+    const observer = new MutationObserver(mutations => mutations.forEach(m => callback(m)));
+    observer.observe(
+        element,
+        Object.assign(
+        {
+            childList: true,
+            attributes: true,
+            attributeOldValue: true,
+            characterData: true,
+            characterDataOldValue: true,
+            subtree: true
+        },
+        options
+        )
+    );
+    return observer;
+};
+const obs = observeMutations(document, console.log); // Logs all mutations that happen on the page
+obs.disconnect(); // Disconnects the observer and stops logging mutations on the page
+
+```
+
+### `off`
+
+从元素中删除事件侦听器。
+
+```js
+
+const off = (el, evt, fn, opts = false) => el.removeEventListener(evt, fn, opts);
+const fn = () => console.log('!');
+document.body.addEventListener('click', fn);
+off(document.body, 'click', fn); // no longer logs '!' upon clicking on the page
+
+```
+
+### `on`
+
+将事件侦听器添加到具有使用事件委托功能的元素。
+
+```js
+
+const on = (el, evt, fn, opts = {}) => {
+    const delegatorFn = e => e.target.matches(opts.target) && fn.call(e.target, e);
+    el.addEventListener(evt, opts.target ? delegatorFn : fn, opts.options || false);
+    if (opts.target) return delegatorFn;
+};
+const fn = () => console.log('!');
+on(document.body, 'click', fn); // logs '!' upon clicking the body
+on(document.body, 'click', fn, { target: 'p' }); // logs '!' upon clicking a `p` element child of the body
+on(document.body, 'click', fn, { options: true }); // use capturing instead of bubbling
+
+// or
+
+const on = (el, evt, fn, opts = {}) => {
+    const delegatorFn = e => e.target.matches(opts.target) && fn.call(e.target, e);
+    el.addEventListener(evt, opts.target ? e => {
+        return e.target.matches(opts.target) && fn.call(e.target, e)
+    } : fn, opts.options || false);
+};
+var fn = () => console.log('!');
+on(document.body, 'click', fn); // logs '!' upon clicking the body
+on(document.body, 'click', fn, { target: '.tt' }); // logs '!' upon clicking a `p` element child of the body
+on(document.body, 'click', fn, { options: true }); // use capturing instead of bubbling
+
+```
+
+### `onUserInputChange`
+
+每当用户输入类型更改（鼠标或触摸）时，运行回调。 根据输入设备来启用/禁用代码。 此过程是动态的，并且适用于混合设备（例如触摸屏笔记本电脑）
+
+```js
+
+const onUserInputChange = callback => {
+    let type = 'mouse',
+        lastTime = 0;
+    const mousemoveHandler = () => {
+        const now = performance.now();
+        if (now - lastTime < 20)
+        (type = 'mouse'), callback(type), document.removeEventListener('mousemove', mousemoveHandler);
+        lastTime = now;
+    };
+    document.addEventListener('touchstart', () => {
+        if (type === 'touch') return;
+        (type = 'touch'), callback(type), document.addEventListener('mousemove', mousemoveHandler);
+    });
+};
+onUserInputChange(type => {
+  console.log('The user is now using', type, 'as an input method.');
+});
+
+```
+
+### `parseCookie`
+
+解析`HTTP Cookie`标头字符串，并返回所有cookie名称-值对的对象。
+
+```js
+
+const parseCookie = str =>
+  str
+    .split(';')
+    .map(v => v.split('='))
+    .reduce((acc, v) => {
+      acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim());
+      return acc;
+    }, {});
+parseCookie('foo=bar; equation=E%3Dmc%5E2'); // { foo: 'bar', equation: 'E=mc^2' }
+
+```
+
+### `prefersDarkColorScheme`
+
+[matchMedia](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/matchMedia)
+
+如果用户配色方案偏好设置为深色，则返回true，否则返回false。
+
+```js
+
+window.matchMedia('(max-width: 600px)'); // 视口宽度大于600px,返回false，否则true
+
+const prefersDarkColorScheme = () =>
+  window && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+prefersDarkColorScheme(); // true
+
+```
+
+### `prefersLightColorScheme`
+
+如果用户配色方案偏好设置为浅色，则返回true，否则返回false。
+
+```js
+
+const prefersLightColorScheme = () =>
+  window && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+prefersLightColorScheme(); // true
+
+```
+
+### `prefix`
+
+返回浏览器支持的CSS属性的前缀版本（如有必要）。
+
+```js
+
+const prefix = prop => {
+    const capitalizedProp = prop.charAt(0).toUpperCase() + prop.slice(1);
+    const prefixes = ['', 'webkit', 'moz', 'ms', 'o'];
+    const i = prefixes.findIndex(
+        prefix => typeof document.body.style[prefix ? prefix + capitalizedProp : prop] !== 'undefined'
+    );
+    return i !== -1 ? (i === 0 ? prop : prefixes[i] + capitalizedProp) : null;
+};
+prefix('appearance'); // 'appearance' on a supported browser, otherwise 'webkitAppearance', 'mozAppearance', 'msAppearance' or 'oAppearance'
+
+```
+
+### `recordAnimationFrames`
+
+在每个动画帧上调用提供的回调。
+
+```js
+
+const recordAnimationFrames = (callback, autoStart = true) => {
+    let running = true,
+        raf;
+    const stop = () => {
+        running = false;
+        cancelAnimationFrame(raf);
+    };
+    const start = () => {
+        running = true;
+        run();
+    };
+    const run = () => {
+        raf = requestAnimationFrame(() => {
+        callback();
+        if (running) run();
+        });
+    };
+    if (autoStart) start();
+    return { start, stop };
+};
+const cb = () => console.log('Animation frame fired');
+const recorder = recordAnimationFrames(cb); // logs 'Animation frame fired' on each animation frame
+recorder.stop(); // stops logging
+recorder.start(); // starts again
+const recorder2 = recordAnimationFrames(cb, false); // `start` needs to be explicitly called to begin recording frames
+
+```
+
+### `redirect`
+
+重定向到指定的URL。
+
+```js
+
+const redirect = (url, asLink = true) =>
+    asLink ? (window.location.href = url) : window.location.replace(url);
+redirect('https://google.com');
+
+```
+
+### `renderElement`
+
+在指定的DOM元素中渲染DOM树。
+
+```js
+
+// test createElement
+var myElement = {
+    type: 'button',
+    props: {
+        type: 'button',
+        className: 'btn',
+        onClick: () => alert('Clicked'),
+        children: [
+            { props: { nodeValue: 'Click me' } }
+        ]
+    }
+};
+var element = document.createElement(myElement.type);
+element['type'] = myElement.props.type;
+element['className'] = myElement.props.className; 
+element // <button type="button" class="btn"></button>
+
+```
+
+```js
+
+const renderElement = ({ type, props = {} }, container) => {
+    const isTextElement = !type;
+    const element = isTextElement
+        ? document.createTextNode('')
+        : document.createElement(type);
+
+    //  是否为事件 是：true 否：false
+    const isListener = p => p.startsWith('on');
+    //  是否是属性 是：true 否：false
+    const isAttribute = p => !isListener(p) && p !== 'children';
+
+    Object.keys(props).forEach(p => {
+        // 属性赋值
+        if(isAttribute(p)) element[p] = props[p];
+        // 事件添加
+        if(!isTextElement && isListener(p))
+            element.addEventListener(p.toLowerCase().slice(2), props[p]);
+    });
+
+    // 获取children后进行递归
+    if(!isTextElement && props.children && props.children.length)
+        props.children.forEach(childElement => renderElement(childElement, element));
+
+    container.appendChild(element);
+}
+
+const myElement = {
+    type: 'button',
+    props: {
+        type: 'button',
+        className: 'btn',
+        onClick: () => alert('Clicked'),
+        children: [
+        { props: { nodeValue: 'Click me' } }
+        ]
+    }
+};
+renderElement(
+    myElement,
+    document.body
+);
+
+```
