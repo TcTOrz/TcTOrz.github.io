@@ -290,3 +290,162 @@ window.addEventListener(
 ); // Will log the window dimensions at most every 250ms
 
 ```
+
+### `defer`
+
+```js
+
+const defer = (fn, ...args) => setTimeout(fn, 1, ...args);
+
+// Example A:
+defer(console.log, 'a'), console.log('b'); // logs 'b' then 'a'
+
+// Example B:
+document.querySelector('#someElement').innerHTML = 'Hello';
+longRunningFunction(); // Browser will not update the HTML until this has finished
+defer(longRunningFunction); // Browser will update the HTML then run the function
+
+```
+
+### `delay`
+
+```js
+
+const delay = (fn, wait, ...args) => setTimeout(fn, wait, ...args);
+delay(
+    function(text) {
+        console.log(text);
+    },
+    1000,
+    'later'
+); // Logs 'later' after one second.
+
+```
+
+### `either`
+
+```js
+
+const either = (f, g) => (...args) => f(...args) || g(...args);
+const isEven = num => num % 2 === 0;
+const isPositive = num => num > 0;
+const isPositiveOrEven = either(isPositive, isEven);
+isPositiveOrEven(4); // true
+isPositiveOrEven(3); // true
+
+```
+
+### `flip`
+
+```js
+
+const flip = fn => (first, ...rest) => fn(...rest, first);
+let a = { name: 'John Smith' };
+let b = {};
+const mergeFrom = flip(Object.assign);
+let mergePerson = mergeFrom.bind(null, a);
+mergePerson(b); // == b
+b = {};
+Object.assign(b, a); // == b
+
+```
+
+### `functionName`
+
+```js
+
+const functionName = fn => (console.debug(fn.name), fn);
+functionName(Math.max); // max (logged in debug channel of console)
+
+```
+
+### `在JavaScript中实现单例？`
+
+[Proxy](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+
+```js
+
+const singletonify = (className) => {
+    return new Proxy(className.prototype.constructor, {
+        instance: null,
+        construct: (target, argumentsList) => {
+            if (!this.instance)
+                this.instance = new target(...argumentsList);
+            return this.instance;
+        }
+    });
+}
+
+class MyClass {
+  constructor(msg) {
+    this.msg = msg;
+  }
+
+  printMsg() {
+    console.log(this.msg);
+  }
+}
+
+MySingletonClass = singletonify(MyClass);
+const myObj = new MySingletonClass('first');
+myObj.printMsg();           // 'first'
+const myObj2 = new MySingletonClass('second');
+myObj2.printMsg();           // 'first'
+
+```
+
+### `hz`
+
+返回每秒执行一个函数的次数。 hz是赫兹的单位，频率的单位定义为每秒一个周期。
+
+```js
+
+const hz = (fn, iterations = 100) => {
+    const before = performance.now();
+    for (let i = 0; i < iterations; i++) fn();
+    return (1000 * iterations) / (performance.now() - before);
+};
+// 10,000 element array
+const numbers = Array(10000)
+    .fill()
+    .map((_, i) => i);
+
+// Test functions with the same goal: sum up the elements in the array
+const sumReduce = () => numbers.reduce((acc, n) => acc + n, 0);
+const sumForLoop = () => {
+    let sum = 0;
+    for (let i = 0; i < numbers.length; i++) sum += numbers[i];
+    return sum;
+};
+
+Math.round(hz(sumReduce)); // 572
+Math.round(hz(sumForLoop)); // 4784
+
+```
+
+### `memoize`
+
+返回缓存函数。
+
+```js
+
+const memoize = fn => {
+    const cache = new Map();
+    const cached = function(val) {
+        return cache.has(val) ? cache.get(val) : cache.set(val, fn.call(this, val)) && cache.get(val);
+    };
+    cached.cache = cache;
+    return cached;
+};
+
+const fn = x => {
+    console.log('第一次载入');
+    return x * 2;
+};
+const fnCached = memoize(fn);
+fnCached(2); // takes a long time // 第一次载入 4
+fnCached(2); // returns virtually instantly since it's now cached // 4
+console.log(fnCached.cache); // The cached fn map
+
+```
+
