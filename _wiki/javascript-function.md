@@ -449,3 +449,215 @@ console.log(fnCached.cache); // The cached fn map
 
 ```
 
+### `mostPerformant`
+
+返回执行最快的函数数组中的函数索引。
+
+```js
+
+const mostPerformant = (fns, iterations = 10000) => {
+    const times = fns.map(fn => {
+        const before = performance.now();
+        for (let i = 0; i < iterations; i++) fn();
+        return performance.now() - before;
+    });
+    return times.indexOf(Math.min(...times));
+};
+mostPerformant([
+    () => {
+        // Loops through the entire array before returning `false`
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, '10'].every(el => typeof el === 'number');
+    },
+    () => {
+        // Only needs to reach index `1` before returning false
+        [1, '2', 3, 4, 5, 6, 7, 8, 9, 10].every(el => typeof el === 'number');
+    }
+]); // 1
+
+```
+
+### `negate`
+
+```js
+
+const negate = func => (...args) => !func(...args);
+// or
+const negate = func => (v) => !func(v);
+[1, 2, 3, 4, 5, 6].filter(negate(n => n % 2 === 0)); // [ 1, 3, 5 ]
+// or
+[1, 2, 3, 4, 5, 6].filter(n => n % 2 !== 0);
+
+```
+
+### `nthArg`
+
+```js
+
+const nthArg = n => (...args) => args.slice(n)[0];
+const third = nthArg(2);
+third(1, 2, 3); // 3
+third(1, 2); // undefined
+const last = nthArg(-1);
+last(1, 2, 3, 4, 5); // 5
+
+```
+
+### `once`
+
+[相似情形](https://ifwechat.com//wiki/javascript-browser/#listenonce)
+
+```js
+
+const once = fn => {
+    let called = false;
+    return function(...args) {
+        if (called) return;
+        called = true;
+        return fn.apply(this, args);
+    };
+};
+const startApp = function(event) {
+  console.log(this, event); // document.body, MouseEvent
+};
+document.body.addEventListener('click', once(startApp)); // only runs `startApp` once upon click
+
+```
+
+### `over`
+
+创建一个函数，该函数使用接收到的参数调用提供的每个函数并返回结果。
+
+```js
+
+const over = (...fns) => (...args) => fns.map(fn => fn.apply(null, args));
+const minMax = over(Math.min, Math.max);
+minMax(1, 2, 3, 4, 5); // [1,5]
+
+```
+
+### `overArgs`
+
+```js
+
+const overArgs = (fn, transforms) => (...args) => fn(...args.map((val, i) => transforms[i](val)));
+const square = n => n * n;
+const double = n => n * 2;
+const fn = overArgs((x, y) => [x, y], [square, double]);
+fn(9, 3); // [81, 6]
+
+```
+
+### `partial` & `partialRight`
+
+```js
+
+const partial = (fn, ...partials) => (...args) => fn(...partials, ...args);
+const greet = (greeting, name) => greeting + ' ' + name + '!';
+const greetHello = partial(greet, 'Hello');
+greetHello('John'); // 'Hello John!'
+
+```
+
+```js
+
+const partialRight = (fn, ...partials) => (...args) => fn(...args, ...partials);
+const greet = (greeting, name) => greeting + ' ' + name + '!';
+const greetJohn = partialRight(greet, 'John');
+greetJohn('Hello'); // 'Hello John!'
+
+```
+
+### `pipeAsyncFunctions`
+
+对异步函数执行从左到右的功能组合。
+
+```js
+
+const pipeAsyncFunctions = (...fns) => arg => fns.reduce((p, f) => p.then(f), Promise.resolve(arg));
+const sum = pipeAsyncFunctions(
+    x => x + 1,
+    x => new Promise(resolve => setTimeout(() => resolve(x + 2), 1000)),
+    x => x + 3,
+    async x => (await x) + 4
+);
+(async() => {
+    console.log(await sum(5)); // 15 (after one second)
+})();
+
+```
+
+### `pipeFunctions`
+
+```js
+
+const pipeFunctions = (...fns) => fns.reduce((f, g) => (...args) => g(f(...args)));
+// or
+const pipeFunctions = (...fns) => (...args) => fns.reduce((f, g) => g(f(...args)));
+
+const add5 = x => x + 5;
+const multiply = (x, y) => x * y;
+const multiplyAndAdd5 = pipeFunctions(multiply, add5);
+multiplyAndAdd5(5, 2); // 15
+
+```
+
+### `promisify`
+
+转换异步函数,返回promise。
+
+```js
+
+const promisify = func => (...args) =>
+    new Promise((resolve, reject) =>
+        func(...args, res => resolve(res))
+        // or
+        func(...args, (err, result) => (err ? reject(err) : resolve(result)))
+    );
+const delay = promisify((d, cb) => setTimeout(cb, d));
+delay(2000).then(() => console.log('Hi!')); // // Promise resolves after 2s
+
+```
+
+### `rearg`
+
+创建一个函数，该函数调用提供的函数，并根据指定的索引排列其参数。
+
+```js
+
+const rearg = (fn, indexes) => (...args) => fn(...indexes.map(i => args[i]));
+var rearged = rearg(
+    function(a, b, c) {
+        return [a, b, c];
+    },
+    [2, 0, 1]
+);
+rearged('b', 'c', 'a'); // ['a', 'b', 'c']
+
+```
+
+### `sleep`
+
+延迟异步功能的执行。
+
+```js
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+async function sleepyWork() {
+  console.log("I'm going to sleep for 1 second.");
+  await sleep(1000);
+  console.log('I woke up after 1 second.');
+}
+
+```
+
+### `spreadOver`
+
+```js
+
+const spreadOver = fn => args => fn(...args);
+const arrayMax = spreadOver(Math.max);
+arrayMax([1, 2, 3]); // 3
+
+```
+
+
