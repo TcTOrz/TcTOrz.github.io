@@ -93,64 +93,6 @@ chunkIntoN([1, 2, 3, 4, 5, 6, 7], 3); // [[1,2], [3,4], [5,6], [7]]
 
 ```
 
-### 代码剖析（循环、`Array.prototype.reduce`、方法链）
-
-循环
-
-```js
-
-// O（N）复杂度，每个元素将仅迭代一次。
-const files = ['foo.txt', '.bar', '   ', 'baz.foo'];
-let filePaths = [];
-
-for(let file of files) {
-    const fileName = file.trim();
-    if(fileName) {
-        const filePath = `~/app/${fileName}`;
-        filePaths.push(filePath);   
-    }
-}
-
-filePaths // ["~/app/foo.txt", "~/app/.bar", "~/app/baz.foo"]
-
-```
-
-Array.prototype.reduce
-
-```js
-
-// 无法跳出循环
-// O（N）复杂度，每个元素将仅迭代一次。
-const files = [ 'foo.txt ', '.bar', '   ', 'baz.foo' ];
-const filePaths = files.reduce((acc, file) => {
-  const fileName = file.trim();
-  if(fileName) {
-    const filePath = `~/cool_app/${fileName}`;
-    acc.push(filePath);
-  }
-  return acc;
-}, []);
-
-// filePaths = [ '~/cool_app/foo.txt', '~/cool_app/.bar', '~/cool_app/baz.foo']
-
-```
-
-方法链(Method chaining)
-
-```js
-
-// 无法跳出循环
-// O（cN）复杂度，每个元素c(方法链长度)次迭代
-const files = [ 'foo.txt ', '.bar', '   ', 'baz.foo' ];
-const filePaths = files
-  .map(file => file.trim())
-  .filter(Boolean)
-  .map(fileName => `~/cool_app/${fileName}`);
-
-// filePaths = [ '~/cool_app/foo.txt', '~/cool_app/.bar', '~/cool_app/baz.foo']
-
-```
-
 ### `compact`
 
 `Array.prototype.filter()`
