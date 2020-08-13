@@ -8,6 +8,61 @@ keywords: Javascript, 面试
 
 ## `Math`
 
+### `accumulate`
+
+```js
+
+const accumulate = (...nums) => nums.reduce((acc, n) => [...acc, n + +acc.slice(-1)], []);
+accumulate(1, 2, 3, 4); // [1, 3, 6, 10]
+accumulate(...[1, 2, 3, 4]); // [1, 3, 6, 10]
+
+```
+
+### `and`
+
+```js
+
+and(true, true); // true
+and(true, false); // false
+and(false, false); // false
+
+```
+
+### `approximatelyEqual`
+
+检查两个数字是否彼此近似相等。
+
+```js
+
+const approximatelyEqual = (v1, v2, epsilon = 0.001) => Math.abs(v1 - v2) < epsilon;
+approximatelyEqual(Math.PI / 2.0, 1.5708); // true
+
+```
+
+### `average`
+
+```js
+
+const average = (...nums) => nums.reduce((acc, val) => acc + val, 0) / nums.length;
+average(...[1, 2, 3]); // 2
+average(1, 2, 3); // 2
+
+```
+
+### `averageBy`
+
+```js
+
+const averageBy = (arr, fn) => arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val) => acc + val, 0) / arr.length;
+averageBy([{ n: 4 }, { n: 2 }, { n: 8 }, { n: 6 }], o => o.n); // 5
+averageBy([{ n: 4 }, { n: 2 }, { n: 8 }, { n: 6 }], 'n'); // 5
+
+```
+
+### `binomialCoefficient`
+
+
+
 ### `randomIntegerInRange`
 
 ```js
@@ -169,5 +224,41 @@ const toSafeInteger = num =>
     Math.round(Math.max(Math.min(num, Number.MAX_SAFE_INTEGER), Number.MIN_SAFE_INTEGER));
 toSafeInteger('3.2'); // 3
 toSafeInteger(Infinity); // 9007199254740991
+
+```
+
+### `validateNumber`
+
+```js
+
+const validateNumber = n => !isNaN(parseFloat(n)) && isFinite(n) && Number(n) == n;
+validateNumber('10'); // true
+
+```
+
+### `vectorAngle`
+
+返回两个向量之间的角度（θ）。
+
+```js
+
+const vectorAngle = (x, y) => {
+    let mX = Math.sqrt(x.reduce((acc, n) => acc + Math.pow(n, 2), 0));
+    let mY = Math.sqrt(y.reduce((acc, n) => acc + Math.pow(n, 2), 0));
+    return Math.acos(x.reduce((acc, n, i) => acc + n * y[i], 0) / (mX * mY));
+};
+vectorAngle([3, 4], [4, 3]); // 0.283794109208328
+
+```
+
+### `vectorDistance`
+
+返回两个向量之间的距离。
+
+```js
+
+const vectorDistance = (x, y) =>
+  Math.sqrt(x.reduce((acc, val, i) => acc + Math.pow(val - y[i], 2), 0));
+vectorDistance([10, 0, 5], [20, 0, 10]); // 11.180339887498949
 
 ```
