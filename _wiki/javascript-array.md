@@ -1450,43 +1450,6 @@ unzipWith([[1, 10, 100], [2, 20, 200]], (...args) => args.reduce((acc, v) => acc
 
 ```
 
-### `Using JavaScript generator functions for ranges`
-
-```js
-
-function* generateRange(end, start = 0, step = 1) {
-    let x = start - step;
-    while(x < end - step) yield x += step;
-}
-const gen5 = generateRange(5);
-let x = gen5.next();
-while (!x.done) {
-  console.log(x.value);
-  x = gen5.next();
-} // Logs: 0, 1, 2, 3, 4
-
-const iterableX = {
-  [Symbol.iterator]: function* () {
-    yield 1;
-    yield 2;
-  }
-};
-console.log([...iterableX]); // [1, 2]
-
-const range = (end, start = 0, step = 1) => {
-  function* generateRange() {
-    let x = start - step;
-    while(x < end - step) yield x += step;
-  }
-  return {
-    [Symbol.iterator]: generateRange
-  };
-}
-console.log([...range(7)]); // [0, 1, 2, 3, 4, 5, 6]
-for (let i of range(8, 2, 2)) console.log(i); // Logs: 2, 4, 6
-
-```
-
 ### `weightedSample`
 
 根据权重随机返回数组中的元素
@@ -1720,92 +1683,6 @@ console.table(Object.entries([...document.getElementsByTagName("*")].map(v=>v.no
     obj[v] = obj[v]? obj[v]+1: 1;
     return obj
 }, {})).sort((a, b)=>b[1]-a[1]).slice(0, 1))
-
-```
-
-### 了解`JavaScript`中的`this`关键字
-
-在`Javascript`中，`this`关键字指代当前正在执行代码的对象，具体如下：
-
-- 默认情况下，`this`指全局对象
-- 函数中，当不在严格模式下，`this`指全局对象
-- 函数中，在严格模式下，`this`为`undefined`
-- 箭头函数中，保留了封闭词法上下文`this`的值
-- 在对象方法中，`this`指代调用该方法的对象
-- 构造函数中，`this`绑定在正在构造而成的新对象中
-- 事件处理中，`this`绑定到放置事件侦听的元素
-
-```js
-
-// 全局上下文中，this指代全局对象
-console.log(this === window); //true
-
-// 非严格模式，this指代全局对象
-function f() {
-  return this;
-}
-console.log(f() === window); // true
-
-// 严格模式，this等于undefined 
-'use strict';
-function f() {
-  return this;
-}
-console.log(f()); // undefined
-
-// 在对象方法中，this指代调用该方法的对象
-const obj = {
-  f: function() {
-    return this;
-  }
-};
-console.log(obj.f()); // { obj }
-
-// 构造函数中，this绑定在正在构造而成的新对象中
-class C {
-  constructor() {
-    this.x = 10;
-  }
-}
-const obj = new C();
-console.log(obj.x); // 10
-
-// 箭头函数中，保留了封闭词法上下文this的值
-const f = () => this;
-console.log(f() === window); // true
-
-const obj = {
-  foo: function() { // foo不是箭头函数, 所以this的值为调用他方法的对象
-    const baz = () => this; // this===obj
-    return baz();
-  },
-  bar: () => this
-};
-console.log(obj.foo()); // { foo, bar }
-console.log(obj.bar() === window); // true
-
-// 事件处理中，this绑定到放置事件侦听的元素
-const el = document.getElementById('my-el');
-el.addEventListener('click', function() {
-  console.log(this === el); // true
-});
-
-```
-
-绑定`this`
-
-`Function.prototype.bind()` `Function.prototype.call()` `Function.prototype.apply()`
-
-```js
-
-function f() {
-  return this.foo;
-}
-
-var x = f.bind({foo: 'hello'});
-console.log(x()); // 'hello'
-
-console.log(f.call({foo: 'hi'})); // 'hi'
 
 ```
 

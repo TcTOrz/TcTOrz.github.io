@@ -660,4 +660,283 @@ arrayMax([1, 2, 3]); // 3
 
 ```
 
+### `throttle`
 
+[函数的防抖和节流](https://ifwechat.com//2020/06/16/javascript-interview/#%E5%87%BD%E6%95%B0%E7%9A%84%E9%98%B2%E6%8A%96%E5%92%8C%E8%8A%82%E6%B5%81)有更详细的说明
+
+函数节流
+
+```js
+
+const throttle = (fn, wait) => {
+    let inThrottle, lastFn, lastTime;
+    return function() {
+        const context = this,
+        args = arguments;
+        if (!inThrottle) {
+            fn.apply(context, args);
+            lastTime = Date.now();
+            inThrottle = true;
+        } else {
+            clearTimeout(lastFn);
+            lastFn = setTimeout(function() {
+                if (Date.now() - lastTime >= wait) {
+                    fn.apply(context, args);
+                    lastTime = Date.now();
+                }
+            }, Math.max(wait - (Date.now() - lastTime), 0));
+        }
+    };
+};
+window.addEventListener(
+    'resize',
+    throttle(function(evt) {
+        console.log(window.innerWidth);
+        console.log(window.innerHeight);
+    }, 250)
+); // Will log the window dimensions at most every 250ms
+
+```
+
+### `times`
+
+遍历回调n次
+
+```js
+
+const times = (n, fn, context = undefined) => {
+    let i = 0;
+    while (fn.call(context, i) !== false && ++i < n) {}
+};
+var output = '';
+times(5, i => (output += i));
+console.log(output); // 01234
+
+```
+
+### `timeTaken`
+
+测量函数执行所需的时间。
+
+```js
+
+const timeTaken = callback => {
+    console.time('timeTaken');
+    const r = callback();
+    console.timeEnd('timeTaken');
+    return r;
+};
+timeTaken(() => Math.pow(2, 10)); // 1024, (logged): timeTaken: 0.02099609375ms
+
+```
+
+### `unary`
+
+创建一个函数，该函数最多接受一个参数，而忽略任何其他参数。
+
+```js
+
+const unary = fn => val => fn(val);
+['6', '8', '10'].map(unary(parseInt)); // [6, 8, 10]
+
+```
+
+### `uncurry`
+
+柯里化直到n深度的函数。
+
+
+```js
+
+const uncurry = (fn, n = 1) => (...args) => {
+    const next = acc => args => args.reduce((x, y) => x(y), acc);
+    if (n > args.length) throw new RangeError('Arguments too few!');
+    return next(fn)(args.slice(0, n));
+};
+const add = x => y => z => x + y + z;
+const uncurriedAdd = uncurry(add, 3);
+uncurriedAdd(1, 2, 3); // 6
+
+```
+
+
+### 了解`JavaScript`中的`this`关键字
+
+在`Javascript`中，`this`关键字指代当前正在执行代码的对象，具体如下：
+
+- 默认情况下，`this`指全局对象
+- 函数中，当不在严格模式下，`this`指全局对象
+- 函数中，在严格模式下，`this`为`undefined`
+- 箭头函数中，保留了封闭词法上下文`this`的值
+- 在对象方法中，`this`指代调用该方法的对象
+- 构造函数中，`this`绑定在正在构造而成的新对象中
+- 事件处理中，`this`绑定到放置事件侦听的元素
+
+```js
+
+// 全局上下文中，this指代全局对象
+console.log(this === window); //true
+
+// 非严格模式，this指代全局对象
+function f() {
+    return this;
+}
+console.log(f() === window); // true
+
+// 严格模式，this等于undefined 
+'use strict';
+function f() {
+    return this;
+}
+console.log(f()); // undefined
+
+// 在对象方法中，this指代调用该方法的对象
+const obj = {
+    f: function() {
+        return this;
+    }
+};
+console.log(obj.f()); // { obj }
+
+// 构造函数中，this绑定在正在构造而成的新对象中
+class C {
+    constructor() {
+        this.x = 10;
+    }
+}
+const obj = new C();
+console.log(obj.x); // 10
+
+// 箭头函数中，保留了封闭词法上下文this的值
+const f = () => this;
+console.log(f() === window); // true
+
+const obj = {
+    foo: function() { // foo不是箭头函数, 所以this的值为调用他方法的对象
+        const baz = () => this; // this===obj
+        return baz();
+    },
+    bar: () => this
+};
+console.log(obj.foo()); // { foo, bar }
+console.log(obj.bar() === window); // true
+
+// 事件处理中，this绑定到放置事件侦听的元素
+const el = document.getElementById('my-el');
+el.addEventListener('click', function() {
+    console.log(this === el); // true
+});
+
+```
+
+绑定`this`
+
+`Function.prototype.bind()` `Function.prototype.call()` `Function.prototype.apply()`
+
+```js
+
+function f() {
+    return this.foo;
+}
+
+var x = f.bind({foo: 'hello'});
+console.log(x()); // 'hello'
+
+console.log(f.call({foo: 'hi'})); // 'hi'
+
+```
+
+### `unfold`
+
+```js
+
+const unfold = (fn, seed) => {
+    let result = [],
+        val = [null, seed];
+    while ((val = fn(val[1]))) result.push(val[0]);
+    return result;
+};
+var f = n => (n > 50 ? false : [-n, n + 10]);
+unfold(f, 10); // [-10, -20, -30, -40, -50]
+
+```
+
+### `Using JavaScript generator functions for ranges`
+
+```js
+
+function* generateRange(end, start = 0, step = 1) {
+    let x = start - step;
+    while(x < end - step) yield x += step;
+}
+const gen5 = generateRange(5);
+let x = gen5.next();
+while (!x.done) {
+    console.log(x.value);
+    x = gen5.next();
+} // Logs: 0, 1, 2, 3, 4
+
+const iterableX = {
+    [Symbol.iterator]: function* () {
+        yield 1;
+        yield 2;
+    }
+};
+console.log([...iterableX]); // [1, 2]
+
+const range = (end, start = 0, step = 1) => {
+    function* generateRange() {
+        let x = start - step;
+        while(x < end - step) yield x += step;
+    }
+    return {
+        [Symbol.iterator]: generateRange
+    };
+}
+console.log([...range(7)]); // [0, 1, 2, 3, 4, 5, 6]
+for (let i of range(8, 2, 2)) console.log(i); // Logs: 2, 4, 6
+
+```
+
+### What are JavaScript closures?
+
+[什么是闭包（closure），为什么使用闭包？](https://ifwechat.com//2020/06/16/javascript-interview/#%E4%BB%80%E4%B9%88%E6%98%AF%E9%97%AD%E5%8C%85closure%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E9%97%AD%E5%8C%85)
+
+### `when`
+
+```js
+
+const when = (pred, whenTrue) => x => (pred(x) ? whenTrue(x) : x);
+const doubleEvenNumbers = when(x => x % 2 === 0, x => x * 2);
+doubleEvenNumbers(2); // 4
+doubleEvenNumbers(1); // 1
+
+```
+
+### 什么时候使用`Javascript`缓存技术？
+
+- 加快执行缓慢，耗时的函数调用
+- 多次调用同一函数
+- 完全不同的情况下多次调用同一函数应避免使用
+
+```js
+
+const memoize = fn => new Proxy(fn, {
+    cache: new Map(),
+    apply (target, thisArg, argsList) {
+        let cacheKey = argsList.toString();
+        if(!this.cache.has(cacheKey))
+        this.cache.set(cacheKey, target.apply(thisArg, argsList));
+        return this.cache.get(cacheKey);
+    }
+});
+
+const fibonacci = n => (n <= 1 ? 1 : fibonacci(n - 1) + fibonacci(n - 2));
+const memoizedFibonacci = memoize(fibonacci);
+
+for (let i = 0; i < 100; i ++)
+    fibonacci(30);                      // ~5000ms
+for (let i = 0; i < 100; i ++)
+    memoizedFibonacci(30);              // ~50ms
+
+```
