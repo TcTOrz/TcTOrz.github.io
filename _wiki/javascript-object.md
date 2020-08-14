@@ -786,3 +786,52 @@ var a = { x: true, y: 1, z: {c: 1} };
 var b = shallowClone(a);
 
 ```
+
+### `size`
+
+```js
+
+const size = val =>
+    Array.isArray(val)
+        ? val.length
+        : val && typeof val === 'object'
+            ? val.size || val.length || Object.keys(val).length
+            : typeof val === 'string'
+                ? new Blob([val]).size
+                : 0;
+size([1, 2, 3, 4, 5]); // 5
+size('size'); // 4
+size({ one: 1, two: 2, three: 3 }); // 3
+
+```
+
+### `toPairs`
+
+根据对象或其他可迭代对象（对象，数组，字符串，集合等）创建键-值对数组。
+
+[Symbol.iterator](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol/iterator)
+
+1. Array.prototype[@@iterator]()
+2. TypedArray.prototype[@@iterator]()
+3. String.prototype[@@iterator]()
+4. Map.prototype[@@iterator]()
+5. Set.prototype[@@iterator]()
+
+[Array.prototype.entries()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/entries)方法返回一个新的Array Iterator对象，该对象包含数组中每个索引的键/值对。 
+
+[Object.entries()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/entries)方法返回一个给定对象自身可枚举属性的键值对数组，其排列与使用 for...in 循环遍历该对象时返回的顺序一致（区别在于 for-in 循环还会枚举原型链中的属性）。
+
+```js
+
+const toPairs = obj =>
+    obj[Symbol.iterator] instanceof Function && obj.entries instanceof Function
+        ? Array.from(obj.entries())
+        : Object.entries(obj);
+toPairs({ a: 1, b: 2 }); // [ ['a', 1], ['b', 2] ]  Object.entries()
+toPairs([2, 4, 8]); // [ [0, 2], [1, 4], [2, 8] ]   obj.entries()
+toPairs('shy'); // [ ['0', 's'], ['1', 'h'], ['2', 'y'] ]   Object.entries()
+toPairs(new Set(['a', 'b', 'c', 'a'])); // [ ['a', 'a'], ['b', 'b'], ['c', 'c'] ]   obj.entries()
+
+```
+
+### `transform`
