@@ -506,3 +506,283 @@ invertKeyValues({ a: 1, b: 2, c: 1 }); // { 1: [ 'a', 'c' ], 2: [ 'b' ] }
 invertKeyValues({ a: 1, b: 2, c: 1 }, value => 'group' + value); // { group1: [ 'a', 'c' ], group2: [ 'b' ] }
 
 ```
+
+### `lowercaseKeys`
+
+从指定的对象创建一个新的对象，其中所有键都小写。
+
+```js
+
+const lowercaseKeys = obj => 
+    Object.keys(obj).reduce((acc, key) => {
+        acc[key.toLowerCase()] = obj[key];
+        return acc;
+    }, {});
+const myObj = { Name: 'Adam', sUrnAME: 'Smith' };
+const myObjLower = lowercaseKeys(myObj); // {name: 'Adam', surname: 'Smith'};
+
+```
+
+### `mapKeys`
+
+```js
+
+const mapKeys = (obj, fn) => 
+    Object.keys(obj).reduce((acc, k) => {
+        acc[fn(obj[k], k)] = obj[k];
+        return acc;
+    }, {});
+mapKeys({ a: 1, b: 2 }, (val, key) => key + val); // { a1: 1, b2: 2 }
+
+```
+
+### `mapValues`
+
+```js
+
+const mapValues = (obj, fn) => 
+    Object.keys(obj).reduce((acc, k) => {
+        acc[k] = fn(obj[k]);
+        return acc;
+    }, {});
+const users = {
+  fred: { user: 'fred', age: 40 },
+  pebbles: { user: 'pebbles', age: 1 }
+};
+mapValues(users, u => u.age); // { fred: 40, pebbles: 1 }
+
+```
+
+### `matches`
+
+比较两个对象以确定第一个对象是否包含与第二个对象相同的属性值。
+
+```js
+
+const matches = (obj, source) => 
+    Object.keys(source).every(key => obj.hasOwnProperty(key) && obj[key] === source[key]);
+matches({ age: 25, hair: 'long', beard: true }, { hair: 'long', beard: true }); // true
+matches({ hair: 'long', beard: true }, { age: 25, hair: 'long', beard: true }); // false
+
+```
+
+### `matchesWith`
+
+```js
+
+const matchesWith = (obj, source, fn) => 
+    Object.keys(source).every(key => 
+        obj.hasOwnProperty(key) && fn
+            ? fn(obj[key], source[key])
+            : obj[key] === source(key)
+    );
+const isGreeting = val => /^h(?:i|ello)$/.test(val);
+matchesWith(
+  { greeting: 'hello' },
+  { greeting: 'hi' },
+  (oV, sV) => isGreeting(oV) && isGreeting(sV)
+); // true
+
+```
+
+### `merge`
+
+通过两个或更多对象的组合创建一个新对象。
+
+```js
+
+const merge = (...objs) =>
+    // objs
+    // 0: {a: Array(2), b: 1}
+    // 1: {a: {…}, b: Array(2), c: "foo"}
+    [...objs].reduce(
+        (acc, obj) =>
+            Object.keys(obj).reduce((a, k) => {
+                acc[k] = acc.hasOwnProperty(k) ? [].concat(acc[k]).concat(obj[k]) : obj[k];
+                return acc;
+            }, {})
+    , {});
+const object = {
+  a: [{ x: 2 }, { y: 4 }],
+  b: 1
+};
+const other = {
+  a: { z: 3 },
+  b: [2, 3],
+  c: 'foo'
+};
+merge(object, other); // { a: [ { x: 2 }, { y: 4 }, { z: 3 } ], b: [ 1, 2, 3 ], c: 'foo' }
+
+```
+
+### `nest`
+
+嵌套
+
+```js
+
+const nest = (items, id = null, link = 'parent_id') =>
+  items
+    .filter(item => item[link] === id)
+    .map(item => ({ ...item, children: nest(items, item.id, link) }));
+// One top level comment
+const comments = [
+  { id: 1, parent_id: null },
+  { id: 2, parent_id: 1 },
+  { id: 3, parent_id: 1 },
+  { id: 4, parent_id: 2 },
+  { id: 5, parent_id: 4 }
+];
+const nestedComments = nest(comments); // [{ id: 1, parent_id: null, children: [...] }]
+
+```
+
+### `objectFromPairs`
+
+根据固定的键值创建对象
+
+```js
+
+const objectFromPairs = arr => arr.reduce((a, [key, val]) => ((a[key] = val), a), {});
+objectFromPairs([['a', 1], ['b', 2]]); // {a: 1, b: 2}
+
+```
+
+### `objectToEntries`
+
+从一个对象创建一个键-值对数组。
+
+```js
+
+const objectToEntries = obj => Object.keys(obj).map(k => [k, obj[k]]);
+objectToEntries({ a: 1, b: 2 }); // [ ['a', 1], ['b', 2] ]
+
+```
+
+### `objectToPairs`
+
+```js
+
+const objectToPairs = obj => Object.entries(obj);
+objectToPairs({ a: 1, b: 2 }); // [ ['a', 1], ['b', 2] ]
+
+```
+
+### `objectToQueryString`
+
+```js
+
+const objectToQueryString = queryParameters => {
+  return queryParameters
+    ? Object.entries(queryParameters).reduce((queryString, [key, val], index) => {
+      const symbol = queryString.length === 0 ? '?' : '&';
+      queryString += typeof val === 'string' ? `${symbol}${key}=${val}` : '';
+      return queryString;
+    }, '')
+    : '';
+};
+objectToQueryString({ page: '1', size: '2kg', key: undefined }); // '?page=1&size=2kg'
+
+```
+
+### `omit`
+
+```js
+
+const omit = (obj, arr) =>
+  Object.keys(obj)
+    .filter(k => !arr.includes(k))
+    .reduce((acc, key) => ((acc[key] = obj[key]), acc), {});
+omit({ a: 1, b: '2', c: 3 }, ['b']); // { 'a': 1, 'c': 3 }
+
+```
+
+### `omitBy`
+
+```js
+
+const omitBy = (obj, fn) =>
+  Object.keys(obj)
+    .filter(k => !fn(obj[k], k))
+    .reduce((acc, key) => ((acc[key] = obj[key]), acc), {});
+omitBy({ a: 1, b: '2', c: 3 }, x => typeof x === 'number'); // { b: '2' }
+
+```
+
+### `orderBy`
+
+```js
+
+const orderBy = (arr, props, orders) =>
+    [...arr].sort((a, b) =>
+        props.reduce((acc, prop, i) => {
+            // 当比较的值相等时再进行下一步的比较
+            if (acc === 0) {
+                const [p1, p2] = orders && orders[i] === 'desc' ? [b[prop], a[prop]] : [a[prop], b[prop]];
+                acc = p1 > p2 ? 1 : p1 < p2 ? -1 : 0;
+            }
+            return acc;
+        }, 0)
+    );
+const users = [{ name: 'fred', age: 48 }, { name: 'barney', age: 36 }, { name: 'fred', age: 40 }];
+orderBy(users, ['name', 'age'], ['asc', 'desc']); // [{name: 'barney', age: 36}, {name: 'fred', age: 48}, {name: 'fred', age: 40}]
+orderBy(users, ['name', 'age']); // [{name: 'barney', age: 36}, {name: 'fred', age: 40}, {name: 'fred', age: 48}]
+
+```
+
+### `pick`
+
+```js
+
+const pick = (obj, arr) =>
+    arr.reduce((acc, curr) => (curr in obj && (acc[curr] = obj[curr]), acc), {});
+pick({ a: 1, b: '2', c: 3 }, ['a', 'c']); // { 'a': 1, 'c': 3 }
+
+```
+
+### `pickBy`
+
+```js
+
+const pickBy = (obj, fn) =>
+  Object.keys(obj)
+    .filter(k => fn(obj[k], k))
+    .reduce((acc, key) => ((acc[key] = obj[key]), acc), {});
+pickBy({ a: 1, b: '2', c: 3 }, x => typeof x === 'number'); // { 'a': 1, 'c': 3 }
+
+```
+
+### `renameKeys`
+
+```js
+
+const renameKeys = (keysMap, obj) =>
+    Object.keys(obj).reduce(
+        (acc, key) => ({
+            ...acc,
+            ...{ [keysMap[key] || key]: obj[key] }
+        }),
+        {}
+    );
+const obj = { name: 'Bobo', job: 'Front-End Master', shoeSize: 100 };
+renameKeys({ name: 'firstName', job: 'passion' }, obj); // { firstName: 'Bobo', passion: 'Front-End Master', shoeSize: 100 }
+
+```
+
+### `shallowClone`
+
+浅拷贝
+
+```js
+
+const shallowClone = obj => Object.assign({}, obj);
+const a = { x: true, y: 1 };
+const b = shallowClone(a); // a !== b
+
+// Note: 
+// a === b false
+// a.z === b.z true
+var a = { x: true, y: 1, z: {c: 1} };
+var b = shallowClone(a);
+
+```
