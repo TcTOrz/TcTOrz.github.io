@@ -835,3 +835,102 @@ toPairs(new Set(['a', 'b', 'c', 'a'])); // [ ['a', 'a'], ['b', 'b'], ['c', 'c'] 
 ```
 
 ### `transform`
+
+```js
+
+const transform = (obj, fn, acc) => Object.keys(obj).reduce((a, k) => fn(a, obj[k], k, obj), acc);
+transform(
+    { a: 1, b: 2, c: 1 },
+    (r, v, k) => {
+        (r[v] || (r[v] = [])).push(k);
+        return r;
+    },
+    {}
+); // { '1': ['a', 'c'], '2': ['b'] }
+
+```
+
+### `truthCheckCollection`
+
+```js
+
+const truthCheckCollection = (collection, pre) => collection.every(obj => obj[pre]);
+truthCheckCollection([{ user: 'Tinky-Winky', sex: 'male' }, { user: 'Dipsy', sex: 'male' }], 'sex'); // true
+
+```
+
+### `unflattenObject`
+
+```js
+
+const unflattenObject = obj =>
+    Object.keys(obj).reduce((acc, k) => {
+        if (k.indexOf('.') !== -1) {
+            const keys = k.split('.');
+            Object.assign(
+                acc,
+                JSON.parse(
+                '{' +
+                    keys.map((v, i) => (i !== keys.length - 1 ? `"${v}":{` : `"${v}":`)).join('') +
+                    obj[k] +
+                    '}'.repeat(keys.length)
+                )
+            );
+        } else acc[k] = obj[k];
+        return acc;
+    }, {});
+unflattenObject({ 'a.b.c': 1, d: 1 }); // { a: { b: { c: 1 } }, d: 1 }
+
+```
+
+### What is the difference between JavaScript's `for...in`, `for...of` and `forEach`?
+
+`for...in`用于迭代对象的所有可枚举属性，包括继承的可枚举属性。 该迭代语句可用于数组字符串或普通对象，但不能用于Map或Set对象。
+
+```js
+
+for (let prop in ['a', 'b', 'c']) 
+    console.log(prop);            // 0, 1, 2 (array indexes)
+
+for (let prop in 'str') 
+    console.log(prop);            // 0, 1, 2 (string indexes)
+
+for (let prop in {a: 1, b: 2, c: 3}) 
+    console.log(prop);            // a, b, c (object property names)
+
+for (let prop in new Set(['a', 'b', 'a', 'd'])) 
+    console.log(prop);            // undefined (no enumerable properties)
+
+```
+
+`for...of`用于迭代可迭代对象，迭代其值而不是其属性。 该迭代语句可以与数组，字符串，Map或Set对象一起使用，但不能与普通对象一起使用。
+
+```js
+
+for (let val of ['a', 'b', 'c']) 
+    console.log(val);            // a, b, c (array values)
+
+for (let val of 'str') 
+    console.log(val);            // s, t, r (string characters)
+
+for (let val of {a: 1, b: 2, c: 3}) 
+    console.log(prop);           // TypeError (not iterable)
+
+for (let val of new Set(['a', 'b', 'a', 'd'])) 
+    console.log(val);            // a, b, d (Set values)
+
+```
+
+`forEach()`是Array原型的一种方法，它允许您遍历数组的元素。 尽管`forEach()`仅迭代数组，但它可以在迭代时访问每个元素的值和索引。
+
+```js
+
+['a', 'b', 'c'].forEach(
+    val => console.log(val)     // a, b, c (array values)
+);
+
+['a', 'b', 'c'].forEach(
+    (val, i) => console.log(i)  // 0, 1, 2 (array indexes)
+);
+
+```
