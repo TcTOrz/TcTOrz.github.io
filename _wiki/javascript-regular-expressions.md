@@ -43,5 +43,5 @@ var re = new RegExp("ab+c");
 
 断言的组成之一是边界。对于文本、词或模式，边界可以用来表明它们的起始或终止部分（如向前断言，向后断言以及条件表达式）。
 
-[断言详细说明]()
+[断言详细说明](https://ifwechat.com//2020/08/15/javascript-assertions/)
 
