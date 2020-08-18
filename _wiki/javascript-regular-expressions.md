@@ -45,3 +45,8 @@ var re = new RegExp("ab+c");
 
 [断言详细说明](https://ifwechat.com//2020/08/15/javascript-assertions/)
 
+##### 字符类（Character Classes）
+
+区分不同类型的字符，例如区分字母和数字。
+
+[字符类详细说明](https://ifwechat.com//2020/08/17/javascript-character-classes/)
