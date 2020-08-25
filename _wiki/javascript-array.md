@@ -1707,3 +1707,19 @@ const str = 'Greek looks like this: γεια';
 */
 
 ```
+
+### `repeat`高效用法
+
+```js
+
+    const repeat = (str, n) => {
+        let res = ''
+        while (n) {
+            if (n % 2 === 1) res += str
+            if (n > 1) str += str
+            n >>= 1
+        }
+        return res
+    }
+
+```
