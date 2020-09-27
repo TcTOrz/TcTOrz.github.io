@@ -2,6 +2,14 @@
 
 我的个人博客：<https://mazhuang.org>，欢迎 Star 和 Fork。 -->
 
+## 微信公众号
+
+欢迎关注微信公众号: Javascript每日一题
+![screenshot home](https://ifwechat.com/assets/images/screenshots/wecom.png)
+
+一个关于效率小程序: 我的todo待办
+![screenshot home](https://ifwechat.com/assets/images/screenshots/wemini.png)
+
 ## 概览
 
 <!-- vim-markdown-toc GFM -->
@@ -14,14 +22,6 @@
 * [联系我](#联系我) -->
 
 <!-- vim-markdown-toc -->
-
-## 微信公众号
-
-欢迎关注微信公众号: Javascript每日一题
-![screenshot home](https://ifwechat.com/assets/images/screenshots/wecom.png)
-
-一个关于效率小程序: 我的todo待办
-![screenshot home](https://ifwechat.com/assets/images/screenshots/wemini.png)
 
 ## 效果预览
 
