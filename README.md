@@ -8,7 +8,7 @@
 ![screenshot home](https://ifwechat.com/assets/images/screenshots/wecom.jpg)
 
 一个关于效率小程序: 我的todo待办
-![screenshot home](https://ifwechat.com/assets/images/screenshots/todolist.jpg)
+![screenshot home](https://ifwechat.com/assets/images/screenshots/todolist.png)
 
 ## 概览
 
