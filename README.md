@@ -5,10 +5,10 @@
 ## 微信公众号
 
 欢迎关注微信公众号: Javascript每日一题
-![Javascript每日一题](https://ifwechat.com/assets/images/screenshots/wecom.jpg)
+![screenshot home](https://ifwechat.com/assets/images/screenshots/wecom.jpg)
 
 一个关于效率小程序: 我的todo待办
-![我的todo待办](https://ifwechat.com/assets/images/screenshots/todolist.png)
+![screenshot home](https://ifwechat.com/assets/images/screenshots/todolist.png)
 
 ## 概览
 
