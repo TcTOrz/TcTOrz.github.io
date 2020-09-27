@@ -21,6 +21,14 @@
 
 ![screenshot home](https://ifwechat.com/assets/images/screenshots/home1.png)
 
+#### 微信公众号
+
+欢迎关注微信公众号: Javascript每日一题
+![screenshot home](https://ifwechat.com/assets/images/screenshots/wecom.png)
+
+一个关于效率小程序: 我的todo待办
+![screenshot home](https://ifwechat.com/assets/images/screenshots/wemini.png)
+
 ## Fork 指南
 
 Fork 本项目之后，还需要做一些事情才能让你的页面「正确」跑起来。
