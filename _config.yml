@@ -2,7 +2,7 @@
 #   Main Configs   #
 # ---------------- #
 baseurl:
-url: https://ifwechat.com/
+url: https://tctorz.github.io/
 date_format: "ordinal"
 title: 李健的博客
 subtitle: "一个简单的博客"
